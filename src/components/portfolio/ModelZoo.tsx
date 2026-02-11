@@ -1,9 +1,15 @@
 import { motion } from "framer-motion";
 import { modelZooItems } from "@/data/portfolio";
+import { useState } from "react";
 
 const ModelZoo = () => {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+
   return (
-    <section id="model-zoo" className="relative min-h-screen flex flex-col justify-center">
+    <section id="model-zoo" className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute inset-0 bg-gradient-radial pointer-events-none opacity-50" />
+
       {/* Header */}
       <div className="section-padding pt-24 pb-16">
         <motion.div
@@ -20,46 +26,112 @@ const ModelZoo = () => {
             Model Zoo<span className="text-primary">.</span>
           </h2>
           <p className="text-xl text-muted-foreground mt-4 max-w-xl">
-            A gallery of AI systems and models built across the years.
+            A hall of fame of AI systems and models — each one built, trained, and deployed.
           </p>
         </motion.div>
       </div>
 
-      {/* Gallery grid */}
+      {/* Gallery — helmet/figure showcase style */}
       <div className="section-padding pb-32">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {modelZooItems.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="group relative aspect-square bg-card border border-border rounded-2xl overflow-hidden cursor-pointer transition-all hover:border-primary/40 hover:shadow-[0_0_50px_hsl(175_85%_45%/0.08)]"
-            >
-              {/* Gradient bg */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-60 group-hover:opacity-100 transition-opacity`} />
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+          {modelZooItems.map((item, i) => {
+            const isHovered = hoveredId === item.id;
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                onMouseEnter={() => setHoveredId(item.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                className="group relative cursor-pointer"
+              >
+                {/* Pedestal card */}
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-card border border-border transition-all duration-500 hover:border-primary/50">
+                  {/* Radial spotlight from top */}
+                  <div
+                    className="absolute inset-0 transition-opacity duration-500"
+                    style={{
+                      background: `radial-gradient(ellipse at 50% 20%, hsl(175 85% 45% / ${isHovered ? 0.15 : 0.04}) 0%, transparent 70%)`,
+                    }}
+                  />
 
-              {/* Content */}
-              <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-primary/40 transition-all">
-                  <item.icon className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                  {/* Vertical light beam */}
+                  <div
+                    className={`absolute top-0 left-1/2 -translate-x-1/2 w-px h-full transition-all duration-700 ${
+                      isHovered ? "opacity-60 shadow-[0_0_15px_3px_hsl(175_85%_45%/0.3)]" : "opacity-10"
+                    }`}
+                    style={{ background: "linear-gradient(to bottom, hsl(175 85% 45% / 0.6), transparent 70%)" }}
+                  />
+
+                  {/* Figure / Icon — floating effect */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <motion.div
+                      animate={isHovered ? { y: -8, rotateY: 15 } : { y: 0, rotateY: 0 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                      className="relative"
+                      style={{ perspective: "800px" }}
+                    >
+                      {/* Glow ring behind icon */}
+                      <div
+                        className={`absolute -inset-6 rounded-full blur-2xl transition-opacity duration-500 ${
+                          isHovered ? "opacity-50" : "opacity-0"
+                        }`}
+                        style={{ background: "radial-gradient(circle, hsl(175 85% 45% / 0.4), transparent)" }}
+                      />
+
+                      {/* Icon container — "helmet" */}
+                      <div
+                        className={`relative w-20 h-20 md:w-28 md:h-28 rounded-2xl flex items-center justify-center transition-all duration-500 ${
+                          isHovered
+                            ? "bg-primary/20 border-primary/50 shadow-[0_0_40px_hsl(175_85%_45%/0.2),inset_0_0_30px_hsl(175_85%_45%/0.1)]"
+                            : "bg-primary/5 border-primary/10"
+                        } border`}
+                      >
+                        <item.icon
+                          className={`w-10 h-10 md:w-14 md:h-14 transition-all duration-500 ${
+                            isHovered ? "text-primary drop-shadow-[0_0_12px_hsl(175_85%_45%/0.6)]" : "text-primary/60"
+                          }`}
+                        />
+                      </div>
+                    </motion.div>
+
+                    {/* Year badge — floats above like a label */}
+                    <motion.span
+                      animate={isHovered ? { y: -4, opacity: 1 } : { y: 0, opacity: 0.5 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-6 text-xs font-display font-bold tracking-[0.4em] text-primary uppercase"
+                    >
+                      {item.year}
+                    </motion.span>
+                  </div>
+
+                  {/* Bottom info — pedestal label */}
+                  <div className="absolute bottom-0 inset-x-0 p-5 md:p-6 bg-gradient-to-t from-background/90 via-background/50 to-transparent">
+                    <motion.div
+                      animate={isHovered ? { y: 0, opacity: 1 } : { y: 4, opacity: 0.8 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <h3 className="text-base md:text-xl font-display font-bold tracking-tight">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs md:text-sm text-muted-foreground mt-0.5">
+                        {item.type}
+                      </p>
+                    </motion.div>
+                  </div>
+
+                  {/* Bottom accent line */}
+                  <div
+                    className={`absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-transform duration-500 origin-left ${
+                      isHovered ? "scale-x-100" : "scale-x-0"
+                    }`}
+                  />
                 </div>
-                <h3 className="text-lg md:text-xl font-display font-bold mb-1">
-                  {item.title}
-                </h3>
-                <p className="text-xs md:text-sm text-muted-foreground">
-                  {item.type}
-                </p>
-                <span className="mt-3 text-xs font-display font-semibold text-primary tracking-wider">
-                  {item.year}
-                </span>
-              </div>
-
-              {/* Hover glow line */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
