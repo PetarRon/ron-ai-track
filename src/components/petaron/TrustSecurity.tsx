@@ -11,39 +11,36 @@ const trustItems = [
   { icon: Shield, title: "ISO 27001", description: "Certification in progress. Security by design." },
 ];
 
-const integrations = ["CargoWise", "SAP", "Scope", "Descartes", "Any TMS with an API"];
-
 const TrustSecurity = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-24 md:py-32 relative" ref={ref}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <p className="text-primary font-display font-medium tracking-[0.2em] uppercase text-sm mb-4">
-            Trust & Security
-          </p>
-          <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight">
-            Built for enterprise logistics
-          </h2>
-        </motion.div>
+    <section id="trust" className="py-16 md:py-24 relative px-6 md:px-12" ref={ref}>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
+        className="max-w-7xl mx-auto bg-card border border-border rounded-3xl p-10 md:p-16"
+      >
+        <span className="inline-block px-4 py-1.5 rounded-full border border-border bg-secondary text-xs font-display font-semibold text-muted-foreground uppercase tracking-[0.15em] mb-6">
+          Trust & Security
+        </span>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-12">
+          Built for enterprise logistics
+        </h2>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {trustItems.map((item, i) => (
             <motion.div
               key={item.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="bg-card border border-border rounded-xl p-6 flex items-start gap-4"
+              transition={{ duration: 0.4, delay: i * 0.07 }}
+              className="rounded-2xl border border-border bg-secondary/50 p-6 flex items-start gap-4"
             >
-              <div className="w-10 h-10 rounded-lg bg-secondary border border-border flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-muted border border-border flex items-center justify-center shrink-0">
                 <item.icon className="w-5 h-5 text-primary" />
               </div>
               <div>
@@ -53,29 +50,7 @@ const TrustSecurity = () => {
             </motion.div>
           ))}
         </div>
-
-        {/* Integrations */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
-        >
-          <p className="text-xs text-muted-foreground font-display uppercase tracking-[0.2em] mb-6">
-            Connects to your systems
-          </p>
-          <div className="flex items-center justify-center gap-8 flex-wrap">
-            {integrations.map((name) => (
-              <span
-                key={name}
-                className="text-muted-foreground/60 font-display font-semibold text-sm border border-border px-4 py-2 rounded-lg"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };
