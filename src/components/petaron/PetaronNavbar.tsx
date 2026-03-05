@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 
 const navLinks = [
   { label: "How It Works", href: "#how-it-works" },
@@ -18,19 +17,21 @@ const PetaronNavbar = () => {
   }, []);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-background/90 backdrop-blur-xl border-b border-border/50"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
-        <a href="#" className="font-display font-bold text-xl tracking-tight">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
+      <div
+        className={`flex items-center justify-between gap-6 px-6 py-3 rounded-full border transition-all duration-300 max-w-3xl w-full ${
+          scrolled
+            ? "bg-card/95 backdrop-blur-xl border-border shadow-lg"
+            : "bg-card/60 backdrop-blur-md border-border/50"
+        }`}
+      >
+        {/* Logo */}
+        <a href="#" className="font-display font-bold text-lg tracking-tight shrink-0">
           Petaron<span className="text-primary">.ai</span>
         </a>
 
-        <div className="hidden md:flex items-center gap-8">
+        {/* Center links */}
+        <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -40,13 +41,15 @@ const PetaronNavbar = () => {
               {link.label}
             </a>
           ))}
-          <a
-            href="#book-demo"
-            className="bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-display font-semibold text-sm transition-all hover:shadow-[0_0_24px_hsl(175_85%_45%/0.3)] hover:scale-105"
-          >
-            Book a Demo
-          </a>
         </div>
+
+        {/* CTA */}
+        <a
+          href="#book-demo"
+          className="bg-primary text-primary-foreground px-5 py-2 rounded-full font-display font-semibold text-sm transition-all hover:shadow-[0_0_24px_hsl(175_85%_45%/0.3)] hover:scale-105 shrink-0"
+        >
+          Book a Demo
+        </a>
       </div>
     </nav>
   );
