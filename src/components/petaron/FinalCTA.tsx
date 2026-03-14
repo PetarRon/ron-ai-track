@@ -82,14 +82,14 @@ const FinalCTA = () => {
           </svg>
         </div>
 
-        <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
+        <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7 }}
-            className="text-center mb-12"
+            className="text-center mb-12 w-full"
           >
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-tight text-[hsl(220_25%_10%)] whitespace-nowrap">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-tight text-[hsl(220_25%_10%)]">
               Ready to stop typing orders?
             </h2>
           </motion.div>
