@@ -89,7 +89,7 @@ const FinalCTA = () => {
             transition={{ duration: 0.7 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-tight text-[hsl(220_25%_10%)]">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-tight text-[hsl(220_25%_10%)] whitespace-nowrap">
               Ready to stop typing orders?
             </h2>
           </motion.div>
