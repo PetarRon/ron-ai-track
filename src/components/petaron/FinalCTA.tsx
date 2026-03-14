@@ -82,7 +82,7 @@ const FinalCTA = () => {
           </svg>
         </div>
 
-        <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12">
+        <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
