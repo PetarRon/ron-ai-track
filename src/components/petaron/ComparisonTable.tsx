@@ -6,7 +6,7 @@ const rows = [
   { feature: "New client format", traditional: "Hours of configuration", petaron: "Works immediately" },
   { feature: "Maintenance", traditional: "Constant updates needed", petaron: "Zero maintenance" },
   { feature: "Accuracy", traditional: "Degrades as formats change", petaron: "Consistent across all formats" },
-  { feature: "Getting started", traditional: "Weeks to months", petaron: "2–3 days" },
+  { feature: "Getting started", traditional: "Weeks of setup", petaron: "Demo in 2 days, POC in 5" },
   { feature: "Human oversight", traditional: "Manual checking of every field", petaron: "Structured review, one-click approve" },
 ];
 
@@ -31,7 +31,7 @@ const ComparisonTable = () => {
         </h2>
         <p className="text-muted-foreground mb-12 max-w-2xl">
           Old tools break when a client changes their document layout.
-          Petaron reads meaning, not fixed positions — like your best operator would.
+          PetaRon reads meaning, not fixed positions, like your best operator would.
         </p>
 
         {/* Table */}
@@ -39,7 +39,7 @@ const ComparisonTable = () => {
           <div className="grid grid-cols-3 text-sm font-display font-semibold border-b border-border">
             <div className="p-5 text-muted-foreground" />
             <div className="p-5 text-muted-foreground text-center">Traditional</div>
-            <div className="p-5 text-primary text-center bg-primary/5">Petaron</div>
+            <div className="p-5 text-primary text-center bg-primary/5">PetaRon</div>
           </div>
 
           {rows.map((row, i) => (

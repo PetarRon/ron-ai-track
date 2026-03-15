@@ -8,13 +8,13 @@ import {
 } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "We already have a system for this — why switch?", a: "Petaron doesn't replace your TMS. It sits in front of it, turning unstructured order emails and documents into structured data that flows straight into whatever system you already use." },
-  { q: "How long does setup actually take?", a: "Most customers are live within 2–3 business days. You forward your order emails to Petaron or upload a batch of documents. No IT integration is required to start." },
+  { q: "We already have a system for this. Why switch?", a: "PetaRon doesn't replace your TMS. It sits in front of it, turning unstructured order emails and documents into structured data that flows straight into whatever system you already use." },
+  { q: "How long does setup actually take?", a: "We provide a live demo within 2 business days and a working proof of concept within 5 business days. No IT integration needed to get started." },
   { q: "What happens when the AI makes a mistake?", a: "Every order goes through human review before it's processed. Your team sees a clean summary and approves it with one click. Exceptions and low-confidence fields are flagged automatically." },
   { q: "Who can see our data, and where is it stored?", a: "All data is hosted in the EU with full GDPR compliance. Access is role-based and encrypted end-to-end. Only your authorized team members can see your data." },
-  { q: "Do we need our IT team involved?", a: "Not to get started. Petaron works via email forwarding or document upload. When you're ready to connect directly to your TMS, we handle the integration." },
+  { q: "Do we need our IT team involved?", a: "Not to get started. PetaRon works via email forwarding or document upload from day one. When you're ready for a direct TMS integration, we handle the full API connection and any credentials needed. No technical work required from your side." },
   { q: "What does it cost?", a: "Pricing is based on the number of orders processed. We'll share specific numbers during your demo. The ROI calculator above gives you a realistic preview of your savings." },
-  { q: "Can we try it before committing?", a: "Yes. We offer a risk-free pilot: process your first 100 orders free. If we don't save you time, you pay nothing." },
+  { q: "Can we try it before committing?", a: "Yes. Your first month is completely free. Use that time to run real orders, gather feedback from your team, and see the results firsthand. If PetaRon doesn't save you time, you pay nothing." },
 ];
 
 const PetaronFAQ = () => {
@@ -29,15 +29,17 @@ const PetaronFAQ = () => {
         transition={{ duration: 0.6 }}
         className="max-w-7xl mx-auto bg-card border border-border rounded-3xl p-10 md:p-16"
       >
-        <span className="inline-block px-4 py-1.5 rounded-full border border-border bg-secondary text-xs font-display font-semibold text-muted-foreground uppercase tracking-[0.15em] mb-6">
-          FAQ
-        </span>
+        <div className="text-center">
+          <span className="inline-block px-4 py-1.5 rounded-full border border-border bg-secondary text-xs font-display font-semibold text-muted-foreground uppercase tracking-[0.15em] mb-6">
+            FAQ
+          </span>
 
-        <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-12">
-          Common questions
-        </h2>
+          <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-12">
+            Common questions
+          </h2>
+        </div>
 
-        <div className="max-w-3xl">
+        <div className="max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, i) => (
               <AccordionItem

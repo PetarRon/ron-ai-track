@@ -53,7 +53,7 @@ const SocialProof = () => {
           <Quote className="w-8 h-8 text-primary/20 absolute top-6 left-6" />
           <blockquote className="relative z-10">
             <p className="text-lg md:text-xl text-foreground leading-relaxed font-display italic">
-              "We went from 12 minutes per order to approving Petaron's summary
+              "We went from 12 minutes per order to approving PetaRon's summary
               in 40 seconds. The team now spends their time on client
               relationships instead of data entry."
             </p>
