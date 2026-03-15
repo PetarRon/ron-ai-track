@@ -6,16 +6,17 @@ const footerLinks = {
     { label: "FAQ", href: "#faq" },
   ],
   Company: [
-    { label: "About", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "LinkedIn", href: "#" },
-  ],
-  Legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
-    { label: "GDPR", href: "#" },
+    { label: "About", href: "#book-demo" },
+    { label: "Careers", href: "#book-demo" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/petaron", external: true },
   ],
 };
+
+const legalItems = [
+  { label: "Privacy Policy" },
+  { label: "Terms of Service" },
+  { label: "GDPR" },
+];
 
 const PetaronFooter = () => {
   return (
@@ -25,16 +26,13 @@ const PetaronFooter = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <span className="font-display font-bold text-lg block mb-3">
-              Petaron<span className="text-primary">.ai</span>
+              PetaRon<span className="text-primary">.ai</span>
             </span>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              AI-powered order processing for freight forwarders.
-            </p>
             <a
-              href="mailto:hello@petaron.ai"
+              href="#book-demo"
               className="text-sm text-primary hover:underline mt-3 block"
             >
-              hello@petaron.ai
+              Contact us
             </a>
           </div>
 
@@ -47,6 +45,7 @@ const PetaronFooter = () => {
                   <li key={link.label}>
                     <a
                       href={link.href}
+                      {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.label}
@@ -56,12 +55,26 @@ const PetaronFooter = () => {
               </ul>
             </div>
           ))}
+
+          {/* Legal column */}
+          <div>
+            <h4 className="font-display font-semibold text-sm text-foreground mb-4">Legal</h4>
+            <ul className="space-y-2.5">
+              {legalItems.map((item) => (
+                <li key={item.label}>
+                  <span className="text-sm text-muted-foreground">
+                    {item.label} <span className="text-muted-foreground/50">(coming soon)</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Bottom */}
         <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Petaron AI. All rights reserved.
+            © {new Date().getFullYear()} PetaRon AI. All rights reserved.
           </p>
           <div className="flex items-center gap-3">
             <span className="text-xs font-display font-medium text-muted-foreground px-3 py-1.5 rounded-full border border-border bg-secondary">
