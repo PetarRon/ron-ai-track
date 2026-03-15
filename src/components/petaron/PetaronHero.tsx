@@ -16,17 +16,6 @@ const PetaronHero = () => {
       <div className="absolute inset-0 bg-gradient-radial pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 w-full text-center space-y-10">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-card text-xs font-display font-medium text-muted-foreground"
-        >
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse-glow" />
-          Built for European freight forwarders
-        </motion.div>
-
         {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
