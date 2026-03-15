@@ -6,13 +6,13 @@ const steps = [
   {
     title: "Connect",
     description:
-      "Send your order emails to Petaron, or upload documents directly. No IT team needed. You're live in 2–3 days.",
+      "We connect PetaRon's agentic pipeline to your incoming order channels. Email forwarding, document upload, or direct API. No IT team needed on your side.",
     icon: Mail,
   },
   {
     title: "Read & Capture",
     description:
-      "Our AI reads every format — no configuration, no setup, no maintenance. It understands the meaning of what's written, not just the layout.",
+      "Our AI reads every format. No configuration, no setup, no maintenance. It understands the meaning of what's written, not just the layout.",
     icon: Brain,
   },
   {
@@ -41,7 +41,7 @@ const HowItWorks = () => {
           How It Works
         </span>
 
-        <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-12">
+        <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-12 text-center">
           Three steps. No complexity.
         </h2>
 
@@ -73,7 +73,7 @@ const HowItWorks = () => {
                 />
               </div>
 
-              <h3 className="text-lg font-display font-bold mb-2 text-foreground">{step.title}</h3>
+              <h3 className="text-lg font-display font-bold mb-2 text-foreground text-center">{step.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
 
               {step.highlighted && (

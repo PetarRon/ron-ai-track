@@ -35,8 +35,7 @@ const PetaronHero = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto"
         >
-          Petaron reads your order emails and documents, captures every detail,
-          and sends them straight into your TMS — with a human checking every order.
+          PetaRon connects to your order pipeline, reads every incoming order, and pushes structured data directly into your TMS. Your team approves, not types.
         </motion.p>
 
         {/* CTA */}
