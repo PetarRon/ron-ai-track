@@ -27,7 +27,7 @@ const PetaronNavbar = () => {
       >
         {/* Logo */}
         <a href="#" className="font-display font-bold text-lg tracking-tight shrink-0">
-          Petaron<span className="text-primary">.ai</span>
+          PetaRon<span className="text-primary">.ai</span>
         </a>
 
         {/* Center links */}

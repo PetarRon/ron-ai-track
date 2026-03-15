@@ -19,14 +19,12 @@ const ROICalculator = () => {
     const moneySaved = hoursSaved * hourlyCost;
     const fteFreed = hoursSaved / 1800;
     const costBefore = (minutesPerOrder / 60) * hourlyCost;
-    const costAfter = costBefore * 0.15;
 
     return {
       hoursSaved: Math.round(hoursSaved),
       moneySaved: Math.round(moneySaved),
       fteFreed: fteFreed.toFixed(1),
       costBefore: costBefore.toFixed(2),
-      costAfter: costAfter.toFixed(2),
     };
   }, [ordersPerDay, minutesPerOrder, hourlyCost]);
 
@@ -138,12 +136,22 @@ const ROICalculator = () => {
             <p className="text-xs text-muted-foreground font-display uppercase tracking-wider mb-2">
               Cost per order
             </p>
-            <p className="text-foreground font-display">
-              <span className="text-muted-foreground line-through text-lg">€{results.costBefore}</span>
-              <span className="text-2xl font-bold text-primary ml-2">€{results.costAfter}</span>
-            </p>
+            <div className="flex items-baseline gap-4">
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">Your cost today</p>
+                <p className="text-lg font-display font-semibold text-muted-foreground line-through">€{results.costBefore}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">With PetaRon</p>
+                <p className="text-2xl font-display font-bold text-primary">€0.49</p>
+              </div>
+            </div>
           </div>
         </div>
+
+        <p className="text-sm text-muted-foreground mt-6">
+          PetaRon costs €0.49 per order processed.
+        </p>
 
         {/* CTA */}
         <div className="mt-10 pt-8 border-t border-border text-center">

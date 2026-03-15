@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useForm, ValidationError } from "@formspree/react";
 
@@ -11,10 +10,14 @@ const ORDER_CHANNELS = [
   { id: "phone", label: "Phone / WhatsApp", sub: "Direct contact" },
 ];
 
+const RATE_LIMIT_MS = 30_000; // 30 seconds between submissions
+
 const FinalCTA = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const [state, handleFormspreeSubmit] = useForm("mreyazvz");
+  const lastSubmitRef = useRef<number>(0);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,10 +34,18 @@ const FinalCTA = () => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const now = Date.now();
+    if (now - lastSubmitRef.current < RATE_LIMIT_MS) {
+      setRateLimited(true);
+      setTimeout(() => setRateLimited(false), 3000);
+      return;
+    }
+    lastSubmitRef.current = now;
+    setRateLimited(false);
     handleFormspreeSubmit(e);
-  };
+  }, [handleFormspreeSubmit]);
 
   if (state.succeeded) {
     return (
@@ -144,9 +155,9 @@ const FinalCTA = () => {
                     className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground font-display focus:outline-none focus:border-primary/50 transition-colors"
                   >
                     <option value="">Select range</option>
-                    <option value="20-50">20–50 orders</option>
-                    <option value="50-150">50–150 orders</option>
-                    <option value="150-300">150–300 orders</option>
+                    <option value="1-50">1-50 orders</option>
+                    <option value="50-150">50-150 orders</option>
+                    <option value="150-300">150-300 orders</option>
                     <option value="300+">300+ orders</option>
                   </select>
                 </div>
@@ -175,21 +186,27 @@ const FinalCTA = () => {
                 <input
                   type="text" name="other_channel" value={formData.other_channel}
                   onChange={(e) => setFormData({ ...formData, other_channel: e.target.value })}
-                  placeholder="Other — describe your order intake…"
+                  placeholder="Other: describe your order intake..."
                   className="mt-3 w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground font-display text-sm placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/50 transition-colors"
                 />
               </div>
 
               <button
-                type="submit" disabled={state.submitting}
+                type="submit" disabled={state.submitting || rateLimited}
                 className="w-full bg-primary text-primary-foreground py-4 rounded-lg font-display font-semibold text-lg transition-all hover:shadow-[0_0_30px_hsl(175_85%_45%/0.3)] hover:scale-[1.02] flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {state.submitting ? "Sending…" : "Book Your Free Demo"}
-                {!state.submitting && <ArrowRight className="w-5 h-5" />}
+                {state.submitting ? "Sending..." : rateLimited ? "Please wait..." : "Book Your Free Demo"}
+                {!state.submitting && !rateLimited && <ArrowRight className="w-5 h-5" />}
               </button>
 
+              {rateLimited && (
+                <p className="text-xs text-destructive text-center">
+                  Please wait a moment before submitting again.
+                </p>
+              )}
+
               <p className="text-xs text-muted-foreground text-center">
-                No commitment. 15-minute call. We'll show you Petaron with your actual data.
+                No commitment. 15-minute call. We'll show you PetaRon with your actual data.
               </p>
             </form>
           </motion.div>
