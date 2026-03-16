@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from "react"; // v2
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
