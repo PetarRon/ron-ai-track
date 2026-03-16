@@ -12,19 +12,15 @@ const ROICalculator = () => {
   const [hourlyCost, setHourlyCost] = useState(35);
 
   const results = useMemo(() => {
-    const workingDays = 250;
-    const totalOrdersYear = ordersPerDay * workingDays;
-    const hoursManual = (totalOrdersYear * minutesPerOrder) / 60;
-    const hoursSaved = hoursManual * 0.85;
-    const moneySaved = hoursSaved * hourlyCost;
-    const fteFreed = hoursSaved / 1800;
-    const costBefore = (minutesPerOrder / 60) * hourlyCost;
+    const workingDaysPerMonth = 22;
+    const monthlyCost = (ordersPerDay * workingDaysPerMonth * minutesPerOrder / 60) * hourlyCost;
+    const annualCost = monthlyCost * 12;
+    const hoursPerMonth = ordersPerDay * workingDaysPerMonth * minutesPerOrder / 60;
 
     return {
-      hoursSaved: Math.round(hoursSaved),
-      moneySaved: Math.round(moneySaved),
-      fteFreed: fteFreed.toFixed(1),
-      costBefore: costBefore.toFixed(2),
+      monthlyCost: Math.round(monthlyCost),
+      annualCost: Math.round(annualCost),
+      hoursPerMonth: Math.round(hoursPerMonth),
     };
   }, [ordersPerDay, minutesPerOrder, hourlyCost]);
 
