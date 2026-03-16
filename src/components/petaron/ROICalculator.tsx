@@ -102,51 +102,37 @@ const ROICalculator = () => {
         <div className="h-px bg-border mb-10" />
 
         {/* Results */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid sm:grid-cols-3 gap-8">
           <div>
             <p className="text-xs text-muted-foreground font-display uppercase tracking-wider mb-2">
-              Hours saved / year
+              What you spend today per month
+            </p>
+            <p className="text-4xl font-display font-bold text-destructive">
+              €{results.monthlyCost.toLocaleString()}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground font-display uppercase tracking-wider mb-2">
+              Per year on manual entry
+            </p>
+            <p className="text-4xl font-display font-bold text-foreground">
+              €{results.annualCost.toLocaleString()}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground font-display uppercase tracking-wider mb-2">
+              Staff hours spent on data entry
             </p>
             <p className="text-3xl font-display font-bold text-foreground">
-              {results.hoursSaved.toLocaleString()}
+              {results.hoursPerMonth.toLocaleString()}
+              <span className="text-base text-muted-foreground font-normal ml-1">hrs/month</span>
             </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground font-display uppercase tracking-wider mb-2">
-              Money saved / year
-            </p>
-            <p className="text-4xl font-display font-bold text-primary text-glow">
-              €{results.moneySaved.toLocaleString()}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground font-display uppercase tracking-wider mb-2">
-              FTEs freed up
-            </p>
-            <p className="text-3xl font-display font-bold text-foreground">
-              {results.fteFreed}
-              <span className="text-base text-muted-foreground font-normal ml-1">people</span>
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground font-display uppercase tracking-wider mb-2">
-              Cost per order
-            </p>
-            <div className="flex items-baseline gap-4">
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">Your cost today</p>
-                <p className="text-lg font-display font-semibold text-muted-foreground line-through">€{results.costBefore}</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">With PetaRon</p>
-                <p className="text-2xl font-display font-bold text-primary">€0.49</p>
-              </div>
-            </div>
           </div>
         </div>
 
-        <p className="text-sm text-muted-foreground mt-6">
-          PetaRon costs €0.49 per order processed.
+        <div className="h-px bg-border mt-10 mb-6" />
+        <p className="text-sm text-muted-foreground">
+          Most customers reduce this cost by over 80%. Pricing is based on your volume.
         </p>
 
         {/* CTA */}

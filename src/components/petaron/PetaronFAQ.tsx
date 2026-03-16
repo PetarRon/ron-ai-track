@@ -13,7 +13,7 @@ const faqs = [
   { q: "What happens when the AI makes a mistake?", a: "Every order goes through human review before it's processed. Your team sees a clean summary and approves it with one click. Exceptions and low-confidence fields are flagged automatically." },
   { q: "Who can see our data, and where is it stored?", a: "All data is hosted in the EU with full GDPR compliance. Access is role-based and encrypted end-to-end. Only your authorized team members can see your data." },
   { q: "Do we need our IT team involved?", a: "All you need is to provide basic APIs and credentials for full and smooth integration. These will be fully secured. If that does not work for you, we can always discuss alternatives." },
-  { q: "What does it cost?", a: "Pricing is based on the number of orders processed. We'll share specific numbers during your demo. The ROI calculator above gives you a realistic preview of your savings." },
+  { q: "What does it cost?", a: "Pricing is based on your order volume. We'll share a custom quote during your demo." },
   { q: "Can we try it before committing?", a: "Yes. Your first month is completely free. Use that time to run real orders, gather feedback from your team, and see the results firsthand. If PetaRon doesn't save you time, you pay nothing." },
 ];
 
