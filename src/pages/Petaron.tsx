@@ -1,6 +1,8 @@
-import { motion, useScroll, useSpring, animate } from "framer-motion";
-import { ArrowRight, MoveRight, Send, Link, ScanText, CheckCircle2, FileText, Search, Check, FileCheck, Mail, BrainCircuit, FileJson, UserCheck, Database, Network } from "lucide-react";
-import { FormEvent, Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { motion, useScroll, useSpring, animate, useMotionValue, useTransform } from "framer-motion";
+import { ArrowRight, Send, Link, ScanText, CheckCircle2, Clock, CalendarIcon, FileJson, Mail, BrainCircuit, Database } from "lucide-react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { DashboardPreview } from "../components/DashboardPreview";
+import { Calendar } from "@/components/ui/calendar";
 
 const integrations = [
   { name: "CargoWise", domain: "cargowise.com" },
@@ -17,24 +19,6 @@ const aiStack = [
   { name: "Mistral", domain: "mistral.ai" },
   { name: "Pydantic", domain: "pydantic.dev" },
   { name: "n8n", domain: "n8n.io" },
-];
-
-const infraStack = [
-  { name: "AWS", domain: "aws.amazon.com" },
-  { name: "Docker", domain: "docker.com" },
-  { name: "Redis", domain: "redis.io" },
-  { name: "PostgreSQL", domain: "postgresql.org" },
-  { name: "React", domain: "react.dev" },
-  { name: "TypeScript", domain: "typescriptlang.org" },
-];
-const faqQuestions = [
-  "We already have a system for this. Why switch?",
-  "How long does setup actually take?",
-  "What happens when the AI makes a mistake?",
-  "Who can see our data, and where is it stored?",
-  "Do we need our IT team involved?",
-  "What does it cost?",
-  "Can we try it before committing?",
 ];
 
 const SpotlightCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
@@ -56,7 +40,7 @@ const SpotlightCard = ({ children, className = "" }: { children: React.ReactNode
           background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(167, 139, 250, 0.15), transparent 40%)`,
         }}
       />
-      <div className="relative h-full w-full rounded-2xl bg-[#06070c] p-6">
+      <div className="relative h-full w-full rounded-2xl bg-[#06070c] p-6 z-10">
         <div
           className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
           style={{
@@ -90,6 +74,66 @@ const AnimatedNumber = ({ value }: { value: number }) => {
   return <span ref={ref}>{value.toLocaleString()}</span>;
 };
 
+// WAW Custom Cursor Tracker
+const MouseTracker = () => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  return (
+    <motion.div
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      style={{ opacity: 0.6 }}
+    >
+      <motion.div
+        className="absolute w-[800px] h-[800px] rounded-full blur-[120px]"
+        style={{
+          background: "radial-gradient(circle, rgba(34,211,238,0.15) 0%, rgba(192,132,252,0.05) 40%, transparent 70%)",
+          x: useTransform(mouseX, (v) => v - 400),
+          y: useTransform(mouseY, (v) => v - 400),
+        }}
+        transition={{ type: "spring", stiffness: 50, damping: 20, mass: 0.5 }}
+      />
+    </motion.div>
+  );
+};
+
+// WAW Text Reveal
+const RevealText = ({ text, className = "" }: { text: string, className?: string }) => {
+  const words = text.split(" ");
+  
+  return (
+    <span className={`inline-block ${className}`}>
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden mr-[0.25em]">
+          <motion.span
+            className="inline-block"
+            initial={{ y: "100%", opacity: 0, rotate: 10 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            transition={{ 
+              duration: 0.8, 
+              delay: i * 0.08, 
+              ease: [0.2, 0.65, 0.3, 0.9],
+              type: "spring",
+              bounce: 0.3
+            }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+};
+
 const Petaron = () => {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
@@ -101,21 +145,12 @@ const Petaron = () => {
   const [ordersPerDay, setOrdersPerDay] = useState(150);
   const [minutesPerOrder, setMinutesPerOrder] = useState(10);
   const [hourlyCost, setHourlyCost] = useState(35);
+  
+  // Booking state
+  const [date, setDate] = useState<Date | undefined>(new Date());
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
-  const [volume, setVolume] = useState("Select range");
-  const [intake, setIntake] = useState<string[]>(["Email"]);
-
-  const toggleIntake = (option: string) => {
-    setIntake((prev) =>
-      prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option]
-    );
-  };
-
-  const [notes, setNotes] = useState("");
+  const [time, setTime] = useState("10:00");
 
   const monthlyCost = useMemo(() => {
     const workDays = 22;
@@ -123,361 +158,454 @@ const Petaron = () => {
   }, [hourlyCost, minutesPerOrder, ordersPerDay]);
 
   const yearlyCost = monthlyCost * 12;
-  const monthlyHours = Math.round((ordersPerDay * minutesPerOrder * 22) / 60);
 
-  const mailtoHref = useMemo(() => {
-    const subject = encodeURIComponent("Book Your Free Demo - PetaRon");
-    const body = encodeURIComponent(
-      [
-        `Name: ${name || "-"}`,
-        `Work email: ${email || "-"}`,
-        `Company: ${company || "-"}`,
-        `Daily order volume: ${volume || "-"}`,
-        `Order intake channel: ${intake.length > 0 ? intake.join(", ") : "-"}`,
-        `Other intake details: ${notes || "-"}`,
-      ].join("\n")
-    );
-    return `mailto:hello@petaron.ai?subject=${subject}&body=${body}`;
-  }, [company, email, intake, name, notes, volume]);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleBookingSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    window.location.href = mailtoHref;
+    const subject = encodeURIComponent("Demo Booking - PetaRon");
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\nRequested Date: ${date?.toLocaleDateString()}\nRequested Time: ${time}`
+    );
+    window.location.href = `mailto:hello@petaron.ai?subject=${subject}&body=${body}`;
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#06070c] text-white">
-      <div className="noise-overlay" />
+    <main className="relative min-h-screen overflow-hidden bg-[#06070c] text-white selection:bg-cyan-400 selection:text-black">
+      
+      <MouseTracker />
+      <div className="noise-overlay opacity-30 z-10 pointer-events-none" />
+      
       <motion.div
-        className="fixed left-0 top-0 z-50 h-1 w-full origin-left bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300"
+        className="fixed left-0 top-0 z-[100] h-1 w-full origin-left bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300"
         style={{ scaleX: progress }}
       />
 
-      <div className="pointer-events-none absolute inset-0 animated-grid opacity-70" />
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20" />
+      
+      <div className="pointer-events-none absolute inset-0 z-0">
         <motion.div
-          className="hero-blob left-[8%] top-[8%] h-72 w-72 bg-fuchsia-500/38"
-          animate={{ x: [0, 42, -20, 0], y: [0, -28, 20, 0], scale: [1, 1.1, 0.96, 1] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute left-[10%] top-[10%] h-[500px] w-[500px] rounded-full bg-fuchsia-600/20 blur-[120px] mix-blend-screen"
+          animate={{ x: [0, 50, -30, 0], y: [0, -30, 40, 0], scale: [1, 1.2, 0.8, 1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="hero-blob right-[12%] top-[20%] h-96 w-96 bg-cyan-400/32"
-          animate={{ x: [0, -36, 18, 0], y: [0, 24, -24, 0], scale: [1, 0.95, 1.08, 1] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute right-[5%] top-[25%] h-[600px] w-[600px] rounded-full bg-cyan-600/20 blur-[150px] mix-blend-screen"
+          animate={{ x: [0, -60, 40, 0], y: [0, 50, -40, 0], scale: [1, 0.8, 1.2, 1] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col px-6 pb-20 pt-8 md:px-10 md:pt-12">
-        <header className="glass-panel sticky top-4 z-20 flex items-center justify-between px-5 py-3">
-          <div className="text-sm font-semibold tracking-[0.18em] text-white/90">
-            PETARON.AI
+      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col px-6 pb-20 pt-6 md:px-10 md:pt-8 z-10">
+        <header className="sticky top-6 z-50 flex items-center justify-between rounded-full border border-white/10 bg-[#06070c]/60 px-6 py-4 backdrop-blur-xl shadow-2xl">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-400 to-fuchsia-500 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.4)]">
+              <span className="font-bold text-black text-xs tracking-tighter">PR</span>
+            </div>
+            <div className="text-xl font-serif font-normal italic tracking-[0.1em] text-white">
+              PetaRon
+            </div>
+          </div>
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70">
+            <a href="#how-it-works" className="hover:text-white transition-colors">Platform</a>
+            <a href="#roi" className="hover:text-white transition-colors">ROI</a>
           </div>
           <a
-            href="#contact-form"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#070814] transition hover:scale-105"
+            href="#booking"
+            className="group inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#070814] transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
           >
-            Contact us
-            <ArrowRight size={14} />
+            Book Demo
+            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </a>
         </header>
 
-        <section className="pb-16 pt-16 md:pb-20 md:pt-24 relative">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            <div>
-              <p className="mb-5 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-medium tracking-wide text-white/85 backdrop-blur-xl">
-                AI-POWERED ORDER PROCESSING
-              </p>
-              <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight text-white md:text-6xl">
-                Transport orders processed
+        <section className="pb-20 pt-24 md:pb-32 md:pt-32 relative">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-center">
+            <div className="relative z-10">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-cyan-300 backdrop-blur-xl shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                  AI-Powered Order Entry
+                </span>
+              </motion.div>
+              
+              <h1 className="max-w-4xl text-5xl font-serif font-normal leading-[1.05] tracking-tight text-white md:text-[5rem] lg:text-[5.5rem] mt-4">
+                <RevealText text="From chaotic inbox to clean TMS" />
                 <br />
-                <span className="shimmer-text">in 30 seconds</span>
+                <motion.span 
+                  className="bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300 bg-clip-text text-transparent inline-block font-serif italic pr-2"
+                  initial={{ opacity: 0, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  transition={{ duration: 1, delay: 0.6 }}
+                >
+                  in under 30s.
+                </motion.span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/75 md:text-lg">
-                PetaRon connects to your order pipeline, reads every incoming order,
-                and pushes structured data directly into your TMS. Your team approves,
-                not types.
-              </p>
+              <motion.p 
+                className="mt-8 max-w-xl text-lg leading-relaxed text-white/60 md:text-xl font-light"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+              >
+                PetaRon connects to your order pipeline, reads every incoming email, extracts the data, and pushes it directly into your TMS. Your team approves, not types.
+              </motion.p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                {[
-                  ["Order Processing", "#how-it-works"],
-                  ["Results", "#results"],
-                  ["Security", "#trust-security"],
-                  ["ROI", "#roi"],
-                ].map(([label, href]) => (
-                  <a
-                    key={label}
-                    href={href}
-                    className="rounded-full border border-white/30 bg-white/5 px-4 py-2 text-sm text-white/90 transition hover:bg-white/12"
-                  >
-                    {label} ↘
-                  </a>
-                ))}
-              </div>
+              <motion.div 
+                className="mt-10 flex flex-wrap gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1 }}
+              >
+                <a
+                  href="#booking"
+                  className="group relative flex items-center justify-center gap-3 rounded-full bg-cyan-400 px-8 py-4 text-sm font-bold text-[#05060d] transition-all hover:bg-cyan-300 hover:scale-105 shadow-[0_0_40px_rgba(34,211,238,0.3)] overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <span className="relative flex items-center gap-2">
+                    Start Automating <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </a>
+                <a
+                  href="#platform"
+                  className="flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-semibold text-white transition hover:bg-white/10 hover:border-white/40 backdrop-blur-sm"
+                >
+                  Explore Platform
+                </a>
+              </motion.div>
             </div>
 
-            <div className="relative hidden md:block h-[400px] perspective-1000">
-              {/* Document Visual */}
+            <div className="relative hidden lg:block h-[500px] perspective-1000 w-full z-10">
+              {/* Document Visual - Floating 3D */}
               <motion.div
-                className="absolute right-12 top-10 w-64 rounded-xl border border-white/10 bg-[#0d101b]/80 p-4 shadow-2xl backdrop-blur-md overflow-hidden"
-                animate={{ y: [0, -15, 0], rotateY: [0, -5, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                style={{ transformStyle: "preserve-3d" }}
+                className="absolute right-0 top-10 w-80 rounded-2xl border border-white/10 bg-[#0d101b]/90 p-5 shadow-2xl backdrop-blur-xl overflow-hidden z-20"
+                animate={{ 
+                  y: [0, -20, 0], 
+                  rotateY: [-5, 5, -5],
+                  rotateX: [5, -5, 5],
+                  rotateZ: [-2, 2, -2]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                style={{ transformStyle: "preserve-3d", transformOrigin: "center" }}
               >
-                <div className="mb-3 flex items-center gap-2 border-b border-white/10 pb-2">
-                  <div className="h-2 w-2 rounded-full bg-red-400" />
-                  <div className="h-2 w-2 rounded-full bg-yellow-400" />
-                  <div className="h-2 w-2 rounded-full bg-green-400" />
-                  <div className="ml-2 text-[10px] text-white/40">order_FW203.pdf</div>
+                <div className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
+                  <div className="h-3 w-3 rounded-full bg-red-400 shadow-[0_0_10px_rgba(248,113,113,0.5)]" />
+                  <div className="h-3 w-3 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]" />
+                  <div className="h-3 w-3 rounded-full bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]" />
+                  <div className="ml-2 text-xs font-mono text-white/50">PDF_Order_FW203.pdf</div>
                 </div>
-                <div className="space-y-2">
-                  <div className="h-2 w-full rounded bg-white/10" />
-                  <div className="h-2 w-5/6 rounded bg-white/10" />
-                  <div className="h-2 w-4/6 rounded bg-white/10" />
-                  <div className="my-4 h-px w-full bg-white/5" />
-                  <div className="flex gap-2">
-                    <div className="h-10 w-10 rounded bg-white/5" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-2 w-full rounded bg-white/10" />
-                      <div className="h-2 w-2/3 rounded bg-white/10" />
+                <div className="space-y-3">
+                  <div className="h-2.5 w-full rounded bg-white/10" />
+                  <div className="h-2.5 w-5/6 rounded bg-white/10" />
+                  <div className="h-2.5 w-4/6 rounded bg-white/10" />
+                  <div className="my-5 h-px w-full bg-white/10" />
+                  <div className="flex gap-3">
+                    <div className="h-12 w-12 rounded bg-cyan-400/20 border border-cyan-400/30" />
+                    <div className="flex-1 space-y-2.5">
+                      <div className="h-2.5 w-full rounded bg-white/10" />
+                      <div className="h-2.5 w-2/3 rounded bg-white/10" />
                     </div>
                   </div>
                 </div>
                 {/* Scanning line effect */}
                 <motion.div
-                  className="absolute left-0 right-0 h-10 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent blur-[2px]"
-                  animate={{ top: ["0%", "80%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  className="absolute left-0 right-0 h-16 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent blur-[2px]"
+                  animate={{ top: ["-20%", "120%"] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
                 />
               </motion.div>
 
-              {/* JSON/Data Output Visual */}
+              {/* JSON/Data Output Visual - Floating 3D */}
               <motion.div
-                className="absolute left-6 top-36 w-64 rounded-xl border border-cyan-500/30 bg-[#060814]/90 p-5 shadow-2xl backdrop-blur-xl"
-                animate={{ y: [0, 10, 0], rotateY: [0, 5, 0] }}
-                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                style={{ transformStyle: "preserve-3d" }}
+                className="absolute left-0 top-40 w-80 rounded-2xl border border-fuchsia-500/30 bg-[#060814]/95 p-6 shadow-[0_0_50px_rgba(192,132,252,0.15)] backdrop-blur-xl z-30"
+                animate={{ 
+                  y: [0, 20, 0], 
+                  rotateY: [5, -5, 5],
+                  rotateX: [-5, 5, -5],
+                  rotateZ: [2, -2, 2]
+                }}
+                transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+                style={{ transformStyle: "preserve-3d", transformOrigin: "center" }}
               >
-                <div className="mb-2 text-[10px] font-mono text-cyan-400">PETARON EXTRACTED JSON</div>
-                <div className="font-mono text-[11px] leading-relaxed text-white/70">
-                  <span className="text-fuchsia-300">"shipper"</span>: <span className="text-green-300">"Acme Corp"</span>,<br/>
-                  <span className="text-fuchsia-300">"origin"</span>: <span className="text-green-300">"Rotterdam"</span>,<br/>
-                  <span className="text-fuchsia-300">"destination"</span>: <span className="text-green-300">"Hamburg"</span>,<br/>
-                  <span className="text-fuchsia-300">"weight_kg"</span>: <span className="text-yellow-300">24500</span>,<br/>
-                  <span className="text-fuchsia-300">"hazardous"</span>: <span className="text-blue-300">false</span>,<br/>
-                  <span className="text-fuchsia-300">"reference"</span>: <span className="text-green-300">"FW-203-A"</span>
+                <div className="mb-3 text-xs font-bold tracking-widest text-fuchsia-400 flex items-center gap-2">
+                  <FileJson size={14} /> EXTRACTED JSON
                 </div>
+                <div className="font-mono text-sm leading-relaxed text-white/80">
+                  <span className="text-fuchsia-300">"shipper"</span>: <span className="text-cyan-300">"Acme Corp"</span>,<br/>
+                  <span className="text-fuchsia-300">"origin"</span>: <span className="text-cyan-300">"Rotterdam"</span>,<br/>
+                  <span className="text-fuchsia-300">"destination"</span>: <span className="text-cyan-300">"Hamburg"</span>,<br/>
+                  <span className="text-fuchsia-300">"weight"</span>: <span className="text-yellow-300">24500</span>,<br/>
+                  <span className="text-fuchsia-300">"hazardous"</span>: <span className="text-violet-300">false</span>,<br/>
+                  <span className="text-fuchsia-300">"reference"</span>: <span className="text-cyan-300">"FW-203-A"</span>
+                </div>
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-fuchsia-500/10 to-transparent pointer-events-none rounded-2xl" />
               </motion.div>
 
-              {/* Connecting line */}
-              <svg className="absolute inset-0 h-full w-full pointer-events-none" style={{ zIndex: -1 }}>
+              {/* Glowing Connecting lines */}
+              <svg className="absolute inset-0 h-full w-full pointer-events-none z-10 overflow-visible">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#c084fc" stopOpacity="0.8" />
+                  </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
                 <motion.path
-                  d="M 120 180 C 180 180 200 120 280 120"
+                  d="M 160 260 C 200 260 240 180 320 180"
                   fill="transparent"
-                  stroke="rgba(34, 211, 238, 0.3)"
-                  strokeWidth="2"
-                  strokeDasharray="4 4"
-                  animate={{ strokeDashoffset: [0, -20] }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  stroke="url(#lineGrad)"
+                  strokeWidth="3"
+                  strokeDasharray="8 8"
+                  filter="url(#glow)"
+                  animate={{ strokeDashoffset: [0, -40] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                 />
               </svg>
             </div>
           </div>
         </section>
 
-        <section className="pb-12">
-          <p className="text-sm text-white/60">Integrates with your existing systems</p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-3 md:grid-cols-5">
-            {integrations.map((item) => (
-              <div
+        <section className="pb-24 text-center relative z-10">
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-8"
+          >
+            TRUSTED INTEGRATIONS
+          </motion.p>
+          <div className="flex flex-wrap justify-center gap-6">
+            {integrations.map((item, i) => (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
                 key={item.name}
-                className="logo-pill justify-center border-white/15 bg-white/[0.06] py-4 grayscale hover:grayscale-0 transition-all duration-300"
+                className="logo-pill flex items-center justify-center border border-white/10 bg-white/[0.03] px-8 py-4 grayscale hover:grayscale-0 hover:border-white/20 transition-all duration-500 rounded-2xl backdrop-blur-sm"
               >
                 <img 
                   src={`https://logo.clearbit.com/${item.domain}`} 
                   alt={item.name} 
-                  className="h-6 object-contain brightness-0 invert opacity-70 hover:opacity-100 hover:brightness-100 hover:invert-0 transition-all duration-300" 
+                  className="h-7 object-contain brightness-0 invert opacity-60 hover:opacity-100 hover:brightness-100 hover:invert-0 transition-all duration-500" 
                   onError={(e) => {
-                    // Fallback to text if logo fails to load
                     e.currentTarget.style.display = 'none';
                     const span = document.createElement('span');
                     span.innerText = item.name;
-                    span.className = "text-white/70 font-semibold";
+                    span.className = "text-white/70 font-semibold text-lg tracking-wide";
                     e.currentTarget.parentElement?.appendChild(span);
                   }}
                 />
-              </div>
+              </motion.div>
             ))}
           </div>
         </section>
 
-        <section className="mt-16">
-          <SpotlightCard className="p-7 md:p-8">
-            <p className="text-xs uppercase tracking-[0.18em] text-white/55">The Problem</p>
-            <div className="mt-4 space-y-4 text-sm leading-relaxed text-white/78 md:text-base">
-              <p>
-                Every morning, the same mountain of order emails lands in your inbox.
-                PDFs, Excel sheets, free-text emails. Every client sends orders in
-                their own format. Your team opens each one, reads it, and types the
-                details into your TMS. 5 to 15 minutes per order. Every single time.
+        <section id="platform" className="mt-16 mb-32 relative z-10 perspective-1000">
+          <div className="text-center mb-16">
+            <motion.div
+               initial={{ opacity: 0, scale: 0.8 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               viewport={{ once: true }}
+            >
+              <p className="inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-5 py-2 text-xs font-bold uppercase tracking-widest text-fuchsia-300">
+                Core Dashboard
               </p>
-              <p>
-                One mistyped postcode. One wrong weight unit. One missed reference.
-                In logistics, a single error means a rebooked shipment, a missed SLA,
-                and an angry client.
+            </motion.div>
+            <h3 className="mt-6 text-4xl font-serif font-normal tracking-tight text-white md:text-5xl">
+              Intelligence you can see.
+            </h3>
+            <p className="mt-6 text-white/60 max-w-2xl mx-auto text-lg">
+              Full visibility of your order pipeline. Built to look exactly like the tools your team already uses, but powered by autonomous agents.
+            </p>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, type: "spring", bounce: 0.2 }}
+            className="relative flex h-[400px] w-full items-center justify-center mt-10 md:h-[650px]"
+            style={{ perspective: "1200px" }}
+          >
+            {/* Dashboard Glow behind */}
+            <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 to-fuchsia-500/10 blur-[100px] -z-10 rounded-full" />
+            
+            {/* Floating Board 1 (Back) */}
+            <motion.div
+              className="absolute w-[85%] max-w-5xl h-[280px] md:h-[480px] rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[0_0_80px_rgba(192,132,252,0.15)] flex items-center justify-center overflow-hidden"
+              initial={{ x: "-5%", rotateX: 20, rotateY: 25, rotateZ: -5, y: -15 }}
+              animate={{ y: 15 }}
+              transition={{ duration: 4, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 to-transparent pointer-events-none" />
+              <p className="text-white/30 font-mono text-xs md:text-sm uppercase tracking-[0.3em] font-medium border border-white/10 rounded-lg px-6 py-3 bg-white/5">
+                Screen Placeholder 1
               </p>
-              <p>
-                And then there is the impossible math of growth: every new client
-                means more orders, which means more staff doing the same repetitive
-                work. Your best people spend their days copying data instead of
-                managing relationships. The cost? €3 per order in labor alone.
-                Before the mistakes.
+            </motion.div>
+
+            {/* Floating Board 2 (Front) */}
+            <motion.div
+              className="absolute w-[85%] max-w-5xl h-[280px] md:h-[480px] rounded-3xl border border-white/20 bg-[#060814]/80 backdrop-blur-2xl shadow-[0_30px_100px_rgba(34,211,238,0.2)] flex items-center justify-center overflow-hidden"
+              initial={{ x: "15%", rotateX: 20, rotateY: 25, rotateZ: -5, y: 15 }}
+              animate={{ y: -15 }}
+              transition={{ duration: 4.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-400/10 via-transparent to-transparent pointer-events-none" />
+              <p className="text-white/40 font-mono text-xs md:text-sm uppercase tracking-[0.3em] font-medium border border-white/20 rounded-lg px-6 py-3 bg-white/5 shadow-xl">
+                Screen Placeholder 2
               </p>
-              <p className="text-white">
-                Your best people deserve better than copy-paste. PetaRon gives your
-                team back the time to build client relationships and grow the
-                business, not fix typos.
-              </p>
-            </div>
-          </SpotlightCard>
+            </motion.div>
+          </motion.div>
         </section>
 
-        <section id="how-it-works" className="pb-16 pt-16 md:pb-20 md:pt-20">
-          <p className="text-xs uppercase tracking-[0.18em] text-white/55">How It Works</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight">
-            Three steps. No complexity.
-          </h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+      </div>
+
+      <section id="process-flow" className="py-32 relative z-10 border-y border-white/5 bg-[#05060A]">
+        <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
+          <div className="text-center mb-16">
+            <p className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-5 py-2 text-xs font-bold uppercase tracking-widest text-cyan-300">
+              Process Flow
+            </p>
+            <h3 className="mt-6 text-4xl font-serif font-normal tracking-tight text-white md:text-5xl">
+              From inbox to system entry
+            </h3>
+            <p className="mt-4 text-white/60 max-w-3xl mx-auto text-lg">
+              A clear, human-in-the-loop pipeline from incoming emails to validated structured records in your system.
+            </p>
+          </div>
+
+          <div className="relative mx-auto max-w-7xl">
+            <div className="grid gap-5 md:grid-cols-4">
+              {[
+                {
+                  title: "Email Received",
+                  description: "Orders arrive from inboxes, attachments, and portal messages.",
+                  Icon: Mail,
+                  color: "text-blue-300 border-blue-400/30 bg-blue-400/10",
+                },
+                {
+                  title: "Order Classified",
+                  description: "AI identifies order intent, shipper context, and required fields.",
+                  Icon: BrainCircuit,
+                  color: "text-fuchsia-300 border-fuchsia-400/30 bg-fuchsia-400/10",
+                },
+                {
+                  title: "Processed",
+                  description: "Data is extracted, normalized, and validated with confidence checks.",
+                  Icon: ScanText,
+                  color: "text-violet-300 border-violet-400/30 bg-violet-400/10",
+                },
+                {
+                  title: "Entered in System",
+                  description: "Approved data is pushed as a clean structured entry to your TMS.",
+                  Icon: Database,
+                  color: "text-emerald-300 border-emerald-400/30 bg-emerald-400/10",
+                },
+              ].map(({ title, description, Icon, color }, index, arr) => (
+                <div key={title} className="relative">
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{ duration: 0.5, delay: index * 0.12 }}
+                    className="h-full w-full rounded-2xl border border-white/10 bg-[#0c1120]/80 p-5"
+                  >
+                    <div className={`mb-4 inline-flex rounded-xl border p-3 ${color}`}>
+                      <Icon size={20} />
+                    </div>
+                    <h4 className="text-lg font-semibold text-white">{title}</h4>
+                    <p className="mt-3 text-sm leading-relaxed text-white/65">{description}</p>
+                  </motion.div>
+
+                  {index < arr.length - 1 && (
+                    <div className="pointer-events-none absolute -right-5 top-1/2 z-0 hidden h-px w-5 -translate-y-1/2 overflow-hidden bg-white/10 md:flex">
+                      <motion.div
+                        className="h-px w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+                        animate={{ x: ["-100%", "100%"] }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "linear",
+                          delay: index * 0.2,
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col px-6 md:px-10 z-10">
+        <section id="how-it-works" className="py-32 relative z-10">
+          <div className="grid gap-6 md:grid-cols-3">
             {[
               [
-                "Connect",
-                "We connect PetaRon's agentic pipeline to your incoming order channels. Email forwarding, document upload, or direct API. No IT team needed on your side.",
+                "Connect in Minutes",
+                "Forward your shared inbox or connect via API. No IT team needed, no deep integration required.",
                 Link,
-                "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/20"
+                "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/30 shadow-[0_0_30px_rgba(232,121,249,0.15)]"
               ],
               [
-                "Read & Capture",
-                "Our AI reads every format. No configuration, no setup, no maintenance. It understands the meaning of what is written, not just the layout.",
+                "Agentic Capture",
+                "Our AI reads PDFs, complex Excel sheets, and free-text emails contextually. Zero templates required.",
                 ScanText,
-                "text-violet-400 bg-violet-400/10 border-violet-400/20"
+                "text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_30px_rgba(34,211,238,0.15)]"
               ],
               [
                 "Review & Confirm",
-                "Your team sees a clean, structured summary ready to approve. One click, and it flows into your system. Exceptions get flagged automatically.",
+                "Operators review a structured, clean summary. One click validates and pushes straight to your TMS.",
                 CheckCircle2,
-                "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
+                "text-emerald-400 bg-emerald-400/10 border-emerald-400/30 shadow-[0_0_30px_rgba(52,211,153,0.15)]"
               ],
             ].map(([title, description, Icon, colorClass], index) => (
               <SpotlightCard key={title as string} className="h-full">
                 <motion.div
-                  className="p-2"
-                  initial={{ opacity: 0, y: 20 }}
+                  className="p-4"
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  transition={{ delay: index * 0.2, duration: 0.6, type: "spring" }}
                 >
-                  <div className={`mb-4 inline-flex rounded-xl border p-2 ${colorClass as string}`}>
-                    {/* @ts-ignore */}
-                    <Icon size={20} />
+                  <div className={`mb-6 inline-flex rounded-2xl border p-4 ${colorClass as string}`}>
+                    {/* @ts-expect-error */}
+                    <Icon size={28} />
                   </div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/55">{title as string}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-white/78">{description as string}</p>
+                  <h4 className="text-xl font-bold tracking-tight text-white mb-3">{title as string}</h4>
+                  <p className="text-base leading-relaxed text-white/60">{description as string}</p>
                 </motion.div>
               </SpotlightCard>
             ))}
           </div>
-          <p className="mt-5 inline-flex rounded-full border border-cyan-300/40 bg-cyan-300/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-cyan-100">
-            Human-in-the-loop
-          </p>
-
-          <div className="mt-16 relative">
-            <div className="text-center mb-10">
-              <p className="inline-flex items-center gap-2 rounded-full border border-fuchsia-300/40 bg-fuchsia-300/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-fuchsia-100">
-                <Network size={14} />
-                Agentic Pipeline
-              </p>
-              <h3 className="mt-4 text-2xl font-semibold tracking-tight text-white md:text-3xl">
-                How data flows through PetaRon.
-              </h3>
-            </div>
-
-            <motion.div
-              className="rounded-2xl border border-white/15 bg-[#0b0e1a]/80 shadow-2xl backdrop-blur-xl overflow-hidden max-w-5xl mx-auto p-8 md:p-12 relative"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.7 }}
-            >
-              <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-x-6 relative z-10">
-                {[
-                  { label: "Order Received", icon: Mail, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-400/20" },
-                  { label: "Classified", icon: BrainCircuit, color: "text-fuchsia-400", bg: "bg-fuchsia-400/10", border: "border-fuchsia-400/20" },
-                  { label: "Processing", icon: ScanText, color: "text-violet-400", bg: "bg-violet-400/10", border: "border-violet-400/20" },
-                  { label: "To Review", icon: UserCheck, color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-400/20" },
-                  { label: "Complete", icon: Database, color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/20" },
-                ].map((step, index, arr) => (
-                  <Fragment key={step.label}>
-                    <div className="flex flex-col items-center group">
-                      <motion.div 
-                        className={`h-16 w-16 rounded-2xl border flex items-center justify-center mb-4 transition-transform group-hover:scale-110 ${step.bg} ${step.border} ${step.color}`}
-                        initial={{ scale: 0, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.15 + 0.2, type: "spring" }}
-                      >
-                        {/* @ts-ignore */}
-                        <step.icon size={28} />
-                      </motion.div>
-                      
-                      <motion.p 
-                        className="text-sm font-medium text-white/80 whitespace-nowrap"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.15 + 0.4 }}
-                      >
-                        {step.label}
-                      </motion.p>
-                    </div>
-                    {index < arr.length - 1 && (
-                      <div className="hidden md:flex shrink-0 w-14 h-16 items-center justify-center">
-                        <div className="relative w-full h-px bg-white/10 overflow-hidden">
-                          <motion.div
-                            className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent"
-                            animate={{ x: ["-100%", "200%"] }}
-                            transition={{ duration: 2.2, repeat: Infinity, ease: "linear", delay: index * 0.3 }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                    {index < arr.length - 1 && (
-                      <div className="md:hidden flex shrink-0 w-16 h-8 items-center justify-center">
-                        <div className="relative w-px h-full bg-white/10 overflow-hidden">
-                          <motion.div
-                            className="absolute top-0 left-0 h-8 w-full bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent"
-                            animate={{ y: ["-100%", "200%"] }}
-                            transition={{ duration: 2.2, repeat: Infinity, ease: "linear", delay: index * 0.3 }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </Fragment>
-                ))}
-              </div>
-            </motion.div>
-          </div>
         </section>
+      </div>
 
-        <section id="roi" className="pb-16 md:pb-20">
-          <div className="glass-panel grid gap-7 p-7 md:grid-cols-2 md:p-8">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-white/55">ROI Calculator</p>
-              <h3 className="mt-2 text-2xl font-semibold">See your savings in real time</h3>
-              <div className="mt-8 space-y-6">
+      <section id="roi" className="py-32 relative z-10 border-y border-white/5 bg-[#080B18]">
+        <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
+          <div className="glass-panel grid gap-10 p-8 md:grid-cols-2 md:p-12 relative overflow-hidden bg-[#060814]/40">
+            {/* Background glowing blob */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
+            
+            <div className="relative z-10">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">ROI Calculator</p>
+              <h3 className="mt-3 text-4xl font-serif font-normal tracking-tight">Calculate your savings</h3>
+              <div className="mt-10 space-y-8">
                 <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-xs uppercase tracking-wider text-white/55">Orders per day</span>
-                    <span className="font-semibold text-white">{ordersPerDay}</span>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm font-medium uppercase tracking-widest text-white/60">Orders per day</span>
+                    <span className="text-xl font-bold text-white bg-white/10 px-4 py-1 rounded-lg border border-white/10">{ordersPerDay}</span>
                   </div>
                   <input
                     type="range"
@@ -486,433 +614,152 @@ const Petaron = () => {
                     step={10}
                     value={ordersPerDay}
                     onChange={(event) => setOrdersPerDay(Number(event.target.value))}
-                    className="w-full accent-cyan-300"
+                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-300"
                   />
                 </div>
                 
                 <div>
-                  <div className="mb-3">
-                    <span className="text-xs uppercase tracking-wider text-white/55">Minutes per order today</span>
+                  <div className="mb-4">
+                    <span className="text-sm font-medium uppercase tracking-widest text-white/60">Minutes per order today</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     {[5, 10, 15, 20].map((val) => (
                       <button
                         key={val}
                         onClick={() => setMinutesPerOrder(val)}
-                        className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition-all ${
+                        className={`flex-1 rounded-xl py-3 text-base font-bold transition-all border ${
                           minutesPerOrder === val
-                            ? "bg-cyan-400 text-[#05060d] shadow-lg shadow-cyan-400/20"
-                            : "bg-white/5 text-white/70 hover:bg-white/10"
+                            ? "bg-cyan-400 text-[#05060d] border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.3)] scale-105"
+                            : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
                         }`}
                       >
-                        {val} min
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="mb-3">
-                    <span className="text-xs uppercase tracking-wider text-white/55">Staff hourly cost</span>
-                  </div>
-                  <div className="flex gap-2">
-                    {[25, 35, 50].map((val) => (
-                      <button
-                        key={val}
-                        onClick={() => setHourlyCost(val)}
-                        className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition-all ${
-                          hourlyCost === val
-                            ? "bg-cyan-400 text-[#05060d] shadow-lg shadow-cyan-400/20"
-                            : "bg-white/5 text-white/70 hover:bg-white/10"
-                        }`}
-                      >
-                        €{val}
+                        {val}m
                       </button>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="rounded-3xl border border-white/15 bg-[#0b0e1a]/90 p-6">
-              <p className="text-sm text-white/65">What you spend today per month</p>
-              <p className="mt-1 text-4xl font-semibold tracking-tight flex items-center">
-                €<AnimatedNumber value={monthlyCost} />
-              </p>
-              <p className="mt-6 text-sm text-white/65">Per year on manual entry</p>
-              <p className="mt-1 text-3xl font-semibold flex items-center">
+            
+            <div className="rounded-3xl border border-white/10 bg-[#0b0e1a]/80 p-8 flex flex-col justify-center relative overflow-hidden shadow-2xl backdrop-blur-md">
+               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-fuchsia-500/20 blur-[50px] rounded-full" />
+              <p className="text-sm font-medium uppercase tracking-widest text-white/60">Estimated yearly manual cost</p>
+              <p className="mt-2 text-6xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-300 flex items-center">
                 €<AnimatedNumber value={yearlyCost} />
               </p>
-              <p className="mt-6 text-sm text-white/65">Staff hours spent on data entry</p>
-              <p className="mt-1 text-3xl font-semibold text-cyan-200 flex items-center gap-2">
-                <AnimatedNumber value={monthlyHours} /> hrs/month
+              <div className="w-full h-px bg-gradient-to-r from-white/20 to-transparent my-8" />
+              <p className="text-lg text-white/80 font-light leading-relaxed">
+                PetaRon typically reduces this operational cost by over <span className="font-bold text-emerald-400">80%</span>, paying for itself within the very first month.
               </p>
-              <p className="mt-6 text-sm text-white/72">
-                Most customers reduce this cost by over 80%. Pricing is based on your volume.
-              </p>
-              <a
-                href="#contact-form"
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#070814]"
-              >
-                Book a 15-minute demo
-                <MoveRight size={15} />
-              </a>
             </div>
-          </div>
-        </section>
-
-        <section id="results" className="pb-16 md:pb-20">
-          <div className="glass-panel p-7 md:p-8">
-            <p className="text-xs uppercase tracking-[0.18em] text-white/55">Results</p>
-            <h3 className="mt-2 text-2xl font-semibold">Proven in production</h3>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-              {[
-                ["1,000+", "Orders processed in latest pilot"],
-                ["47", "Different shipper formats handled"],
-                ["96.3%", "First-pass accuracy"],
-                ["40s", "Average review time per order"],
-              ].map(([num, label], i) => (
-                <SpotlightCard key={num}>
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.8 }} 
-                    whileInView={{ opacity: 1, scale: 1 }} 
-                    viewport={{ once: true }} 
-                    transition={{ delay: i * 0.1, duration: 0.4 }}
-                  >
-                    <p className="text-3xl font-semibold bg-gradient-to-r from-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">{num}</p>
-                    <p className="mt-2 text-sm text-white/70">{label}</p>
-                  </motion.div>
-                </SpotlightCard>
-              ))}
-            </div>
-            <blockquote className="mt-6 rounded-2xl border border-white/15 bg-white/5 p-5 text-sm leading-relaxed text-white/80">
-              "We went from 12 minutes per order to approving PetaRon's summary in 40
-              seconds. The team now spends their time on client relationships instead
-              of data entry."
-              <footer className="mt-3 text-xs uppercase tracking-[0.18em] text-white/55">
-                MH • Operations Manager • European 3PL, 200+ orders/day
-              </footer>
-            </blockquote>
-          </div>
-        </section>
-
-        <section className="pb-16 md:pb-20">
-          <div className="glass-panel p-7 md:p-8">
-            <p className="text-xs uppercase tracking-[0.18em] text-white/55">Why Switch</p>
-            <h3 className="mt-2 text-2xl font-semibold">Intelligence vs. rigidity</h3>
-            <p className="mt-3 text-sm text-white/70">
-              Old tools break when a client changes their document layout. PetaRon
-              reads meaning, not fixed positions, like your best operator would.
-            </p>
-            <div className="mt-5 overflow-hidden rounded-2xl border border-white/15">
-              <div className="grid grid-cols-3 bg-white/8 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-white/70">
-                <span>Category</span>
-                <span>Traditional</span>
-                <span>PetaRon</span>
-              </div>
-              {[
-                ["New client format", "Hours of configuration", "Works immediately"],
-                ["Maintenance", "Constant updates needed", "Zero maintenance"],
-                ["Accuracy", "Degrades as formats change", "Consistent across all formats"],
-                ["Getting started", "Weeks of setup", "Demo in 2 days, POC in 5"],
-                ["Human oversight", "Manual checking of every field", "Structured review, one-click approve"],
-              ].map(([label, oldValue, newValue]) => (
-                <div
-                  key={label}
-                  className="grid grid-cols-3 border-t border-white/10 px-4 py-3 text-sm"
-                >
-                  <span className="text-white/65">{label}</span>
-                  <span className="text-white/82">{oldValue}</span>
-                  <span className="font-medium text-cyan-200">{newValue}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="trust-security" className="pb-16 md:pb-20">
-          <div className="glass-panel p-7 md:p-8">
-            <p className="text-xs uppercase tracking-[0.18em] text-white/55">Trust & Security</p>
-            <h3 className="mt-2 text-2xl font-semibold">Built for enterprise logistics</h3>
-            <div className="mt-5 grid gap-3 md:grid-cols-2">
-              {[
-                ["EU-hosted", "All data stays in Europe. Full GDPR compliance."],
-                ["Encrypted", "End-to-end encryption at rest and in transit."],
-                ["Role-based access", "Fine-grained permissions for every team member."],
-                ["Audit trail", "Complete history of every order and action."],
-                ["Human review", "Every order is checked by your team before it is processed."],
-                ["ISO 27001", "Certification in progress. Security by design."],
-              ].map(([title, text], i) => (
-                <SpotlightCard key={title}>
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.05, duration: 0.4 }}
-                  >
-                    <p className="font-semibold text-cyan-50">{title}</p>
-                    <p className="mt-1 text-sm text-white/72">{text}</p>
-                  </motion.div>
-                </SpotlightCard>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="pb-16 md:pb-20">
-          <motion.div
-            className="logo-frame aurora-frame p-7 md:p-8"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="text-xs uppercase tracking-[0.18em] text-white/55">
-              Ecosystem
-            </p>
-            <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">
-              Built with the stack your team already trusts.
-            </h3>
-            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/70">
-              AI frameworks, workflow automation, cloud infrastructure, and
-              logistics-native systems. Everything is designed to plug into your
-              operation without friction.
-            </p>
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              {aiStack.map((tool) => (
-                <motion.div
-                  key={tool.name}
-                  className="logo-pill"
-                  whileHover={{ y: -4, scale: 1.03 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                >
-                  <img
-                    src={`https://logo.clearbit.com/${tool.domain}`}
-                    alt={tool.name}
-                    className="h-4 w-4 object-contain brightness-0 invert"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      const span = document.createElement('span');
-                      span.className = "logo-dot";
-                      e.currentTarget.parentElement?.prepend(span);
-                    }}
-                  />
-                  <span>{tool.name}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="marquee mt-6">
-              <div className="marquee-track flex items-center">
-                {infraStack.concat(infraStack).map((tool, index) => (
-                  <div key={`${tool.name}-${index}`} className="flex items-center gap-2 mx-8">
-                    <img
-                      src={`https://logo.clearbit.com/${tool.domain}`}
-                      alt={tool.name}
-                      className="h-5 w-5 object-contain brightness-0 invert opacity-60"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                    />
-                    <span className="font-semibold">{tool.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="marquee marquee-reverse mt-3">
-              <div className="marquee-track flex items-center">
-                {integrations.concat(integrations).map((tool, index) => (
-                  <div key={`${tool.name}-rail-${index}`} className="flex items-center gap-2 mx-8">
-                    <img
-                      src={`https://logo.clearbit.com/${tool.domain}`}
-                      alt={tool.name}
-                      className="h-5 w-5 object-contain brightness-0 invert opacity-60"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                    />
-                    <span className="font-semibold">{tool.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
-        <section className="pb-16 md:pb-20">
-          <div className="glass-panel p-7 md:p-8">
-            <p className="text-xs uppercase tracking-[0.18em] text-white/55">FAQ</p>
-            <h3 className="mt-2 text-2xl font-semibold">Common questions</h3>
-            <div className="mt-5 space-y-2">
-              {faqQuestions.map((item) => (
-                <div
-                  key={item}
-                  className="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/85"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="contact-form" className="pb-20 md:pb-24">
-          <div className="mx-auto max-w-4xl relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-fuchsia-500/20 via-cyan-500/20 to-violet-500/20 blur-3xl rounded-[3rem] -z-10" />
-            <div className="glass-panel p-8 md:p-12 relative z-10 overflow-hidden">
-              <div className="absolute top-0 right-0 p-32 bg-cyan-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
-              <div className="absolute bottom-0 left-0 p-32 bg-fuchsia-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
-              
-              <div className="text-center relative z-20">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
-                  Take Action
-                </p>
-                <h3 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                  Ready to stop <span className="text-white/40 line-through decoration-fuchsia-500 decoration-4">typing orders?</span>
-                </h3>
-                <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-white/70">
-                  No commitment. 15-minute call. We&apos;ll show you PetaRon with your
-                  actual data and map out your ROI.
-                </p>
-              </div>
-
-              <form className="mt-12 space-y-6 relative z-20" onSubmit={handleSubmit}>
-              <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-left text-xs uppercase tracking-[0.14em] text-white/55">
-                  Name
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    placeholder="Your name"
-                    className="mt-2 w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/45 focus:border-fuchsia-300 focus:outline-none"
-                  />
-                </label>
-                <label className="block text-left text-xs uppercase tracking-[0.14em] text-white/55">
-                  Work email
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="you@company.com"
-                    className="mt-2 w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/45 focus:border-violet-300 focus:outline-none"
-                  />
-                </label>
-              </div>
-              <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-left text-xs uppercase tracking-[0.14em] text-white/55">
-                  Company
-                  <input
-                    type="text"
-                    value={company}
-                    onChange={(event) => setCompany(event.target.value)}
-                    placeholder="Company name"
-                    className="mt-2 w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/45 focus:border-cyan-300 focus:outline-none"
-                  />
-                </label>
-                <label className="block text-left text-xs uppercase tracking-[0.14em] text-white/55">
-                  Daily order volume
-                  <select
-                    value={volume}
-                    onChange={(event) => setVolume(event.target.value)}
-                    className="mt-2 w-full rounded-xl border border-white/20 bg-[#0e1120] px-4 py-3 text-sm text-white focus:border-fuchsia-300 focus:outline-none"
-                  >
-                    <option>Select range</option>
-                    <option>1-50 orders/day</option>
-                    <option>50-150 orders/day</option>
-                    <option>150-300 orders/day</option>
-                    <option>300+ orders/day</option>
-                  </select>
-                </label>
-              </div>
-
-              <div>
-                <p className="block text-left text-xs uppercase tracking-[0.14em] text-white/55 mb-3">
-                  How do you currently receive orders?
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { id: "Email", desc: "Manual processing" },
-                    { id: "EDI", desc: "Electronic data interchange" },
-                    { id: "Portal / web form", desc: "Customer self-service" },
-                    { id: "Phone / WhatsApp", desc: "Direct contact" },
-                  ].map((method) => {
-                    const isSelected = intake.includes(method.id);
-                    return (
-                      <button
-                        key={method.id}
-                        type="button"
-                        onClick={() => toggleIntake(method.id)}
-                        className={`flex flex-col items-start rounded-xl border p-4 text-left transition-all ${
-                          isSelected
-                            ? "border-cyan-400 bg-cyan-400/10"
-                            : "border-white/10 bg-[#0e1120] hover:bg-white/5 hover:border-white/20"
-                        }`}
-                      >
-                        <span className={`text-sm font-semibold ${isSelected ? "text-cyan-100" : "text-white"}`}>
-                          {method.id}
-                        </span>
-                        <span className={`mt-1 text-xs ${isSelected ? "text-cyan-200/70" : "text-white/45"}`}>
-                          {method.desc}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <textarea
-                value={notes}
-                onChange={(event) => setNotes(event.target.value)}
-                rows={3}
-                placeholder="Other: describe your order intake..."
-                className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/45 focus:border-cyan-300 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="group relative inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300 px-5 py-4 text-base font-semibold text-[#05060d] transition-all hover:scale-[1.02] active:scale-95 overflow-hidden shadow-[0_0_40px_rgba(167,139,250,0.4)]"
-              >
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full animate-shiny-sweep" />
-                <span className="relative flex items-center gap-2">
-                  Book Your Free Demo
-                  <Send size={18} className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-                </span>
-              </button>
-            </form>
           </div>
         </div>
       </section>
 
-        <footer className="glass-panel space-y-8 px-7 py-8">
-          <div className="grid gap-5 md:grid-cols-4">
-            <div>
-              <p className="text-xl font-semibold">PetaRon.ai</p>
-              <a href="#contact-form" className="mt-2 inline-block text-sm text-white/70">
-                Contact us
-              </a>
-            </div>
-            <div className="space-y-2 text-sm text-white/70">
-              <p className="font-medium text-white">Product</p>
-              <a href="#how-it-works" className="block">How It Works</a>
-              <a href="#results" className="block">Results</a>
-              <a href="#roi" className="block">ROI Calculator</a>
-              <a href="#contact-form" className="block">FAQ</a>
-            </div>
-            <div className="space-y-2 text-sm text-white/70">
-              <p className="font-medium text-white">Company</p>
-              <span className="block">About</span>
-              <span className="block">Careers</span>
-              <span className="block">LinkedIn</span>
-            </div>
-            <div className="space-y-2 text-sm text-white/70">
-              <p className="font-medium text-white">Legal</p>
-              <span className="block">Privacy Policy (coming soon)</span>
-              <span className="block">Terms of Service (coming soon)</span>
-              <span className="block">GDPR (coming soon)</span>
+      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col px-6 pb-20 md:px-10 z-10">
+        <section id="booking" className="py-32 relative z-10">
+          <div className="mx-auto max-w-5xl relative">
+            <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 via-violet-500/20 to-fuchsia-500/20 blur-3xl rounded-[3rem] -z-10 opacity-70" />
+            <div className="glass-panel p-8 md:p-12 relative z-10 overflow-hidden border border-white/20">
+              <div className="absolute top-0 right-0 p-32 bg-cyan-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
+              <div className="absolute bottom-0 left-0 p-32 bg-fuchsia-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
+              
+              <div className="text-center mb-12">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
+                  Take Action
+                </p>
+                <h3 className="mt-4 text-4xl font-serif font-normal tracking-tight text-white md:text-5xl">
+                  Ready for the future?
+                </h3>
+                <p className="mx-auto mt-4 max-w-lg text-lg text-white/60 font-light">
+                  Book a 15-minute call. We'll show you PetaRon with your actual data and map out your ROI.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-12 items-start">
+                <div className="bg-[#0b0e1a]/80 p-6 rounded-2xl border border-white/10 flex flex-col items-center shadow-xl backdrop-blur-md">
+                  <p className="text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 text-cyan-400">
+                    <CalendarIcon size={18} />
+                    Select a Date
+                  </p>
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    className="rounded-xl border border-white/5 bg-[#06070c]/50 text-white shadow-inner p-4"
+                  />
+                </div>
+
+                <form className="space-y-6" onSubmit={handleBookingSubmit}>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Jane Doe"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-4 text-base text-white placeholder:text-white/20 focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-cyan-400/10 transition-all shadow-inner"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Work Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="jane@logistics.com"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-4 text-base text-white placeholder:text-white/20 focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-cyan-400/10 transition-all shadow-inner"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-white/60 mb-2">
+                      <span className="flex items-center gap-2">
+                        <Clock size={16} className="text-fuchsia-400" /> Preferred Time
+                      </span>
+                    </label>
+                    <select
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-[#0b0e1a] px-5 py-4 text-base text-white focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-400/10 shadow-inner"
+                    >
+                      <option value="09:00">09:00 AM</option>
+                      <option value="10:00">10:00 AM</option>
+                      <option value="11:00">11:00 AM</option>
+                      <option value="13:00">01:00 PM</option>
+                      <option value="15:00">03:00 PM</option>
+                    </select>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="group w-full mt-2 flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 px-5 py-4 text-base font-bold text-[#05060d] transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_30px_rgba(34,211,238,0.4)]"
+                  >
+                    Confirm Booking
+                    <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 text-xs text-white/60">
-            <span>© 2026 PetaRon AI. All rights reserved.</span>
-            <span>EU-hosted • GDPR compliant</span>
+        </section>
+
+        <footer className="border-t border-white/10 pt-10 pb-6 flex flex-col md:flex-row items-center justify-between gap-6 z-10">
+          <div className="flex items-center gap-3">
+             <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-cyan-400 to-fuchsia-500 flex items-center justify-center">
+              <span className="font-bold text-black text-[10px] tracking-tighter">PR</span>
+            </div>
+            <p className="text-lg font-serif font-normal italic tracking-wider text-white/90">PetaRon.ai</p>
+          </div>
+          <div className="flex gap-6 text-xs font-medium tracking-widest uppercase text-white/40">
+            <span>© 2026 PetaRon AI.</span>
+            <span className="hidden md:inline">•</span>
+            <span className="text-emerald-400/70">EU-hosted</span>
+            <span className="hidden md:inline">•</span>
+            <span className="text-cyan-400/70">GDPR compliant</span>
           </div>
         </footer>
       </div>
