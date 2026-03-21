@@ -56,7 +56,7 @@ export const InteractiveHoverButton = ({
     <Tag
       {...linkProps}
       onClick={onClick}
-      className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-ac-1/50 bg-ac-1 px-7 py-3.5 text-[13px] font-bold text-[#05060d] shadow-[0_0_24px_rgb(var(--ac-1)/0.35)] transition-all hover:shadow-[0_0_34px_rgb(var(--ac-1)/0.55)]"
+      className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-ac-1/50 bg-ac-1 px-7 py-3.5 text-[13px] font-bold text-white shadow-[0_0_24px_rgb(var(--ac-1)/0.35)] transition-all hover:shadow-[0_0_34px_rgb(var(--ac-1)/0.55)]"
       {...rest}
     >
       <span className="absolute left-[20%] top-[40%] h-2 w-2 scale-0 rounded-full bg-ac-3 transition-all duration-500 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.8]" />

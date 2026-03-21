@@ -24,7 +24,7 @@ const steps = [
     title: "Review",
     description: "Operators approve ready drafts in seconds and push directly to your TMS.",
     Icon: CheckCircle2,
-    colorClass: "text-ac-pos",
+    colorClass: "text-ac-3",
     chips: ["Approval", "Exceptions", "TMS ready"],
   },
 ];

@@ -52,7 +52,7 @@ export const PlatformPreviewSection = () => {
                 onClick={() => setActive(i)}
                 className={`relative rounded-full px-4 py-1.5 text-[13px] font-medium transition-all duration-300 ${
                   active === i
-                    ? "text-[#06070c]"
+                    ? "text-white"
                     : "text-th-muted hover:text-th-heading"
                 }`}
               >

@@ -45,20 +45,17 @@ const MouseTracker = () => {
   }, [mouseX, mouseY]);
 
   return (
-    <motion.div
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-      style={{ opacity: 0.5 }}
-    >
+    <div className="pointer-events-none fixed inset-0 z-[2] overflow-hidden">
       <motion.div
-        className="absolute w-[600px] h-[600px] rounded-full blur-[120px]"
+        className="absolute h-[520px] w-[520px] rounded-full blur-[110px] opacity-55"
         style={{
-          background: "radial-gradient(circle, rgb(var(--ac-1) / 0.1) 0%, transparent 60%)",
-          x: useTransform(mouseX, (v) => v - 300),
-          y: useTransform(mouseY, (v) => v - 300),
+          background: "radial-gradient(circle, rgb(var(--ac-1) / 0.14) 0%, rgb(var(--ac-2) / 0.05) 42%, transparent 72%)",
+          x: useTransform(mouseX, (v) => v - 260),
+          y: useTransform(mouseY, (v) => v - 260),
         }}
-        transition={{ type: "spring", stiffness: 50, damping: 20, mass: 0.5 }}
+        transition={{ type: "spring", stiffness: 55, damping: 22, mass: 0.45 }}
       />
-    </motion.div>
+    </div>
   );
 };
 
@@ -268,17 +265,6 @@ const faqItems = [
 const FAQSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const setCardGlow = (e: React.MouseEvent<HTMLLIElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    e.currentTarget.style.setProperty("--faq-x", `${e.clientX - rect.left}px`);
-    e.currentTarget.style.setProperty("--faq-y", `${e.clientY - rect.top}px`);
-  };
-
-  const clearCardGlow = (e: React.MouseEvent<HTMLLIElement>) => {
-    e.currentTarget.style.removeProperty("--faq-x");
-    e.currentTarget.style.removeProperty("--faq-y");
-  };
-
   return (
     <section className="py-16 relative z-10">
       <div className="mx-auto max-w-4xl px-5 md:px-8">
@@ -300,17 +286,7 @@ const FAQSection = () => {
                 <li
                   key={item.question}
                   className="group relative overflow-hidden rounded-2xl border border-th-line backdrop-blur-xl bg-th-surface-alt/40 shadow-[0_20px_80px_-40px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-0.5"
-                  onMouseMove={setCardGlow}
-                  onMouseLeave={clearCardGlow}
                 >
-                  <div
-                    className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${
-                      open ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                    }`}
-                    style={{
-                      background: "radial-gradient(200px circle at var(--faq-x, 50%) var(--faq-y, 50%), rgb(var(--ac-1) / 0.06), transparent 70%)",
-                    }}
-                  />
 
                   <button
                     type="button"
@@ -526,7 +502,7 @@ const Petaron = () => {
                           onClick={() => setMinutesPerOrder(val)}
                           className={`flex-1 rounded-lg py-2 text-[13px] font-bold transition-all border ${
                             minutesPerOrder === val
-                              ? "bg-ac-1 text-[#05060d] border-ac-1 shadow-[0_0_14px_rgb(var(--ac-1)/0.3)]"
+                              ? "bg-ac-1 text-white border-ac-1 shadow-[0_0_14px_rgb(var(--ac-1)/0.3)]"
                               : "bg-th-surface text-th-body border-th-line hover:bg-th-line/50"
                           }`}
                         >
@@ -547,7 +523,7 @@ const Petaron = () => {
                           onClick={() => setHourlyCost(val)}
                           className={`flex-1 rounded-lg py-2 text-[13px] font-bold transition-all border ${
                             hourlyCost === val
-                              ? "bg-ac-2 text-[#05060d] border-ac-2 shadow-[0_0_14px_rgb(var(--ac-2)/0.3)]"
+                              ? "bg-ac-2 text-white border-ac-2 shadow-[0_0_14px_rgb(var(--ac-2)/0.3)]"
                               : "bg-th-surface text-th-body border-th-line hover:bg-th-line/50"
                           }`}
                         >
