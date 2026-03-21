@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -49,6 +49,50 @@
     --glow: 175 85% 45%;
     --surface: 220 20% 12%;
     --surface-hover: 220 20% 16%;
+
+    /* ============================================================
+       THEME TOKENS -- Edit these to restyle the entire website.
+       All values are R G B (space-separated) so Tailwind opacity
+       modifiers work: bg-th-page/60, text-th-heading/80, etc.
+       ============================================================ */
+
+    /* -- Backgrounds ------------------------------------------- */
+    --th-page:        6 7 12;       /* main page background       */
+    --th-surface:     8 12 22;      /* cards, panels              */
+    --th-surface-alt: 6 8 20;       /* alternate / inset surfaces */
+    --th-elevated:    11 14 26;     /* modals, popovers           */
+
+    /* -- Text -------------------------------------------------- */
+    --th-heading:     255 255 255;  /* headings, primary text     */
+    --th-body:        156 163 175;  /* body copy                  */
+    --th-muted:       107 114 128;  /* labels, captions           */
+    --th-faint:       68 74 88;     /* copyright, fine print      */
+
+    /* -- Borders ----------------------------------------------- */
+    --th-line:        3 42 54;     /* standard borders           */
+    --th-line-subtle: 1 22 35;    /* very faint dividers        */
+
+    /* -- Accent colours ----------------------------------------
+       Change these to restyle buttons, gradients, highlights.
+       Values are R G B so Tailwind opacity modifiers work.
+       Use ac-1, ac-2, ac-3, ac-pos, ac-neg in Tailwind classes.
+       --------------------------------------------------------- */
+    --ac-1:     34 211 238;     /* primary: buttons, links, glow  */
+    --ac-2:     232 121 249;    /* secondary: highlights          */
+    --ac-3:     167 139 250;    /* tertiary: gradients, hover     */
+    --ac-pos:   52 211 153;     /* positive: success, savings     */
+    --ac-neg:   244 114 182;    /* negative: cost, warnings       */
+
+    /* -- Fonts -------------------------------------------------
+       --font-heading: used for section titles, hero, FAQ headings
+       --font-body:    used for paragraphs, labels, descriptions
+       --font-display: used for feature titles, badges, buttons
+       --font-mono:    used for code, technical text
+       --------------------------------------------------------- */
+    --font-heading: 'DM Serif Display', Georgia, serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
   }
 }
 
@@ -58,7 +102,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-th-page text-th-heading font-body antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -152,8 +196,8 @@
       110deg,
       hsl(0 0% 100% / 0.8) 22%,
       hsl(0 0% 100% / 0.95) 38%,
-      hsl(296 88% 74%) 52%,
-      hsl(190 94% 78%) 64%,
+      hsl(203, 100%, 50%) 52%,
+      hsl(275, 100%, 72%) 64%,
       hsl(0 0% 100% / 0.95) 78%
     );
     background-size: 320% 100%;
@@ -356,5 +400,17 @@
 
 .animate-shiny-sweep {
   animation: shiny-sweep 3s infinite;
+}
+
+/* Cal.com popup -- shrink and remove internal scrollbar */
+div[data-cal-namespace] > div,
+.cal-embed-modal {
+  max-height: 90vh !important;
+}
+
+[data-cal-namespace="30min"] iframe {
+  transform: scale(0.9);
+  transform-origin: top center;
+  max-height: 85vh !important;
 }
 

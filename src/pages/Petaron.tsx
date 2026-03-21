@@ -1,65 +1,22 @@
-import { motion, useScroll, useSpring, animate, useMotionValue, useTransform } from "framer-motion";
-import { ArrowRight, Send, Link, ScanText, CheckCircle2, Clock, CalendarIcon, FileJson, Mail, BrainCircuit, Database } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { DashboardPreview } from "../components/DashboardPreview";
-import { Calendar } from "@/components/ui/calendar";
-
-const integrations = [
-  { name: "CargoWise", domain: "cargowise.com" },
-  { name: "SAP", domain: "sap.com" },
-  { name: "Descartes", domain: "descartes.com" },
-  { name: "Scope", domain: "riege.com" },
-  { name: "Modality", domain: "modality.com" }
-];
-
-const aiStack = [
-  { name: "LangChain", domain: "langchain.com" },
-  { name: "OpenAI", domain: "openai.com" },
-  { name: "Claude", domain: "anthropic.com" },
-  { name: "Mistral", domain: "mistral.ai" },
-  { name: "Pydantic", domain: "pydantic.dev" },
-  { name: "n8n", domain: "n8n.io" },
-];
-
-const SpotlightCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  return (
-    <motion.div
-      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-px ${className}`}
-      onMouseMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-      }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    >
-      <div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
-        style={{
-          background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(167, 139, 250, 0.15), transparent 40%)`,
-        }}
-      />
-      <div className="relative h-full w-full rounded-2xl bg-[#06070c] p-6 z-10">
-        <div
-          className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(167, 139, 250, 0.05), transparent 40%)`,
-          }}
-        />
-        {children}
-      </div>
-    </motion.div>
-  );
-};
+import { motion, useScroll, useSpring, animate, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { getCalApi } from "@calcom/embed-react";
+import { integrations } from "@/components/petaron/data";
+import { PlatformPreviewSection } from "@/components/petaron/PlatformPreviewSection";
+import { ProcessFlowSection } from "@/components/petaron/ProcessFlowSection";
+import { GlowingBorder } from "@/components/ui/glowing-border";
+import { LogoMarquee } from "@/components/ui/logo-marquee";
+import { SparklesSection } from "@/components/ui/sparkles";
+import { InteractiveHoverButton, SpinningLogo } from "@/components/petaron/shared";
+import ContactForm from "@/components/petaron/FinalCTA";
 
 const AnimatedNumber = ({ value }: { value: number }) => {
   const ref = useRef<HTMLSpanElement>(null);
-  
+
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    
+
     const current = Number(node.textContent?.replace(/,/g, "")) || 0;
     const controls = animate(current, value, {
       duration: 0.5,
@@ -70,11 +27,10 @@ const AnimatedNumber = ({ value }: { value: number }) => {
     });
     return controls.stop;
   }, [value]);
-  
+
   return <span ref={ref}>{value.toLocaleString()}</span>;
 };
 
-// WAW Custom Cursor Tracker
 const MouseTracker = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -91,14 +47,14 @@ const MouseTracker = () => {
   return (
     <motion.div
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 0.5 }}
     >
       <motion.div
-        className="absolute w-[800px] h-[800px] rounded-full blur-[120px]"
+        className="absolute w-[600px] h-[600px] rounded-full blur-[120px]"
         style={{
-          background: "radial-gradient(circle, rgba(34,211,238,0.15) 0%, rgba(192,132,252,0.05) 40%, transparent 70%)",
-          x: useTransform(mouseX, (v) => v - 400),
-          y: useTransform(mouseY, (v) => v - 400),
+          background: "radial-gradient(circle, rgb(var(--ac-1) / 0.1) 0%, transparent 60%)",
+          x: useTransform(mouseX, (v) => v - 300),
+          y: useTransform(mouseY, (v) => v - 300),
         }}
         transition={{ type: "spring", stiffness: 50, damping: 20, mass: 0.5 }}
       />
@@ -106,663 +62,614 @@ const MouseTracker = () => {
   );
 };
 
-// WAW Text Reveal
-const RevealText = ({ text, className = "" }: { text: string, className?: string }) => {
+const RevealText = ({ text, className = "" }: { text: string; className?: string }) => {
   const words = text.split(" ");
-  
+
   return (
-    <span className={`inline-block ${className}`}>
+    <span className={`inline ${className}`}>
       {words.map((word, i) => (
-        <span key={i} className="inline-block overflow-hidden mr-[0.25em]">
+        <span key={i} className="inline-block">
           <motion.span
             className="inline-block"
-            initial={{ y: "100%", opacity: 0, rotate: 10 }}
-            animate={{ y: 0, opacity: 1, rotate: 0 }}
-            transition={{ 
-              duration: 0.8, 
-              delay: i * 0.08, 
-              ease: [0.2, 0.65, 0.3, 0.9],
-              type: "spring",
-              bounce: 0.3
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
           >
             {word}
           </motion.span>
+          {i < words.length - 1 ? "\u00A0" : ""}
         </span>
       ))}
     </span>
   );
 };
 
+const TYPEWRITER_WORDS = [
+  "automate ?",
+  "scale ?",
+  "lead ?",
+  "transform ?",
+  "accelerate ?",
+  "innovate ?",
+  "advance ?",
+  "improve ?",
+  "utilize AI ?",
+  "move faster ?",
+  "take control ?",
+  "save time ?",
+  "improve efficiency ?",
+  "increase productivity ?",
+  "optimize workflows ?",
+  "enhance service ?",
+];
+
+const TypewriterWord = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % TYPEWRITER_WORDS.length);
+    }, 2400);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <span className="inline-block w-[220px] text-left align-baseline md:w-[280px]">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={TYPEWRITER_WORDS[index]}
+          className="inline-block bg-gradient-to-r from-ac-1 via-ac-2 to-ac-3 bg-clip-text text-transparent"
+          initial={{ y: 16, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -16, opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+        >
+          {TYPEWRITER_WORDS[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+};
+
+const PETARON_MONTHLY = 2250;
+
+const MiniCostGraph = ({ monthlyCost }: { monthlyCost: number }) => {
+  const w = 240;
+  const h = 100;
+  const pad = { t: 14, b: 8, l: 6, r: 6 };
+  const iw = w - pad.l - pad.r;
+  const ih = h - pad.t - pad.b;
+
+  const months = 12;
+  const maxManual = monthlyCost * months;
+  const maxVal = Math.max(maxManual, PETARON_MONTHLY * months, 1);
+
+  const jitterRef = useRef<number[]>();
+  if (!jitterRef.current) {
+    jitterRef.current = Array.from({ length: months }, () => 0.93 + Math.random() * 0.14);
+  }
+  const jitter = jitterRef.current;
+
+  const toXY = (cost: number, i: number, wobble: boolean) => {
+    const x = pad.l + (i / (months - 1)) * iw;
+    const base = (cost * (i + 1)) / maxVal;
+    const v = wobble ? base * jitter[i] : base;
+    const y = pad.t + ih - Math.min(v, 1) * ih;
+    return [x, y] as const;
+  };
+
+  const manualPts = Array.from({ length: months }, (_, i) => toXY(monthlyCost, i, true));
+  const petaronPts = Array.from({ length: months }, (_, i) => toXY(PETARON_MONTHLY, i, true));
+
+  const smoothPath = (pts: (readonly [number, number])[]) => {
+    if (pts.length < 2) return "";
+    let d = `M${pts[0][0]},${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) {
+      const prev = pts[i - 1];
+      const cur = pts[i];
+      const tension = (cur[0] - prev[0]) * 0.35;
+      d += ` C${prev[0] + tension},${prev[1]} ${cur[0] - tension},${cur[1]} ${cur[0]},${cur[1]}`;
+    }
+    return d;
+  };
+
+  const areaPath = (pts: (readonly [number, number])[]) => {
+    const line = smoothPath(pts);
+    const last = pts[pts.length - 1];
+    const first = pts[0];
+    return `${line} L${last[0]},${pad.t + ih} L${first[0]},${pad.t + ih} Z`;
+  };
+
+  return (
+    <div className="my-5">
+      <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="mini-manual-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgb(var(--ac-neg))" stopOpacity={0.12} />
+            <stop offset="100%" stopColor="rgb(var(--ac-neg))" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="mini-petaron-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgb(var(--ac-1))" stopOpacity={0.12} />
+            <stop offset="100%" stopColor="rgb(var(--ac-1))" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+
+        <path d={areaPath(manualPts)} fill="url(#mini-manual-fill)" />
+        <path d={smoothPath(manualPts)} fill="none" stroke="rgb(var(--ac-neg))" strokeWidth="1.2" strokeLinecap="round" />
+
+        <path d={areaPath(petaronPts)} fill="url(#mini-petaron-fill)" />
+        <path d={smoothPath(petaronPts)} fill="none" stroke="rgb(var(--ac-1))" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+      <div className="flex items-center justify-center gap-5 mt-1.5">
+        <span className="flex items-center gap-1.5 text-[10px] text-th-muted">
+          <span className="inline-block w-3 h-[1.5px] rounded-full bg-ac-neg" />Manual
+        </span>
+        <span className="flex items-center gap-1.5 text-[10px] text-th-muted">
+          <span className="inline-block w-3 h-[1.5px] rounded-full bg-ac-1" />Petaron
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const SellLine = ({ text }: { text: string }) => (
+  <div className="relative z-10 py-10">
+    <div className="mx-auto w-full max-w-[1300px] px-5 md:px-8">
+      <p className="text-center text-lg font-serif italic text-th-body/60 md:text-xl tracking-tight">
+        {text}
+      </p>
+    </div>
+  </div>
+);
+
+const faqItems = [
+  {
+    question: "Does it work with our existing TMS?",
+    answer: "Yes. PetaRon.ai connects to the TMS you already use. No ripping and replacing -- your setup stays the same, the manual work disappears.",
+    meta: "Integration",
+  },
+  {
+    question: "How long does it take to get started?",
+    answer: "Days, not months. We connect to your email flow, configure your fields, and you are processing orders within a week.",
+    meta: "Onboarding",
+  },
+  {
+    question: "Does our team lose control over orders?",
+    answer: "Never. AI handles the intake, your team makes every decision. Nothing moves to your TMS without human approval.",
+    meta: "Control",
+  },
+  {
+    question: "Is this built specifically for logistics?",
+    answer: "From the ground up. PetaRon.ai was designed around the daily reality of freight operations -- multi-format orders, tight deadlines, and zero tolerance for errors.",
+    meta: "Industry",
+  },
+  {
+    question: "What happens when the AI encounters an edge case?",
+    answer: "It flags it. Anything the AI is not fully confident about gets routed to your team for manual review. Nothing slips through unchecked.",
+    meta: "Reliability",
+  },
+  {
+    question: "How fast is the ROI?",
+    answer: "Most teams see the impact in the first week. Less time on data entry means more time with customers -- that is value from day one.",
+    meta: "Value",
+  },
+  {
+    question: "Is there a free trial or pilot?",
+    answer: "We offer a free 30-day pilot with your actual data. You will see exactly how it performs before making any commitment.",
+    meta: "Pilot",
+  },
+  {
+    question: "What data do you need from us to get started?",
+    answer: "Access to your order inbox, basic TMS credentials, and a short walkthrough of your field mapping. That is it -- we handle the rest.",
+    meta: "Setup",
+  },
+];
+
+const FAQSection = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const setCardGlow = (e: React.MouseEvent<HTMLLIElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--faq-x", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--faq-y", `${e.clientY - rect.top}px`);
+  };
+
+  const clearCardGlow = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.currentTarget.style.removeProperty("--faq-x");
+    e.currentTarget.style.removeProperty("--faq-y");
+  };
+
+  return (
+    <section className="py-16 relative z-10">
+      <div className="mx-auto max-w-4xl px-5 md:px-8">
+        <div className="flex flex-col gap-10">
+          <div className="text-center">
+            <p className="text-[10px] uppercase tracking-[0.35em] text-th-muted mb-3">Questions</p>
+            <h3 className="text-2xl font-serif font-normal tracking-tight text-th-heading md:text-3xl">
+              Frequently asked questions
+            </h3>
+            <p className="mt-3 max-w-md text-sm text-th-body mx-auto">
+              Everything you need to know about working with PetaRon.ai.
+            </p>
+          </div>
+
+          <ul className="space-y-3">
+            {faqItems.map((item, index) => {
+              const open = activeIndex === index;
+              return (
+                <li
+                  key={item.question}
+                  className="group relative overflow-hidden rounded-2xl border border-th-line backdrop-blur-xl bg-th-surface-alt/40 shadow-[0_20px_80px_-40px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-0.5"
+                  onMouseMove={setCardGlow}
+                  onMouseLeave={clearCardGlow}
+                >
+                  <div
+                    className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${
+                      open ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    }`}
+                    style={{
+                      background: "radial-gradient(200px circle at var(--faq-x, 50%) var(--faq-y, 50%), rgb(var(--ac-1) / 0.06), transparent 70%)",
+                    }}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveIndex(open ? -1 : index)}
+                    className="relative flex w-full items-start gap-5 px-6 py-5 text-left transition-colors duration-300"
+                  >
+                    <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-th-line bg-th-surface-alt/50 transition-all duration-500 group-hover:scale-105">
+                      <span
+                        className={`pointer-events-none absolute inset-0 rounded-full border border-th-line opacity-30 ${
+                          open ? "animate-ping" : ""
+                        }`}
+                      />
+                      <svg
+                        className={`relative h-4 w-4 text-th-heading transition-transform duration-500 ${open ? "rotate-45" : ""}`}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path d="M12 5v14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        <path d="M5 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      </svg>
+                    </span>
+
+                    <div className="flex flex-1 flex-col gap-3">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                        <h4 className="text-sm font-medium leading-tight text-th-heading sm:text-[15px]">
+                          {item.question}
+                        </h4>
+                        <span className="inline-flex w-fit items-center rounded-full border border-th-line px-2.5 py-0.5 text-[9px] uppercase tracking-[0.3em] text-th-muted sm:ml-auto">
+                          {item.meta}
+                        </span>
+                      </div>
+
+                      <div
+                        className={`overflow-hidden text-[13px] leading-relaxed transition-[max-height,opacity] duration-500 ease-out text-th-body ${
+                          open ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                        }`}
+                      >
+                        <p className="pr-2">{item.answer}</p>
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const footerLinks = {
+  Product: [
+    { label: "How It Works", href: "#process-flow" },
+    { label: "Platform", href: "#platform" },
+    { label: "ROI Calculator", href: "#roi" },
+  ],
+  Company: [
+    { label: "About", href: "#" },
+    { label: "Careers", href: "#" },
+    { label: "LinkedIn", href: "#" },
+  ],
+  Legal: [
+    { label: "Privacy Policy", href: "#" },
+    { label: "Terms of Service", href: "#" },
+    { label: "GDPR", href: "#" },
+  ],
+};
+
 const Petaron = () => {
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.2,
-  });
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.2 });
 
   const [ordersPerDay, setOrdersPerDay] = useState(150);
   const [minutesPerOrder, setMinutesPerOrder] = useState(10);
-  const [hourlyCost, setHourlyCost] = useState(35);
-  
-  // Booking state
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [time, setTime] = useState("10:00");
+  const [hourlyCost, setHourlyCost] = useState(25);
+  const [contactOpen, setContactOpen] = useState(false);
 
   const monthlyCost = useMemo(() => {
-    const workDays = 22;
-    return Math.round((ordersPerDay * minutesPerOrder * hourlyCost * workDays) / 60);
+    return Math.round((ordersPerDay * minutesPerOrder * hourlyCost * 22) / 60);
   }, [hourlyCost, minutesPerOrder, ordersPerDay]);
 
   const yearlyCost = monthlyCost * 12;
 
-  const handleBookingSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const subject = encodeURIComponent("Demo Booking - PetaRon");
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nRequested Date: ${date?.toLocaleDateString()}\nRequested Time: ${time}`
-    );
-    window.location.href = `mailto:hello@petaron.ai?subject=${subject}&body=${body}`;
-  };
+  const initCal = useCallback(async () => {
+    const cal = await getCalApi({ namespace: "30min" });
+    cal("ui", { hideEventTypeDetails: false, layout: "month_view", theme: "dark" });
+  }, []);
+
+  useEffect(() => { initCal(); }, [initCal]);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#06070c] text-white selection:bg-cyan-400 selection:text-black">
-      
+    <main className="relative min-h-screen overflow-hidden bg-th-page text-th-heading selection:bg-ac-1 selection:text-black">
       <MouseTracker />
-      <div className="noise-overlay opacity-30 z-10 pointer-events-none" />
-      
+      <div className="noise-overlay z-10 pointer-events-none" />
+
       <motion.div
-        className="fixed left-0 top-0 z-[100] h-1 w-full origin-left bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300"
+        className="fixed left-0 top-0 z-[100] h-0.5 w-full origin-left bg-gradient-to-r from-ac-2 via-ac-3 to-ac-1"
         style={{ scaleX: progress }}
       />
 
-      <div className="pointer-events-none absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20" />
-      
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <motion.div
-          className="absolute left-[10%] top-[10%] h-[500px] w-[500px] rounded-full bg-fuchsia-600/20 blur-[120px] mix-blend-screen"
-          animate={{ x: [0, 50, -30, 0], y: [0, -30, 40, 0], scale: [1, 1.2, 0.8, 1] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute right-[5%] top-[25%] h-[600px] w-[600px] rounded-full bg-cyan-600/20 blur-[150px] mix-blend-screen"
-          animate={{ x: [0, -60, 40, 0], y: [0, 50, -40, 0], scale: [1, 0.8, 1.2, 1] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-        />
+      <div className="pointer-events-none absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10" />
+
+      {/* Hero background image */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[800px] overflow-hidden md:h-[900px]">
+        <img src="/hero-bg.png" alt="" className="h-full w-full object-cover opacity-25" />
+        <div className="absolute inset-0 bg-gradient-to-b from-th-page/30 via-th-page/50 to-th-page" />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col px-6 pb-20 pt-6 md:px-10 md:pt-8 z-10">
-        <header className="sticky top-6 z-50 flex items-center justify-between rounded-full border border-white/10 bg-[#06070c]/60 px-6 py-4 backdrop-blur-xl shadow-2xl">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-400 to-fuchsia-500 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.4)]">
-              <span className="font-bold text-black text-xs tracking-tighter">PR</span>
-            </div>
-            <div className="text-xl font-serif font-normal italic tracking-[0.1em] text-white">
-              PetaRon
+      {/* Header */}
+      <div className="relative mx-auto flex w-full max-w-[1300px] flex-col px-5 pb-10 pt-5 md:px-8 md:pt-6 z-10">
+        <header className="sticky top-4 z-50 flex items-center justify-between rounded-full border border-th-line bg-th-page/60 px-5 py-2.5 backdrop-blur-xl shadow-2xl">
+          <div className="flex items-center gap-2.5">
+            <SpinningLogo size={24} />
+            <div className="text-sm font-bold tracking-wide text-th-heading">
+              Petaron<span className="text-th-muted font-normal text-[11px] ml-1">. AI Solutions</span>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70">
-            <a href="#how-it-works" className="hover:text-white transition-colors">Platform</a>
-            <a href="#roi" className="hover:text-white transition-colors">ROI</a>
+          <div className="hidden md:flex items-center gap-7 text-[13px] font-medium text-th-body">
+            <a href="#process-flow" className="hover:text-th-heading transition-colors">How it Works</a>
+            <a href="#platform" className="hover:text-th-heading transition-colors">Platform</a>
+            <a href="#roi" className="hover:text-th-heading transition-colors">ROI</a>
           </div>
-          <a
-            href="#booking"
-            className="group inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#070814] transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-          >
-            Book Demo
-            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-          </a>
         </header>
 
-        <section className="pb-20 pt-24 md:pb-32 md:pt-32 relative">
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-center">
-            <div className="relative z-10">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
+        {/* Hero */}
+        <section className="relative pb-10 pt-14 md:pb-16 md:pt-22">
+          <div className="relative z-10 mx-auto max-w-3xl text-center">
+            <h1 className="text-2xl font-serif font-normal leading-[1.1] tracking-tight text-th-heading md:text-4xl lg:text-5xl">
+              <RevealText text="Order entry has never been this easy" />
+              <br />
+              <motion.span
+                className="bg-gradient-to-r from-ac-2 via-ac-3 to-ac-1 bg-clip-text text-transparent inline-block font-serif italic pr-1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.6 }}
               >
-                <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-cyan-300 backdrop-blur-xl shadow-[0_0_20px_rgba(34,211,238,0.2)]">
-                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                  AI-Powered Order Entry
-                </span>
-              </motion.div>
-              
-              <h1 className="max-w-4xl text-5xl font-serif font-normal leading-[1.05] tracking-tight text-white md:text-[5rem] lg:text-[5.5rem] mt-4">
-                <RevealText text="From chaotic inbox to clean TMS" />
-                <br />
-                <motion.span 
-                  className="bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300 bg-clip-text text-transparent inline-block font-serif italic pr-2"
-                  initial={{ opacity: 0, filter: "blur(10px)" }}
-                  animate={{ opacity: 1, filter: "blur(0px)" }}
-                  transition={{ duration: 1, delay: 0.6 }}
-                >
-                  in under 30s.
-                </motion.span>
-              </h1>
-              <motion.p 
-                className="mt-8 max-w-xl text-lg leading-relaxed text-white/60 md:text-xl font-light"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-              >
-                PetaRon connects to your order pipeline, reads every incoming email, extracts the data, and pushes it directly into your TMS. Your team approves, not types.
-              </motion.p>
+                Our AI agent handle incoming orders.
+              </motion.span>
+            </h1>
 
-              <motion.div 
-                className="mt-10 flex flex-wrap gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1 }}
-              >
-                <a
-                  href="#booking"
-                  className="group relative flex items-center justify-center gap-3 rounded-full bg-cyan-400 px-8 py-4 text-sm font-bold text-[#05060d] transition-all hover:bg-cyan-300 hover:scale-105 shadow-[0_0_40px_rgba(34,211,238,0.3)] overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <span className="relative flex items-center gap-2">
-                    Start Automating <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </a>
-                <a
-                  href="#platform"
-                  className="flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-semibold text-white transition hover:bg-white/10 hover:border-white/40 backdrop-blur-sm"
-                >
-                  Explore Platform
-                </a>
-              </motion.div>
-            </div>
+            <motion.p
+              className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-th-body md:text-base font-light"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              No more manual entry. PetaRon.ai handles intake from first email to ready-to-approve draft, so your team stays focused on customers and decisions.
+            </motion.p>
 
-            <div className="relative hidden lg:block h-[500px] perspective-1000 w-full z-10">
-              {/* Document Visual - Floating 3D */}
-              <motion.div
-                className="absolute right-0 top-10 w-80 rounded-2xl border border-white/10 bg-[#0d101b]/90 p-5 shadow-2xl backdrop-blur-xl overflow-hidden z-20"
-                animate={{ 
-                  y: [0, -20, 0], 
-                  rotateY: [-5, 5, -5],
-                  rotateX: [5, -5, 5],
-                  rotateZ: [-2, 2, -2]
-                }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                style={{ transformStyle: "preserve-3d", transformOrigin: "center" }}
+            <motion.div
+              className="mt-6 flex flex-wrap items-center justify-center gap-3"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1 }}
+            >
+              <InteractiveHoverButton
+                data-cal-namespace="30min"
+                data-cal-link="ron-lev-tabuchov-tgk0nx/30min"
+                data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"dark"}'
               >
-                <div className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
-                  <div className="h-3 w-3 rounded-full bg-red-400 shadow-[0_0_10px_rgba(248,113,113,0.5)]" />
-                  <div className="h-3 w-3 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]" />
-                  <div className="h-3 w-3 rounded-full bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]" />
-                  <div className="ml-2 text-xs font-mono text-white/50">PDF_Order_FW203.pdf</div>
-                </div>
-                <div className="space-y-3">
-                  <div className="h-2.5 w-full rounded bg-white/10" />
-                  <div className="h-2.5 w-5/6 rounded bg-white/10" />
-                  <div className="h-2.5 w-4/6 rounded bg-white/10" />
-                  <div className="my-5 h-px w-full bg-white/10" />
-                  <div className="flex gap-3">
-                    <div className="h-12 w-12 rounded bg-cyan-400/20 border border-cyan-400/30" />
-                    <div className="flex-1 space-y-2.5">
-                      <div className="h-2.5 w-full rounded bg-white/10" />
-                      <div className="h-2.5 w-2/3 rounded bg-white/10" />
+                Book a Demo for Free
+              </InteractiveHoverButton>
+              <button
+                onClick={() => setContactOpen(true)}
+                className="flex items-center justify-center rounded-full border border-th-line bg-th-surface-alt/50 px-7 py-3.5 text-[13px] font-semibold text-th-heading transition hover:bg-th-line/50"
+              >
+                Get in Touch
+              </button>
+            </motion.div>
+          </div>
+        </section>
+
+        <LogoMarquee logos={integrations} speed={25} />
+      </div>
+
+      <SellLine text="The moment an order arrives, PetaRon.ai gets to work." />
+
+      <PlatformPreviewSection />
+
+      <SellLine text="Your team reviews. Not types." />
+
+      <ProcessFlowSection />
+
+      <SellLine text="Every minute saved on data entry is a minute with a customer." />
+
+      {/* ROI Calculator */}
+      <section id="roi" className="py-16 relative z-10 border-y border-th-line-subtle bg-th-surface">
+        <div className="mx-auto w-full max-w-[1300px] px-5 md:px-8">
+          <GlowingBorder colors={["rgb(var(--ac-1))", "rgb(var(--ac-3))"]} blur={20} borderRadius={28} speed="6s">
+            <div className="grid gap-8 p-7 md:grid-cols-2 md:p-10 relative overflow-hidden bg-th-surface-alt/95 rounded-[27px]">
+              <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-ac-1/5 blur-[100px] rounded-full pointer-events-none" />
+
+              <div className="relative z-10">
+                <h3 className="text-xl font-serif font-normal tracking-tight text-th-heading md:text-2xl">Manual vs. automated order entry cost</h3>
+                <div className="mt-8 space-y-6">
+                  <div>
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-[11px] font-medium uppercase tracking-widest text-th-body">Orders per day</span>
+                      <span className="text-lg font-bold text-th-heading bg-th-line/50 px-3 py-0.5 rounded-lg border border-th-line">{ordersPerDay}</span>
+                    </div>
+                    <input type="range" min={50} max={400} step={10} value={ordersPerDay} onChange={(e) => setOrdersPerDay(Number(e.target.value))} className="w-full h-1.5 bg-th-line rounded-lg appearance-none cursor-pointer accent-ac-1" />
+                  </div>
+
+                  <div>
+                    <div className="mb-3">
+                      <span className="text-[11px] font-medium uppercase tracking-widest text-th-body">Minutes per order today</span>
+                    </div>
+                    <div className="flex gap-2">
+                      {[5, 10, 15, 20].map((val) => (
+                        <button
+                          key={val}
+                          onClick={() => setMinutesPerOrder(val)}
+                          className={`flex-1 rounded-lg py-2 text-[13px] font-bold transition-all border ${
+                            minutesPerOrder === val
+                              ? "bg-ac-1 text-[#05060d] border-ac-1 shadow-[0_0_14px_rgb(var(--ac-1)/0.3)]"
+                              : "bg-th-surface text-th-body border-th-line hover:bg-th-line/50"
+                          }`}
+                        >
+                          {val}m
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-3">
+                      <span className="text-[11px] font-medium uppercase tracking-widest text-th-body">Staff hourly cost per employee</span>
+                    </div>
+                    <div className="flex gap-2">
+                      {[25, 30, 35, 40].map((val) => (
+                        <button
+                          key={val}
+                          onClick={() => setHourlyCost(val)}
+                          className={`flex-1 rounded-lg py-2 text-[13px] font-bold transition-all border ${
+                            hourlyCost === val
+                              ? "bg-ac-2 text-[#05060d] border-ac-2 shadow-[0_0_14px_rgb(var(--ac-2)/0.3)]"
+                              : "bg-th-surface text-th-body border-th-line hover:bg-th-line/50"
+                          }`}
+                        >
+                          &euro;{val}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
-                {/* Scanning line effect */}
-                <motion.div
-                  className="absolute left-0 right-0 h-16 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent blur-[2px]"
-                  animate={{ top: ["-20%", "120%"] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-                />
-              </motion.div>
+              </div>
 
-              {/* JSON/Data Output Visual - Floating 3D */}
-              <motion.div
-                className="absolute left-0 top-40 w-80 rounded-2xl border border-fuchsia-500/30 bg-[#060814]/95 p-6 shadow-[0_0_50px_rgba(192,132,252,0.15)] backdrop-blur-xl z-30"
-                animate={{ 
-                  y: [0, 20, 0], 
-                  rotateY: [5, -5, 5],
-                  rotateX: [-5, 5, -5],
-                  rotateZ: [2, -2, 2]
-                }}
-                transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-                style={{ transformStyle: "preserve-3d", transformOrigin: "center" }}
-              >
-                <div className="mb-3 text-xs font-bold tracking-widest text-fuchsia-400 flex items-center gap-2">
-                  <FileJson size={14} /> EXTRACTED JSON
-                </div>
-                <div className="font-mono text-sm leading-relaxed text-white/80">
-                  <span className="text-fuchsia-300">"shipper"</span>: <span className="text-cyan-300">"Acme Corp"</span>,<br/>
-                  <span className="text-fuchsia-300">"origin"</span>: <span className="text-cyan-300">"Rotterdam"</span>,<br/>
-                  <span className="text-fuchsia-300">"destination"</span>: <span className="text-cyan-300">"Hamburg"</span>,<br/>
-                  <span className="text-fuchsia-300">"weight"</span>: <span className="text-yellow-300">24500</span>,<br/>
-                  <span className="text-fuchsia-300">"hazardous"</span>: <span className="text-violet-300">false</span>,<br/>
-                  <span className="text-fuchsia-300">"reference"</span>: <span className="text-cyan-300">"FW-203-A"</span>
-                </div>
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-fuchsia-500/10 to-transparent pointer-events-none rounded-2xl" />
-              </motion.div>
+              <div className="rounded-2xl border border-th-line bg-th-elevated/80 p-7 flex flex-col justify-center relative overflow-hidden shadow-2xl backdrop-blur-md">
+                <div className="absolute -bottom-10 -right-10 w-36 h-36 bg-ac-2/10 blur-[50px] rounded-full" />
 
-              {/* Glowing Connecting lines */}
-              <svg className="absolute inset-0 h-full w-full pointer-events-none z-10 overflow-visible">
-                <defs>
-                  <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#c084fc" stopOpacity="0.8" />
-                  </linearGradient>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-                <motion.path
-                  d="M 160 260 C 200 260 240 180 320 180"
-                  fill="transparent"
-                  stroke="url(#lineGrad)"
-                  strokeWidth="3"
-                  strokeDasharray="8 8"
-                  filter="url(#glow)"
-                  animate={{ strokeDashoffset: [0, -40] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                />
-              </svg>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-ac-neg/70">Your current manual cost / year</p>
+                    <p className="mt-1 text-4xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-ac-neg to-ac-2">
+                      &euro;<AnimatedNumber value={yearlyCost} />
+                    </p>
+                  </div>
+                  <div className="w-full h-px bg-gradient-to-r from-th-line via-th-line to-transparent" />
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-ac-1/70">With Petaron / year</p>
+                    <p className="mt-1 text-4xl font-bold tracking-tighter text-ac-1">
+                      &euro;<AnimatedNumber value={PETARON_MONTHLY * 12} />
+                    </p>
+                  </div>
+                </div>
+
+                <MiniCostGraph monthlyCost={monthlyCost} />
+
+                <p className="text-[13px] text-th-body font-light leading-relaxed">
+                  The graph shows cumulative yearly cost. Manual entry grows with volume -- Petaron stays flat.
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
+          </GlowingBorder>
+        </div>
+      </section>
 
-        <section className="pb-24 text-center relative z-10">
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-8"
-          >
-            TRUSTED INTEGRATIONS
-          </motion.p>
-          <div className="flex flex-wrap justify-center gap-6">
-            {integrations.map((item, i) => (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                key={item.name}
-                className="logo-pill flex items-center justify-center border border-white/10 bg-white/[0.03] px-8 py-4 grayscale hover:grayscale-0 hover:border-white/20 transition-all duration-500 rounded-2xl backdrop-blur-sm"
+      {/* CTA Section */}
+      <section id="booking" className="pt-10 pb-20 relative z-10">
+        <div className="mx-auto w-full max-w-[1300px] px-5 md:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-base text-th-body font-light">
+              Want to find out how much money and time you can save?
+            </p>
+            <h3 className="mt-3 text-2xl font-serif font-normal tracking-tight text-th-heading md:text-3xl text-center whitespace-nowrap">
+              Ready to&nbsp;<TypewriterWord />
+            </h3>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <InteractiveHoverButton
+                data-cal-namespace="30min"
+                data-cal-link="ron-lev-tabuchov-tgk0nx/30min"
+                data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true","theme":"dark"}'
               >
-                <img 
-                  src={`https://logo.clearbit.com/${item.domain}`} 
-                  alt={item.name} 
-                  className="h-7 object-contain brightness-0 invert opacity-60 hover:opacity-100 hover:brightness-100 hover:invert-0 transition-all duration-500" 
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    const span = document.createElement('span');
-                    span.innerText = item.name;
-                    span.className = "text-white/70 font-semibold text-lg tracking-wide";
-                    e.currentTarget.parentElement?.appendChild(span);
-                  }}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        <section id="platform" className="mt-16 mb-32 relative z-10 perspective-1000">
-          <div className="text-center mb-16">
-            <motion.div
-               initial={{ opacity: 0, scale: 0.8 }}
-               whileInView={{ opacity: 1, scale: 1 }}
-               viewport={{ once: true }}
-            >
-              <p className="inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-5 py-2 text-xs font-bold uppercase tracking-widest text-fuchsia-300">
-                Core Dashboard
-              </p>
-            </motion.div>
-            <h3 className="mt-6 text-4xl font-serif font-normal tracking-tight text-white md:text-5xl">
-              Intelligence you can see.
-            </h3>
-            <p className="mt-6 text-white/60 max-w-2xl mx-auto text-lg">
-              Full visibility of your order pipeline. Built to look exactly like the tools your team already uses, but powered by autonomous agents.
-            </p>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, type: "spring", bounce: 0.2 }}
-            className="relative flex h-[400px] w-full items-center justify-center mt-10 md:h-[650px]"
-            style={{ perspective: "1200px" }}
-          >
-            {/* Dashboard Glow behind */}
-            <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 to-fuchsia-500/10 blur-[100px] -z-10 rounded-full" />
-            
-            {/* Floating Board 1 (Back) */}
-            <motion.div
-              className="absolute w-[85%] max-w-5xl h-[280px] md:h-[480px] rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[0_0_80px_rgba(192,132,252,0.15)] flex items-center justify-center overflow-hidden"
-              initial={{ x: "-5%", rotateX: 20, rotateY: 25, rotateZ: -5, y: -15 }}
-              animate={{ y: 15 }}
-              transition={{ duration: 4, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 to-transparent pointer-events-none" />
-              <p className="text-white/30 font-mono text-xs md:text-sm uppercase tracking-[0.3em] font-medium border border-white/10 rounded-lg px-6 py-3 bg-white/5">
-                Screen Placeholder 1
-              </p>
-            </motion.div>
-
-            {/* Floating Board 2 (Front) */}
-            <motion.div
-              className="absolute w-[85%] max-w-5xl h-[280px] md:h-[480px] rounded-3xl border border-white/20 bg-[#060814]/80 backdrop-blur-2xl shadow-[0_30px_100px_rgba(34,211,238,0.2)] flex items-center justify-center overflow-hidden"
-              initial={{ x: "15%", rotateX: 20, rotateY: 25, rotateZ: -5, y: 15 }}
-              animate={{ y: -15 }}
-              transition={{ duration: 4.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-400/10 via-transparent to-transparent pointer-events-none" />
-              <p className="text-white/40 font-mono text-xs md:text-sm uppercase tracking-[0.3em] font-medium border border-white/20 rounded-lg px-6 py-3 bg-white/5 shadow-xl">
-                Screen Placeholder 2
-              </p>
-            </motion.div>
-          </motion.div>
-        </section>
-
-      </div>
-
-      <section id="process-flow" className="py-32 relative z-10 border-y border-white/5 bg-[#05060A]">
-        <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
-          <div className="text-center mb-16">
-            <p className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-5 py-2 text-xs font-bold uppercase tracking-widest text-cyan-300">
-              Process Flow
-            </p>
-            <h3 className="mt-6 text-4xl font-serif font-normal tracking-tight text-white md:text-5xl">
-              From inbox to system entry
-            </h3>
-            <p className="mt-4 text-white/60 max-w-3xl mx-auto text-lg">
-              A clear, human-in-the-loop pipeline from incoming emails to validated structured records in your system.
-            </p>
-          </div>
-
-          <div className="relative mx-auto max-w-7xl">
-            <div className="grid gap-5 md:grid-cols-4">
-              {[
-                {
-                  title: "Email Received",
-                  description: "Orders arrive from inboxes, attachments, and portal messages.",
-                  Icon: Mail,
-                  color: "text-blue-300 border-blue-400/30 bg-blue-400/10",
-                },
-                {
-                  title: "Order Classified",
-                  description: "AI identifies order intent, shipper context, and required fields.",
-                  Icon: BrainCircuit,
-                  color: "text-fuchsia-300 border-fuchsia-400/30 bg-fuchsia-400/10",
-                },
-                {
-                  title: "Processed",
-                  description: "Data is extracted, normalized, and validated with confidence checks.",
-                  Icon: ScanText,
-                  color: "text-violet-300 border-violet-400/30 bg-violet-400/10",
-                },
-                {
-                  title: "Entered in System",
-                  description: "Approved data is pushed as a clean structured entry to your TMS.",
-                  Icon: Database,
-                  color: "text-emerald-300 border-emerald-400/30 bg-emerald-400/10",
-                },
-              ].map(({ title, description, Icon, color }, index, arr) => (
-                <div key={title} className="relative">
-                  <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={{ duration: 0.5, delay: index * 0.12 }}
-                    className="h-full w-full rounded-2xl border border-white/10 bg-[#0c1120]/80 p-5"
-                  >
-                    <div className={`mb-4 inline-flex rounded-xl border p-3 ${color}`}>
-                      <Icon size={20} />
-                    </div>
-                    <h4 className="text-lg font-semibold text-white">{title}</h4>
-                    <p className="mt-3 text-sm leading-relaxed text-white/65">{description}</p>
-                  </motion.div>
-
-                  {index < arr.length - 1 && (
-                    <div className="pointer-events-none absolute -right-5 top-1/2 z-0 hidden h-px w-5 -translate-y-1/2 overflow-hidden bg-white/10 md:flex">
-                      <motion.div
-                        className="h-px w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
-                        animate={{ x: ["-100%", "100%"] }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "linear",
-                          delay: index * 0.2,
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                Book a Demo for Free
+              </InteractiveHoverButton>
+              <button
+                onClick={() => setContactOpen(true)}
+                className="flex items-center justify-center rounded-full border border-th-line bg-th-surface-alt/50 px-7 py-3.5 text-[13px] font-semibold text-th-heading transition hover:bg-th-line/50"
+              >
+                Get in Touch
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col px-6 md:px-10 z-10">
-        <section id="how-it-works" className="py-32 relative z-10">
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              [
-                "Connect in Minutes",
-                "Forward your shared inbox or connect via API. No IT team needed, no deep integration required.",
-                Link,
-                "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/30 shadow-[0_0_30px_rgba(232,121,249,0.15)]"
-              ],
-              [
-                "Agentic Capture",
-                "Our AI reads PDFs, complex Excel sheets, and free-text emails contextually. Zero templates required.",
-                ScanText,
-                "text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_30px_rgba(34,211,238,0.15)]"
-              ],
-              [
-                "Review & Confirm",
-                "Operators review a structured, clean summary. One click validates and pushes straight to your TMS.",
-                CheckCircle2,
-                "text-emerald-400 bg-emerald-400/10 border-emerald-400/30 shadow-[0_0_30px_rgba(52,211,153,0.15)]"
-              ],
-            ].map(([title, description, Icon, colorClass], index) => (
-              <SpotlightCard key={title as string} className="h-full">
-                <motion.div
-                  className="p-4"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2, duration: 0.6, type: "spring" }}
-                >
-                  <div className={`mb-6 inline-flex rounded-2xl border p-4 ${colorClass as string}`}>
-                    {/* @ts-expect-error */}
-                    <Icon size={28} />
-                  </div>
-                  <h4 className="text-xl font-bold tracking-tight text-white mb-3">{title as string}</h4>
-                  <p className="text-base leading-relaxed text-white/60">{description as string}</p>
-                </motion.div>
-              </SpotlightCard>
+      <FAQSection />
+
+      <SellLine text="Less admin. More of what your team is actually good at." />
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-th-line bg-th-page">
+        <div className="mx-auto w-full max-w-[1300px] px-5 py-12 md:px-8">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 mb-10">
+            <div className="col-span-2 md:col-span-1">
+              <div className="flex items-center gap-2 mb-3">
+                <SpinningLogo size={20} />
+                <span className="text-sm font-bold tracking-wide text-th-heading">Petaron.ai</span>
+              </div>
+              <p className="text-xs text-th-muted leading-relaxed max-w-xs">
+                AI-powered order processing for freight forwarders. From email to TMS-ready draft.
+              </p>
+              <a href="mailto:hello@petaron.ai" className="mt-2 inline-block text-xs text-ac-1/70 hover:text-ac-1 transition-colors">
+                hello@petaron.ai
+              </a>
+            </div>
+
+            {Object.entries(footerLinks).map(([title, links]) => (
+              <div key={title}>
+                <h4 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-th-body">{title}</h4>
+                <ul className="space-y-2">
+                  {links.map((link) => (
+                    <li key={link.label}>
+                      <a href={link.href} className="text-xs text-th-muted hover:text-th-heading transition-colors">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
-        </section>
-      </div>
 
-      <section id="roi" className="py-32 relative z-10 border-y border-white/5 bg-[#080B18]">
-        <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10">
-          <div className="glass-panel grid gap-10 p-8 md:grid-cols-2 md:p-12 relative overflow-hidden bg-[#060814]/40">
-            {/* Background glowing blob */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
-            
-            <div className="relative z-10">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">ROI Calculator</p>
-              <h3 className="mt-3 text-4xl font-serif font-normal tracking-tight">Calculate your savings</h3>
-              <div className="mt-10 space-y-8">
-                <div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium uppercase tracking-widest text-white/60">Orders per day</span>
-                    <span className="text-xl font-bold text-white bg-white/10 px-4 py-1 rounded-lg border border-white/10">{ordersPerDay}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={20}
-                    max={400}
-                    step={10}
-                    value={ordersPerDay}
-                    onChange={(event) => setOrdersPerDay(Number(event.target.value))}
-                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-300"
-                  />
-                </div>
-                
-                <div>
-                  <div className="mb-4">
-                    <span className="text-sm font-medium uppercase tracking-widest text-white/60">Minutes per order today</span>
-                  </div>
-                  <div className="flex gap-3">
-                    {[5, 10, 15, 20].map((val) => (
-                      <button
-                        key={val}
-                        onClick={() => setMinutesPerOrder(val)}
-                        className={`flex-1 rounded-xl py-3 text-base font-bold transition-all border ${
-                          minutesPerOrder === val
-                            ? "bg-cyan-400 text-[#05060d] border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.3)] scale-105"
-                            : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
-                        }`}
-                      >
-                        {val}m
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="rounded-3xl border border-white/10 bg-[#0b0e1a]/80 p-8 flex flex-col justify-center relative overflow-hidden shadow-2xl backdrop-blur-md">
-               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-fuchsia-500/20 blur-[50px] rounded-full" />
-              <p className="text-sm font-medium uppercase tracking-widest text-white/60">Estimated yearly manual cost</p>
-              <p className="mt-2 text-6xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-300 flex items-center">
-                €<AnimatedNumber value={yearlyCost} />
-              </p>
-              <div className="w-full h-px bg-gradient-to-r from-white/20 to-transparent my-8" />
-              <p className="text-lg text-white/80 font-light leading-relaxed">
-                PetaRon typically reduces this operational cost by over <span className="font-bold text-emerald-400">80%</span>, paying for itself within the very first month.
-              </p>
+          <div className="border-t border-th-line pt-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
+            <p className="text-[10px] text-th-faint">
+              &copy; {new Date().getFullYear()} Petaron AI. All rights reserved.
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] text-ac-pos/50 border border-ac-pos/20 rounded-full px-2.5 py-0.5">EU-hosted</span>
+              <span className="text-[10px] text-ac-1/50 border border-ac-1/20 rounded-full px-2.5 py-0.5">GDPR compliant</span>
             </div>
           </div>
         </div>
-      </section>
+      </footer>
 
-      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col px-6 pb-20 md:px-10 z-10">
-        <section id="booking" className="py-32 relative z-10">
-          <div className="mx-auto max-w-5xl relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 via-violet-500/20 to-fuchsia-500/20 blur-3xl rounded-[3rem] -z-10 opacity-70" />
-            <div className="glass-panel p-8 md:p-12 relative z-10 overflow-hidden border border-white/20">
-              <div className="absolute top-0 right-0 p-32 bg-cyan-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
-              <div className="absolute bottom-0 left-0 p-32 bg-fuchsia-500/10 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
-              
-              <div className="text-center mb-12">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
-                  Take Action
-                </p>
-                <h3 className="mt-4 text-4xl font-serif font-normal tracking-tight text-white md:text-5xl">
-                  Ready for the future?
-                </h3>
-                <p className="mx-auto mt-4 max-w-lg text-lg text-white/60 font-light">
-                  Book a 15-minute call. We'll show you PetaRon with your actual data and map out your ROI.
-                </p>
-              </div>
+      <SparklesSection text="PETARON" particleCount={80} particleColor="rgb(var(--ac-1))" />
 
-              <div className="grid md:grid-cols-2 gap-12 items-start">
-                <div className="bg-[#0b0e1a]/80 p-6 rounded-2xl border border-white/10 flex flex-col items-center shadow-xl backdrop-blur-md">
-                  <p className="text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 text-cyan-400">
-                    <CalendarIcon size={18} />
-                    Select a Date
-                  </p>
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    className="rounded-xl border border-white/5 bg-[#06070c]/50 text-white shadow-inner p-4"
-                  />
-                </div>
-
-                <form className="space-y-6" onSubmit={handleBookingSubmit}>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Jane Doe"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-4 text-base text-white placeholder:text-white/20 focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-cyan-400/10 transition-all shadow-inner"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Work Email</label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="jane@logistics.com"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-4 text-base text-white placeholder:text-white/20 focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-4 focus:ring-cyan-400/10 transition-all shadow-inner"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-white/60 mb-2">
-                      <span className="flex items-center gap-2">
-                        <Clock size={16} className="text-fuchsia-400" /> Preferred Time
-                      </span>
-                    </label>
-                    <select
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-[#0b0e1a] px-5 py-4 text-base text-white focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-400/10 shadow-inner"
-                    >
-                      <option value="09:00">09:00 AM</option>
-                      <option value="10:00">10:00 AM</option>
-                      <option value="11:00">11:00 AM</option>
-                      <option value="13:00">01:00 PM</option>
-                      <option value="15:00">03:00 PM</option>
-                    </select>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="group w-full mt-2 flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 px-5 py-4 text-base font-bold text-[#05060d] transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_30px_rgba(34,211,238,0.4)]"
-                  >
-                    Confirm Booking
-                    <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <footer className="border-t border-white/10 pt-10 pb-6 flex flex-col md:flex-row items-center justify-between gap-6 z-10">
-          <div className="flex items-center gap-3">
-             <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-cyan-400 to-fuchsia-500 flex items-center justify-center">
-              <span className="font-bold text-black text-[10px] tracking-tighter">PR</span>
-            </div>
-            <p className="text-lg font-serif font-normal italic tracking-wider text-white/90">PetaRon.ai</p>
-          </div>
-          <div className="flex gap-6 text-xs font-medium tracking-widest uppercase text-white/40">
-            <span>© 2026 PetaRon AI.</span>
-            <span className="hidden md:inline">•</span>
-            <span className="text-emerald-400/70">EU-hosted</span>
-            <span className="hidden md:inline">•</span>
-            <span className="text-cyan-400/70">GDPR compliant</span>
-          </div>
-        </footer>
-      </div>
+      <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
     </main>
   );
 };
