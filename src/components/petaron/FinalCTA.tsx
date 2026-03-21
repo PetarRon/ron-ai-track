@@ -66,7 +66,6 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
                   type="text"
                   name="name"
                   required
-                  placeholder="Jane Doe"
                   className="w-full rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                 />
                 <ValidationError
@@ -84,7 +83,6 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
                   type="email"
                   name="email"
                   required
-                  placeholder="jane@logistics.com"
                   className="w-full rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                 />
                 <ValidationError
@@ -102,7 +100,6 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
                   name="message"
                   required
                   rows={4}
-                  placeholder="Tell us about your needs..."
                   className="w-full resize-none rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                 />
                 <ValidationError
@@ -115,7 +112,7 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
               <button
                 type="submit"
                 disabled={state.submitting}
-                className="w-full rounded-full bg-ac-1 px-6 py-3.5 text-sm font-bold text-[#05060d] transition hover:shadow-[0_0_24px_rgb(var(--ac-1)/0.4)] disabled:opacity-50"
+                className="w-full rounded-full bg-ac-1 px-6 py-3.5 text-sm font-bold text-white transition hover:shadow-[0_0_24px_rgb(var(--ac-1)/0.4)] disabled:opacity-50"
               >
                 {state.submitting ? "Sending..." : "Send Message"}
               </button>
