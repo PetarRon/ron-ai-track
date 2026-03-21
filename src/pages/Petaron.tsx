@@ -416,7 +416,7 @@ const Petaron = () => {
 
       {/* Hero background image */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[800px] overflow-hidden md:h-[900px]">
-        <img src="/hero-bg.png" alt="" className="h-full w-full object-cover opacity-25" />
+        <img src="/hero-bg.png" alt="" className="h-full w-full object-cover opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-b from-th-page/30 via-th-page/50 to-th-page" />
       </div>
 
