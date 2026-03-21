@@ -6,49 +6,49 @@
 
 @layer base {
   :root {
-    --background: 220 25% 6%;
-    --foreground: 210 20% 92%;
+    --background: 35 20% 98%;
+    --foreground: 20 10% 11%;
 
-    --card: 220 20% 10%;
-    --card-foreground: 210 20% 92%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 10% 11%;
 
-    --popover: 220 20% 10%;
-    --popover-foreground: 210 20% 92%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 10% 11%;
 
-    --primary: 175 85% 45%;
-    --primary-foreground: 220 25% 6%;
+    --primary: 20 10% 15%;
+    --primary-foreground: 35 20% 98%;
 
-    --secondary: 220 20% 14%;
-    --secondary-foreground: 210 20% 85%;
+    --secondary: 35 15% 94%;
+    --secondary-foreground: 20 10% 20%;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 215 15% 55%;
+    --muted: 35 12% 92%;
+    --muted-foreground: 30 8% 44%;
 
-    --accent: 175 85% 45%;
-    --accent-foreground: 220 25% 6%;
+    --accent: 20 10% 15%;
+    --accent-foreground: 35 20% 98%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 18%;
-    --input: 220 15% 18%;
-    --ring: 175 85% 45%;
+    --border: 35 15% 87%;
+    --input: 35 15% 87%;
+    --ring: 20 10% 15%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 220 25% 8%;
-    --sidebar-foreground: 210 20% 92%;
-    --sidebar-primary: 175 85% 45%;
-    --sidebar-primary-foreground: 220 25% 6%;
-    --sidebar-accent: 220 20% 14%;
-    --sidebar-accent-foreground: 210 20% 92%;
-    --sidebar-border: 220 15% 18%;
-    --sidebar-ring: 175 85% 45%;
+    --sidebar-background: 35 20% 97%;
+    --sidebar-foreground: 20 10% 11%;
+    --sidebar-primary: 20 10% 15%;
+    --sidebar-primary-foreground: 35 20% 98%;
+    --sidebar-accent: 35 15% 94%;
+    --sidebar-accent-foreground: 20 10% 11%;
+    --sidebar-border: 35 15% 87%;
+    --sidebar-ring: 20 10% 15%;
 
     /* Custom tokens */
-    --glow: 175 85% 45%;
-    --surface: 220 20% 12%;
-    --surface-hover: 220 20% 16%;
+    --glow: 20 10% 15%;
+    --surface: 35 15% 96%;
+    --surface-hover: 35 12% 92%;
 
     /* ============================================================
        THEME TOKENS -- Edit these to restyle the entire website.
@@ -57,31 +57,31 @@
        ============================================================ */
 
     /* -- Backgrounds ------------------------------------------- */
-    --th-page:        6 7 12;       /* main page background       */
-    --th-surface:     8 12 22;      /* cards, panels              */
-    --th-surface-alt: 6 8 20;       /* alternate / inset surfaces */
-    --th-elevated:    11 14 26;     /* modals, popovers           */
+    --th-page:        250 248 245;  /* main page background       */
+    --th-surface:     255 255 255;  /* cards, panels              */
+    --th-surface-alt: 244 241 236;  /* alternate / inset surfaces */
+    --th-elevated:    255 255 255;  /* modals, popovers           */
 
     /* -- Text -------------------------------------------------- */
-    --th-heading:     255 255 255;  /* headings, primary text     */
-    --th-body:        156 163 175;  /* body copy                  */
-    --th-muted:       107 114 128;  /* labels, captions           */
-    --th-faint:       68 74 88;     /* copyright, fine print      */
+    --th-heading:     28 25 23;     /* headings, primary text     */
+    --th-body:        87 78 70;     /* body copy                  */
+    --th-muted:       140 130 120;  /* labels, captions           */
+    --th-faint:       195 188 178;  /* copyright, fine print      */
 
     /* -- Borders ----------------------------------------------- */
-    --th-line:        3 42 54;     /* standard borders           */
-    --th-line-subtle: 1 22 35;    /* very faint dividers        */
+    --th-line:        229 224 216;  /* standard borders           */
+    --th-line-subtle: 240 236 230;  /* very faint dividers        */
 
     /* -- Accent colours ----------------------------------------
        Change these to restyle buttons, gradients, highlights.
        Values are R G B so Tailwind opacity modifiers work.
        Use ac-1, ac-2, ac-3, ac-pos, ac-neg in Tailwind classes.
        --------------------------------------------------------- */
-    --ac-1:     34 211 238;     /* primary: buttons, links, glow  */
-    --ac-2:     232 121 249;    /* secondary: highlights          */
-    --ac-3:     167 139 250;    /* tertiary: gradients, hover     */
-    --ac-pos:   52 211 153;     /* positive: success, savings     */
-    --ac-neg:   244 114 182;    /* negative: cost, warnings       */
+    --ac-1:     28 25 23;       /* primary: buttons, links, glow  */
+    --ac-2:     68 64 60;       /* secondary: highlights          */
+    --ac-3:     120 113 108;    /* tertiary: gradients, hover     */
+    --ac-pos:   22 101 52;      /* positive: success, savings     */
+    --ac-neg:   185 28 28;      /* negative: cost, warnings       */
 
     /* -- Fonts -------------------------------------------------
        --font-heading: used for section titles, hero, FAQ headings
@@ -89,7 +89,7 @@
        --font-display: used for feature titles, badges, buttons
        --font-mono:    used for code, technical text
        --------------------------------------------------------- */
-    --font-heading: 'DM Serif Display', Georgia, serif;
+    --font-heading: 'Playfair Display', Georgia, serif;
     --font-body:    'Inter', system-ui, sans-serif;
     --font-display: 'Space Grotesk', system-ui, sans-serif;
     --font-mono:    'JetBrains Mono', monospace;
@@ -110,7 +110,7 @@
   }
 
   ::selection {
-    background: hsl(175 85% 45% / 0.3);
+    background: hsl(20 10% 15% / 0.12);
   }
 
   html {
@@ -120,15 +120,15 @@
 
 @layer utilities {
   .text-glow {
-    text-shadow: 0 0 40px hsl(175 85% 45% / 0.4), 0 0 80px hsl(175 85% 45% / 0.15);
+    text-shadow: 0 0 40px hsl(20 10% 15% / 0.15), 0 0 80px hsl(20 10% 15% / 0.08);
   }
 
   .border-glow {
-    box-shadow: 0 0 20px hsl(175 85% 45% / 0.15), inset 0 0 20px hsl(175 85% 45% / 0.05);
+    box-shadow: 0 0 20px hsl(20 10% 15% / 0.08), inset 0 0 20px hsl(20 10% 15% / 0.03);
   }
 
   .bg-gradient-radial {
-    background: radial-gradient(ellipse at center, hsl(175 85% 45% / 0.08) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, hsl(20 10% 15% / 0.05) 0%, transparent 70%);
   }
 
   .section-padding {
@@ -136,19 +136,19 @@
   }
 
   .bg-surface-light {
-    background: hsl(220 20% 92%);
+    background: hsl(35 15% 92%);
   }
 
   .geo-block {
     border-radius: 12px;
-    background: hsl(220 20% 86% / 0.6);
-    border: 1px solid hsl(220 20% 82% / 0.4);
+    background: hsl(35 12% 88% / 0.6);
+    border: 1px solid hsl(35 12% 84% / 0.4);
   }
 
   .geo-block-accent {
     border-radius: 10px;
-    background: hsl(175 85% 45% / 0.15);
-    border: 1px solid hsl(175 85% 45% / 0.25);
+    background: hsl(20 10% 15% / 0.06);
+    border: 1px solid hsl(20 10% 15% / 0.15);
   }
 
   .glass-panel {
@@ -161,7 +161,7 @@
     );
     backdrop-filter: blur(18px);
     box-shadow:
-      0 10px 30px hsl(233 50% 4% / 0.45),
+      0 10px 30px hsl(20 10% 11% / 0.08),
       inset 0 1px 0 hsl(0 0% 100% / 0.22);
   }
 
@@ -174,8 +174,8 @@
 
   .animated-grid {
     background-image:
-      linear-gradient(to right, hsl(0 0% 100% / 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(0 0% 100% / 0.03) 1px, transparent 1px);
+      linear-gradient(to right, hsl(20 10% 11% / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(20 10% 11% / 0.04) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
     animation: grid-drift 40s linear infinite;
@@ -186,19 +186,19 @@
     inset: 0;
     pointer-events: none;
     z-index: 40;
-    opacity: 0.04;
-    mix-blend-mode: overlay;
+    opacity: 0.025;
+    mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
   .shimmer-text {
     background: linear-gradient(
       110deg,
-      hsl(0 0% 100% / 0.8) 22%,
-      hsl(0 0% 100% / 0.95) 38%,
-      hsl(203, 100%, 50%) 52%,
-      hsl(275, 100%, 72%) 64%,
-      hsl(0 0% 100% / 0.95) 78%
+      hsl(20 10% 11%) 22%,
+      hsl(20 10% 11%) 38%,
+      hsl(30, 15%, 40%) 52%,
+      hsl(20, 10%, 25%) 64%,
+      hsl(20 10% 11%) 78%
     );
     background-size: 320% 100%;
     background-clip: text;
@@ -214,16 +214,16 @@
 
   .neon-button {
     box-shadow:
-      0 0 0 1px hsl(0 0% 100% / 0.22) inset,
-      0 10px 24px hsl(266 84% 55% / 0.28),
-      0 0 50px hsl(190 95% 70% / 0.24);
+      0 0 0 1px hsl(20 10% 15% / 0.2) inset,
+      0 10px 24px hsl(20 10% 15% / 0.1),
+      0 0 50px hsl(20 10% 30% / 0.08);
   }
 
   .marquee {
     overflow: hidden;
-    border: 1px solid hsl(0 0% 100% / 0.14);
+    border: 1px solid hsl(35 15% 85%);
     border-radius: 999px;
-    background: hsl(0 0% 100% / 0.05);
+    background: hsl(35 15% 94%);
     backdrop-filter: blur(10px);
   }
 
@@ -236,7 +236,7 @@
     text-transform: uppercase;
     letter-spacing: 0.18em;
     font-size: 0.65rem;
-    color: hsl(0 0% 100% / 0.72);
+    color: hsl(20 10% 35%);
     animation: marquee-move 36s linear infinite;
   }
 
@@ -258,7 +258,7 @@
     height: 0.3rem;
     margin-top: -0.15rem;
     border-radius: 999px;
-    background: hsl(0 0% 100% / 0.4);
+    background: hsl(20 10% 60%);
   }
 
   .logo-frame {
@@ -271,8 +271,8 @@
     );
     backdrop-filter: blur(16px);
     box-shadow:
-      0 20px 40px hsl(233 50% 4% / 0.42),
-      inset 0 1px 0 hsl(0 0% 100% / 0.2);
+      0 20px 40px hsl(20 10% 11% / 0.08),
+      inset 0 1px 0 hsl(0 0% 100%);
   }
 
   .aurora-frame {
@@ -287,17 +287,17 @@
     background:
       radial-gradient(
         32% 38% at 18% 28%,
-        hsl(296 88% 62% / 0.22),
+        hsl(30 15% 40% / 0.1),
         transparent 78%
       ),
       radial-gradient(
         34% 40% at 82% 22%,
-        hsl(191 95% 68% / 0.18),
+        hsl(35 20% 50% / 0.08),
         transparent 80%
       ),
       radial-gradient(
         40% 44% at 52% 88%,
-        hsl(252 82% 60% / 0.16),
+        hsl(25 12% 35% / 0.06),
         transparent 82%
       );
     filter: blur(12px);
@@ -316,13 +316,13 @@
     align-items: center;
     gap: 0.55rem;
     border-radius: 999px;
-    border: 1px solid hsl(0 0% 100% / 0.18);
-    background: hsl(0 0% 100% / 0.07);
+    border: 1px solid hsl(35 15% 85%);
+    background: hsl(0 0% 100%);
     padding: 0.6rem 0.8rem;
     font-size: 0.76rem;
     font-weight: 600;
     letter-spacing: 0.03em;
-    color: hsl(0 0% 100% / 0.88);
+    color: hsl(20 10% 20%);
     backdrop-filter: blur(10px);
   }
 
@@ -332,11 +332,11 @@
     border-radius: 999px;
     background: linear-gradient(
       120deg,
-      hsl(296 90% 70%),
-      hsl(190 95% 74%),
-      hsl(45 100% 70%)
+      hsl(20 10% 25%),
+      hsl(30 15% 40%),
+      hsl(35 20% 55%)
     );
-    box-shadow: 0 0 16px hsl(296 90% 70% / 0.5);
+    box-shadow: 0 0 10px hsl(20 10% 25% / 0.3);
   }
 }
 
@@ -413,4 +413,3 @@ div[data-cal-namespace] > div,
   transform-origin: top center;
   max-height: 85vh !important;
 }
-
