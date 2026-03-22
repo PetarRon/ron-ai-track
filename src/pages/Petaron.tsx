@@ -222,7 +222,7 @@ const SellLine = ({ text }: { text: string }) => (
 const faqItems = [
   {
     question: "Does it work with our existing TMS?",
-    answer: "Yes. PetaRon.ai connects to the TMS you already use. No ripping and replacing -- your setup stays the same, the manual work disappears.",
+    answer: "Yes. PetaRon.ai connects to the TMS you already use. No ripping and replacing, your setup stays the same, the manual work disappears.",
     meta: "Integration",
   },
   {
@@ -237,17 +237,17 @@ const faqItems = [
   },
   {
     question: "Is this built specifically for logistics?",
-    answer: "From the ground up. PetaRon.ai was designed around the daily reality of freight operations -- multi-format orders, tight deadlines, and zero tolerance for errors.",
+    answer: "From the ground up. PetaRon.ai was designed around the daily reality of freight operations, multi-format orders, tight deadlines, and zero tolerance for errors.",
     meta: "Industry",
   },
   {
     question: "What happens when the AI encounters an edge case?",
-    answer: "It flags it. Anything the AI is not fully confident about gets routed to your team for manual review. Nothing slips through unchecked.",
+    answer: "It flags it. Anything the AI is not fully confident about gets routed to your team for review. Nothing slips through unchecked.",
     meta: "Reliability",
   },
   {
     question: "How fast is the ROI?",
-    answer: "Most teams see the impact in the first week. Less time on data entry means more time with customers -- that is value from day one.",
+    answer: "Most teams see the impact in the first week. Less time on data entry means more time with customers, that is value from day one.",
     meta: "Value",
   },
   {
@@ -257,7 +257,7 @@ const faqItems = [
   },
   {
     question: "What data do you need from us to get started?",
-    answer: "Access to your order inbox, basic TMS credentials, and a short walkthrough of your field mapping. That is it -- we handle the rest.",
+    answer: "Access to your order inbox, basic TMS credentials, and a short walkthrough of your field mapping. That is it, we handle the rest.",
     meta: "Setup",
   },
 ];
