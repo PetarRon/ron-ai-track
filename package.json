@@ -13,7 +13,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@formspree/react": "2.5.1",
+    "@calcom/embed-react": "^1.5.3",
+    "@formspree/react": "^3.0.0",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -46,6 +47,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "d3": "^7.9.0",
+    "d3-sankey": "^0.12.3",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.34.0",
@@ -70,6 +73,8 @@
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.0.0",
+    "@types/d3": "^7.4.3",
+    "@types/d3-sankey": "^0.12.5",
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",

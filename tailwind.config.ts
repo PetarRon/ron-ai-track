@@ -14,8 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Space Grotesk", "system-ui", "sans-serif"],
-        body: ["Inter", "system-ui", "sans-serif"],
+        display: ["var(--font-display)"],
+        body: ["var(--font-body)"],
+        serif: ["var(--font-heading)"],
+        mono: ["var(--font-mono)"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,6 +56,28 @@ export default {
         surface: "hsl(var(--surface))",
         "surface-hover": "hsl(var(--surface-hover))",
         glow: "hsl(var(--glow))",
+        th: {
+          page: "rgb(var(--th-page) / <alpha-value>)",
+          surface: "rgb(var(--th-surface) / <alpha-value>)",
+          "surface-alt": "rgb(var(--th-surface-alt) / <alpha-value>)",
+          elevated: "rgb(var(--th-elevated) / <alpha-value>)",
+          heading: "rgb(var(--th-heading) / <alpha-value>)",
+          body: "rgb(var(--th-body) / <alpha-value>)",
+          muted: "rgb(var(--th-muted) / <alpha-value>)",
+          faint: "rgb(var(--th-faint) / <alpha-value>)",
+          line: "rgb(var(--th-line) / <alpha-value>)",
+          "line-subtle": "rgb(var(--th-line-subtle) / <alpha-value>)",
+        },
+        ac: {
+          1: "rgb(var(--ac-1) / <alpha-value>)",
+          2: "rgb(var(--ac-2) / <alpha-value>)",
+          3: "rgb(var(--ac-3) / <alpha-value>)",
+          pos: "rgb(var(--ac-pos) / <alpha-value>)",
+          neg: "rgb(var(--ac-neg) / <alpha-value>)",
+          "hero-from": "rgb(var(--ac-hero-from) / <alpha-value>)",
+          "hero-via": "rgb(var(--ac-hero-via) / <alpha-value>)",
+          "hero-to": "rgb(var(--ac-hero-to) / <alpha-value>)",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
