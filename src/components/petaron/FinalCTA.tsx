@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useForm, ValidationError } from "@formspree/react";
 
@@ -11,10 +10,14 @@ const ORDER_CHANNELS = [
   { id: "phone", label: "Phone / WhatsApp", sub: "Direct contact" },
 ];
 
+const RATE_LIMIT_MS = 30_000; // 30 seconds between submissions
+
 const FinalCTA = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const [state, handleFormspreeSubmit] = useForm("mreyazvz");
+  const lastSubmitRef = useRef<number>(0);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,10 +34,21 @@ const FinalCTA = () => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleFormspreeSubmit(e);
-  };
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const now = Date.now();
+      if (now - lastSubmitRef.current < RATE_LIMIT_MS) {
+        setRateLimited(true);
+        setTimeout(() => setRateLimited(false), 3000);
+        return;
+      }
+      lastSubmitRef.current = now;
+      setRateLimited(false);
+      handleFormspreeSubmit(e);
+    },
+    [handleFormspreeSubmit]
+  );
 
   if (state.succeeded) {
     return (
@@ -82,12 +96,12 @@ const FinalCTA = () => {
           </svg>
         </div>
 
-        <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12">
+        <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7 }}
-            className="text-center mb-12"
+            className="text-center mb-12 w-full"
           >
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-tight text-[hsl(220_25%_10%)]">
               Ready to stop typing orders
@@ -183,12 +197,18 @@ const FinalCTA = () => {
               </div>
 
               <button
-                type="submit" disabled={state.submitting}
+                type="submit" disabled={state.submitting || rateLimited}
                 className="w-full bg-primary text-primary-foreground py-4 rounded-lg font-display font-semibold text-lg transition-all hover:shadow-[0_0_30px_hsl(175_85%_45%/0.3)] hover:scale-[1.02] flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {state.submitting ? "Sending…" : "Book Your Free Demo"}
-                {!state.submitting && <ArrowRight className="w-5 h-5" />}
+                {state.submitting ? "Sending…" : rateLimited ? "Please wait…" : "Book Your Free Demo"}
+                {!state.submitting && !rateLimited && <ArrowRight className="w-5 h-5" />}
               </button>
+
+              {rateLimited && (
+                <p className="text-xs text-destructive text-center">
+                  Please wait a moment before submitting again.
+                </p>
+              )}
 
               <p className="text-xs text-muted-foreground text-center">
                 No commitment. 15-minute call. We'll show you Petaron with your actual data.

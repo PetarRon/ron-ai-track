@@ -21,7 +21,7 @@ const PainPoints = () => {
         <div className="max-w-3xl space-y-8 text-lg md:text-xl text-muted-foreground leading-relaxed">
           <p>
             Every morning, the same mountain of order emails lands in your inbox.
-            PDFs, Excel sheets, free-text emails — every client sends orders in
+            PDFs, Excel sheets, free-text emails. Every client sends orders in
             their own format. Your team opens each one, reads it, and types the
             details into your TMS.{" "}
             <span className="text-foreground font-semibold">
@@ -31,13 +31,9 @@ const PainPoints = () => {
           </p>
 
           <p>
-            Mistakes happen — a wrong postcode, a missed reference, a weight
-            typed as kilograms instead of tonnes. Small errors that cause
-            delays, rework, and frustrated clients.{" "}
-            <span className="text-foreground font-semibold">
-              2–3 errors per 100 orders
-            </span>{" "}
-            processed by hand.
+            One mistyped postcode. One wrong weight unit. One missed reference.
+            In logistics, a single error means a rebooked shipment, a missed SLA,
+            and an angry client.
           </p>
 
           <p>
@@ -46,9 +42,15 @@ const PainPoints = () => {
             work. Your best people spend their days copying data instead of
             managing relationships. The cost?{" "}
             <span className="text-primary font-display font-bold text-glow">
-              €2.83 per order
+              €3 per order
             </span>{" "}
-            in labor alone — and it only goes up.
+            in labor alone. Before the mistakes.
+          </p>
+
+          <p>
+            Your best people deserve better than copy-paste. PetaRon gives your
+            team back the time to build client relationships and grow the business,
+            not fix typos.
           </p>
         </div>
       </motion.div>
