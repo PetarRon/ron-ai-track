@@ -18,7 +18,7 @@ const steps = [
     description: "Structures order data, maps fields, and validates critical details automatically.",
     Icon: BrainCircuit,
     colorClass: "text-ac-2",
-    chips: ["Mapping", "Validation", "Drafting"],
+    chips: ["Data Enrichment & Processing"],
   },
   {
     title: "Review",

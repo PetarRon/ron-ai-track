@@ -52,6 +52,23 @@ These control buttons, gradients, highlights, and all interactive elements.
 | `--ac-pos` | `ac-pos` | Positive: success, savings | `52 211 153` | #34d399 (emerald) |
 | `--ac-neg` | `ac-neg` | Negative: cost, warnings | `244 114 182` | #f472b6 (pink) |
 
+### Hero subtitle (italic line under the main headline)
+
+Darker gradient so it stays legible on light backgrounds. Tailwind: `from-ac-hero-from via-ac-hero-via to-ac-hero-to`.
+
+| Variable | Role | Default (R G B) |
+|---|---|---|
+| `--ac-hero-from` | Gradient start (left) | `72 64 58` |
+| `--ac-hero-via` | Middle | `48 43 39` |
+| `--ac-hero-to` | Gradient end (right) | `28 25 23` |
+
+**Example -- even darker:**
+```css
+--ac-hero-from: 48 43 39;
+--ac-hero-via:  35 31 28;
+--ac-hero-to:   22 20 18;
+```
+
 **Example -- change primary from cyan to green:**
 ```css
 --ac-1: 34 197 94;
@@ -230,7 +247,19 @@ In `src/index.css`:
 
 ---
 
-## 5. File reference
+## 5. Pages & Routes
+
+| Page | Route | File |
+|---|---|---|
+| Landing page | `/` | `src/pages/Petaron.tsx` |
+| About | `/about` | `src/pages/About.tsx` |
+
+- **Careers** -- opens the contact form modal (no separate page).
+- **FAQ** -- same-page anchor (`#faq`) on the landing page.
+
+---
+
+## 6. File reference
 
 | What | Where |
 |---|---|
@@ -238,6 +267,8 @@ In `src/index.css`:
 | Tailwind colour aliases | `tailwind.config.ts` (`th` and `ac` objects) |
 | Hero background image | `public/hero-bg.png` |
 | Main page layout & sections | `src/pages/Petaron.tsx` |
+| About page | `src/pages/About.tsx` |
+| Route definitions | `src/App.tsx` |
 | Shared components (button, logo) | `src/components/petaron/shared.tsx` |
 | How it Works cards | `src/components/petaron/ProcessFlowSection.tsx` |
 | See it in Action tabs | `src/components/petaron/PlatformPreviewSection.tsx` |

@@ -222,7 +222,6 @@ export const DashboardPreview = () => {
                           <span>Today 14:02</span>
                         </div>
                         <p className="mt-1.5 text-xs font-medium text-white/90">julien.trevoux@client.com</p>
-                        {/* INCREASED TEXT SIZE FOR CONVERSATION HERE */}
                         <p className="mt-2 text-[13px] leading-relaxed text-white/70">
                           Transport inquiry Rotterdam to Hamburg tomorrow. 24 pallets attached in PDF. Please use same carrier settings as last shipment.
                         </p>

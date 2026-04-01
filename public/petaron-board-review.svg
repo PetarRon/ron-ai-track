@@ -16,17 +16,32 @@
   <rect x="750" y="220" width="190" height="50" rx="14" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.2)"/>
   <rect x="958" y="220" width="190" height="50" rx="14" fill="rgba(52,211,153,0.12)" stroke="rgba(52,211,153,0.2)"/>
   <rect x="1166" y="220" width="326" height="50" rx="14" fill="#101B31"/>
-  <rect x="542" y="298" width="950" height="46" rx="14" fill="#101B31"/>
+  <rect x="542" y="298" width="698" height="46" rx="14" fill="#101B31"/>
+  <rect x="1260" y="298" width="232" height="46" rx="14" fill="rgba(251,191,36,0.06)" stroke="rgba(251,191,36,0.28)" stroke-dasharray="10 8"/>
 
   <rect x="506" y="410" width="490" height="506" rx="28" fill="#0D172B" stroke="rgba(255,255,255,0.06)"/>
   <rect x="542" y="450" width="418" height="134" rx="22" fill="#101B31"/>
   <rect x="542" y="608" width="418" height="118" rx="22" fill="#101B31"/>
   <rect x="542" y="748" width="418" height="132" rx="22" fill="#101B31"/>
+  <rect x="574" y="484" width="238" height="16" rx="8" fill="rgba(255,255,255,0.12)"/>
+  <rect x="574" y="514" width="156" height="14" rx="7" fill="rgba(255,255,255,0.08)"/>
+  <rect x="574" y="542" width="112" height="14" rx="7" fill="rgba(251,191,36,0.14)"/>
+  <rect x="574" y="640" width="182" height="16" rx="8" fill="rgba(255,255,255,0.12)"/>
+  <rect x="574" y="670" width="96" height="14" rx="7" fill="rgba(251,191,36,0.14)"/>
+  <rect x="574" y="780" width="208" height="16" rx="8" fill="rgba(255,255,255,0.12)"/>
+  <rect x="574" y="810" width="148" height="14" rx="7" fill="rgba(255,255,255,0.08)"/>
+  <rect x="574" y="838" width="118" height="14" rx="7" fill="rgba(251,191,36,0.14)"/>
 
   <rect x="1028" y="410" width="500" height="506" rx="28" fill="#0D172B" stroke="rgba(255,255,255,0.06)"/>
   <rect x="1064" y="450" width="428" height="76" rx="18" fill="#101B31"/>
   <rect x="1064" y="544" width="428" height="76" rx="18" fill="#101B31"/>
   <rect x="1064" y="638" width="428" height="76" rx="18" fill="#101B31"/>
+  <rect x="1094" y="476" width="170" height="14" rx="7" fill="rgba(255,255,255,0.12)"/>
+  <rect x="1280" y="476" width="96" height="14" rx="7" fill="rgba(251,191,36,0.16)"/>
+  <rect x="1094" y="570" width="156" height="14" rx="7" fill="rgba(255,255,255,0.12)"/>
+  <rect x="1266" y="570" width="128" height="14" rx="7" fill="rgba(255,255,255,0.08)"/>
+  <rect x="1094" y="664" width="148" height="14" rx="7" fill="rgba(255,255,255,0.12)"/>
+  <rect x="1260" y="664" width="112" height="14" rx="7" fill="rgba(251,191,36,0.16)"/>
   <rect x="1064" y="732" width="206" height="116" rx="20" fill="rgba(52,211,153,0.12)" stroke="rgba(52,211,153,0.2)"/>
   <rect x="1286" y="732" width="206" height="116" rx="20" fill="rgba(255,255,255,0.05)"/>
 

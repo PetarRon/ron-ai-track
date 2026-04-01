@@ -74,6 +74,9 @@ export default {
           3: "rgb(var(--ac-3) / <alpha-value>)",
           pos: "rgb(var(--ac-pos) / <alpha-value>)",
           neg: "rgb(var(--ac-neg) / <alpha-value>)",
+          "hero-from": "rgb(var(--ac-hero-from) / <alpha-value>)",
+          "hero-via": "rgb(var(--ac-hero-via) / <alpha-value>)",
+          "hero-to": "rgb(var(--ac-hero-to) / <alpha-value>)",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
