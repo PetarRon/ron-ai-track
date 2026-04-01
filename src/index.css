@@ -83,6 +83,14 @@
     --ac-pos:   22 101 52;      /* positive: success, savings     */
     --ac-neg:   185 28 28;      /* negative: cost, warnings       */
 
+    /* -- Hero subtitle gradient (italic line under main headline)
+          Darker than default ac-* so the line stays readable on cream.
+          Edit here or use Tailwind: from-ac-hero-from via-ac-hero-via to-ac-hero-to
+       --------------------------------------------------------- */
+    --ac-hero-from: 72 64 58;
+    --ac-hero-via:  48 43 39;
+    --ac-hero-to:   28 25 23;
+
     /* -- Fonts -------------------------------------------------
        --font-heading: used for section titles, hero, FAQ headings
        --font-body:    used for paragraphs, labels, descriptions
