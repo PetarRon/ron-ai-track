@@ -1,0 +1,19 @@
+.svg-wrapper {
+  position: relative;
+  min-height: 320px;
+  flex: 1;
+}
+
+.svg-wrapper svg {
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+
+.particles-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 3;
+}
