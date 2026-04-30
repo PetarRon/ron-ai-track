@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useForm, ValidationError } from "@formspree/react";
-import { SpinningLogo } from "@/components/petaron/shared";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
+import { Footer } from "@/components/petaron/Footer";
+import { PageShell } from "@/components/petaron/PageShell";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -13,20 +13,8 @@ const Careers = () => {
   const [state, handleSubmit] = useForm("mreyazvz");
 
   return (
-    <div className="relative min-h-screen bg-th-page text-th-body">
-      <div className="pointer-events-none absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10" />
-
-      <div className="relative z-10 mx-auto w-full max-w-[900px] px-5 py-10 md:px-8">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-th-muted hover:text-th-heading transition-colors mb-10">
-          <ArrowLeft size={16} />
-          Back to home
-        </Link>
-
-        <div className="flex items-center gap-3 mb-6">
-          <SpinningLogo size={28} />
-          <span className="text-lg font-bold tracking-wide text-th-heading">Petaron.ai</span>
-        </div>
-
+    <PageShell>
+      <div className="relative z-10 mx-auto w-full max-w-[900px] px-5 py-10 md:px-8 md:py-14">
         <motion.h1
           className="text-3xl font-serif font-normal tracking-tight text-th-heading md:text-4xl mb-4"
           initial="hidden"
@@ -92,7 +80,7 @@ const Careers = () => {
 
             {state.succeeded ? (
               <div className="rounded-2xl border border-th-line bg-th-elevated p-8 text-center space-y-4">
-                <CheckCircle2 className="mx-auto h-14 w-14 text-ac-1" />
+                <CheckCircle2 className="mx-auto h-14 w-14 text-ac-1" aria-hidden="true" />
                 <h3 className="text-2xl font-bold text-th-heading">Application received</h3>
                 <p className="text-th-body">
                   Thank you for your interest. We will review your application and be in touch soon.
@@ -108,16 +96,19 @@ const Careers = () => {
                   autoComplete="off"
                 />
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
+                  <label htmlFor="careers-name" className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
                     Full Name
                   </label>
                   <input
+                    id="careers-name"
                     type="text"
                     name="name"
                     required
+                    aria-describedby="careers-name-error"
                     className="w-full rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                   />
                   <ValidationError
+                    id="careers-name-error"
                     prefix="Name"
                     field="name"
                     errors={state.errors}
@@ -125,16 +116,19 @@ const Careers = () => {
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
+                  <label htmlFor="careers-email" className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
                     Email
                   </label>
                   <input
+                    id="careers-email"
                     type="email"
                     name="email"
                     required
+                    aria-describedby="careers-email-error"
                     className="w-full rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                   />
                   <ValidationError
+                    id="careers-email-error"
                     prefix="Email"
                     field="email"
                     errors={state.errors}
@@ -142,15 +136,18 @@ const Careers = () => {
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
+                  <label htmlFor="careers-portfolio" className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
                     LinkedIn or Portfolio (optional)
                   </label>
                   <input
+                    id="careers-portfolio"
                     type="url"
                     name="portfolio"
+                    aria-describedby="careers-portfolio-error"
                     className="w-full rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                   />
                   <ValidationError
+                    id="careers-portfolio-error"
                     prefix="Portfolio"
                     field="portfolio"
                     errors={state.errors}
@@ -158,17 +155,20 @@ const Careers = () => {
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
+                  <label htmlFor="careers-message" className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-th-body">
                     How can you contribute?
                   </label>
                   <textarea
+                    id="careers-message"
                     name="message"
                     required
                     rows={6}
+                    aria-describedby="careers-message-error"
                     placeholder="Tell us about your skills, experience, and what excites you about Petaron.ai..."
                     className="w-full resize-none rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                   />
                   <ValidationError
+                    id="careers-message-error"
                     prefix="Message"
                     field="message"
                     errors={state.errors}
@@ -186,20 +186,9 @@ const Careers = () => {
             )}
           </motion.section>
         </div>
-
-        <motion.div
-          className="mt-14 border-t border-th-line pt-6 text-center"
-          initial="hidden"
-          animate="visible"
-          custom={5}
-          variants={fadeUp}
-        >
-          <p className="text-xs text-th-faint">
-            &copy; {new Date().getFullYear()} Petaron AI. All rights reserved.
-          </p>
-        </motion.div>
       </div>
-    </div>
+      <Footer />
+    </PageShell>
   );
 };
 

@@ -77,6 +77,55 @@ export type FeatureCard = {
   eyebrow: string;
 };
 
+export type FaqItem = {
+  question: string;
+  answer: string;
+  meta: string;
+};
+
+export const faqItems: FaqItem[] = [
+  {
+    question: "Does it work with our existing TMS?",
+    answer: "Yes. PetaRon.ai connects to the TMS you already use. No ripping and replacing, your setup stays the same, the manual work disappears.",
+    meta: "Integration",
+  },
+  {
+    question: "How long does it take to get started?",
+    answer: "Days, not months. We connect to your email flow, configure your fields, and you are processing orders within a week.",
+    meta: "Onboarding",
+  },
+  {
+    question: "Does our team lose control over orders?",
+    answer: "Never. AI handles the intake, your team makes every decision. Nothing moves to your TMS without human approval.",
+    meta: "Control",
+  },
+  {
+    question: "Is this built specifically for logistics?",
+    answer: "From the ground up. PetaRon.ai was designed around the daily reality of freight operations, multi-format orders, tight deadlines, and zero tolerance for errors.",
+    meta: "Industry",
+  },
+  {
+    question: "What happens when the AI encounters an edge case?",
+    answer: "It flags it. Anything the AI is not fully confident about gets routed to your team for review. Nothing slips through unchecked.",
+    meta: "Reliability",
+  },
+  {
+    question: "How fast is the ROI?",
+    answer: "Most teams see the impact in the first week. Less time on data entry means more time with customers, that is value from day one.",
+    meta: "Value",
+  },
+  {
+    question: "Is there a free trial or pilot?",
+    answer: "We offer a free 14-day pilot with your actual data. You will see exactly how it performs before making any commitment.",
+    meta: "Pilot",
+  },
+  {
+    question: "What data do you need from us to get started?",
+    answer: "Access to your order inbox, basic TMS credentials, and a short walkthrough of your field mapping. That is it, we handle the rest.",
+    meta: "Setup",
+  },
+];
+
 export const featureCards: FeatureCard[] = [
   {
     title: "Connect in Minutes",

@@ -66,41 +66,6 @@ export const InteractiveHoverButton = ({
   );
 };
 
-export const SpinningLogo = ({ size = 32 }: { size?: number }) => (
-  <div
-    className="relative rounded-full"
-    style={{ width: size, height: size }}
-  >
-    <motion.div
-      className="absolute inset-0 rounded-full"
-      style={{
-        background: "conic-gradient(from 0deg, rgb(var(--ac-1)), rgb(var(--ac-3)), rgb(var(--ac-2)), rgb(var(--ac-1)))",
-      }}
-      animate={{ rotate: 360 }}
-      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-    />
-    <div
-      className="absolute rounded-full bg-th-page"
-      style={{
-        inset: size * 0.15,
-      }}
-    />
-    <motion.div
-      className="absolute rounded-full bg-white"
-      style={{
-        width: size * 0.2,
-        height: size * 0.2,
-        top: 0,
-        left: "50%",
-        marginLeft: -(size * 0.1),
-        filter: `blur(${size * 0.08}px)`,
-      }}
-      animate={{ rotate: 360 }}
-      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-    />
-  </div>
-);
-
 export type GlowEffectProps = {
   className?: string;
   style?: CSSProperties;
