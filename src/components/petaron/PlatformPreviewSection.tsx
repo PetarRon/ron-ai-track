@@ -48,8 +48,14 @@ export const PlatformPreviewSection = () => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(null);
+    };
+    window.addEventListener("keydown", onKey);
+
     return () => {
       document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", onKey);
     };
   }, [expanded]);
 
@@ -128,6 +134,9 @@ export const PlatformPreviewSection = () => {
             {expandedSlide && (
               <motion.div
                 className="fixed inset-0 z-[999] flex items-center justify-center bg-black/82 p-4 backdrop-blur-sm"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${expandedSlide.title} preview`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
