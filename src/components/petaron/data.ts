@@ -8,8 +8,6 @@ export const integrations = [
   { name: "Modality", domain: "modality.com" },
   { name: "Gmail", domain: "gmail.com" },
   { name: "Microsoft", domain: "microsoft.com" },
-  { name: "OpenAI", domain: "openai.com" },
-  { name: "Anthropic", domain: "anthropic.com" },
 ];
 
 export type ProcessStage = {
@@ -86,7 +84,7 @@ export type FaqItem = {
 export const faqItems: FaqItem[] = [
   {
     question: "Does it work with our existing TMS?",
-    answer: "Yes. PetaRon.ai connects to the TMS you already use. No ripping and replacing, your setup stays the same, the manual work disappears.",
+    answer: "Yes. Petaron.ai connects to the TMS you already use. No ripping and replacing, your setup stays the same, the manual work disappears.",
     meta: "Integration",
   },
   {
@@ -101,7 +99,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     question: "Is this built specifically for logistics?",
-    answer: "From the ground up. PetaRon.ai was designed around the daily reality of freight operations, multi-format orders, tight deadlines, and zero tolerance for errors.",
+    answer: "From the ground up. Petaron.ai was designed around the daily reality of freight operations, multi-format orders, tight deadlines, and zero tolerance for errors.",
     meta: "Industry",
   },
   {
@@ -118,11 +116,6 @@ export const faqItems: FaqItem[] = [
     question: "Is there a free trial or pilot?",
     answer: "We offer a free 14-day pilot with your actual data. You will see exactly how it performs before making any commitment.",
     meta: "Pilot",
-  },
-  {
-    question: "What data do you need from us to get started?",
-    answer: "Access to your order inbox, basic TMS credentials, and a short walkthrough of your field mapping. That is it, we handle the rest.",
-    meta: "Setup",
   },
 ];
 

@@ -1,21 +1,27 @@
 import { useId, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { faqPageJsonLd } from "@/lib/seo";
 import { faqItems } from "./data";
 
 export const FAQ = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const baseId = useId();
 
   return (
     <section id="faq" className="py-16 relative z-10">
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(faqPageJsonLd(faqItems))}
+        </script>
+      </Helmet>
       <div className="mx-auto max-w-4xl px-5 md:px-8">
         <div className="flex flex-col gap-10">
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-[0.35em] text-th-muted mb-3">Questions</p>
             <h3 className="text-2xl font-serif font-normal tracking-tight text-th-heading md:text-3xl">
               Frequently asked questions
             </h3>
             <p className="mt-3 max-w-md text-sm text-th-body mx-auto">
-              Everything you need to know about working with PetaRon.ai.
+              A few of the things teams ask most before getting started. More questions? <a href="#booking" className="text-ac-1 hover:underline">Book a demo</a>.
             </p>
           </div>
 

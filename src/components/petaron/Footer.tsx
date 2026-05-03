@@ -27,19 +27,19 @@ export const Footer = () => (
             <span className="text-sm font-bold tracking-wide text-th-heading">Petaron.ai</span>
           </Link>
           <p className="text-xs text-th-muted leading-relaxed max-w-xs">
-            AI-powered order processing for freight forwarders. From email to TMS
+            AI-powered order processing for freight forwarders. From email to TMS.
           </p>
         </div>
 
         {Object.entries(footerLinks).map(([title, links]) => (
           <div key={title}>
             <h4 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-th-body">{title}</h4>
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {links.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="text-xs text-th-muted hover:text-th-heading transition-colors"
+                    className="inline-flex min-h-[36px] items-center text-xs text-th-muted hover:text-th-heading transition-colors"
                   >
                     {link.label}
                   </Link>

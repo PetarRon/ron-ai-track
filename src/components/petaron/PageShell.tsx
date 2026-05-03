@@ -2,6 +2,8 @@ import { motion, useMotionValue, useScroll, useSpring, useTransform } from "fram
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getCalApi } from "@calcom/embed-react";
+import { Helmet } from "react-helmet-async";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import ContactForm from "./FinalCTA";
 import { ContactContext } from "./contact-context";
 import { Header } from "./Header";
@@ -88,6 +90,15 @@ export const PageShell = ({ children }: PageShellProps) => {
 
   return (
     <ContactContext.Provider value={{ openContact }}>
+      <Helmet>
+        <html lang="en" />
+        <script type="application/ld+json">
+          {JSON.stringify(organizationJsonLd())}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(websiteJsonLd())}
+        </script>
+      </Helmet>
       <main className="relative min-h-screen overflow-hidden bg-th-page text-th-heading selection:bg-ac-1 selection:text-black">
         <a
           href="#content"

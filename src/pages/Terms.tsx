@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Footer } from "@/components/petaron/Footer";
 import { PageShell } from "@/components/petaron/PageShell";
+import { SEO } from "@/components/petaron/SEO";
+import { routeSeo } from "@/lib/seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -17,6 +19,7 @@ const Section = ({ title, children, i }: { title: string; children: React.ReactN
 
 const Terms = () => (
   <PageShell>
+    <SEO route={routeSeo.terms} />
     <div className="relative z-10 mx-auto w-full max-w-[900px] px-5 py-10 md:px-8 md:py-14">
       <motion.h1
         className="text-3xl font-serif font-normal tracking-tight text-th-heading md:text-4xl mb-2"

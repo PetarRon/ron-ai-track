@@ -62,7 +62,7 @@ const SegButtons = ({
           role="radio"
           aria-checked={active}
           onClick={() => onChange(opt)}
-          className={`flex-1 rounded-lg border px-3 py-2 text-[13px] font-semibold transition-all ${
+          className={`flex-1 min-h-[44px] rounded-lg border px-2 py-2 text-[13px] font-semibold transition-all ${
             active
               ? "border-ac-1/40 bg-ac-1/10 text-th-heading"
               : "border-th-line bg-th-surface-alt/40 text-th-muted hover:text-th-heading hover:bg-th-surface-alt/70"

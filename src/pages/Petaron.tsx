@@ -6,11 +6,14 @@ import { OrderCostCalculator } from "@/components/petaron/OrderCostCalculator";
 import { PageShell } from "@/components/petaron/PageShell";
 import { PlatformPreviewSection } from "@/components/petaron/PlatformPreviewSection";
 import { ProcessFlowSection } from "@/components/petaron/ProcessFlowSection";
+import { SEO } from "@/components/petaron/SEO";
 import { SellLine } from "@/components/petaron/SellLine";
 import { SparklesSection } from "@/components/ui/sparkles";
+import { routeSeo, softwareApplicationJsonLd } from "@/lib/seo";
 
 const Petaron = () => (
   <PageShell>
+    <SEO route={routeSeo.home} jsonLd={softwareApplicationJsonLd()} />
     <Hero />
     <PlatformPreviewSection />
     <ProcessFlowSection />

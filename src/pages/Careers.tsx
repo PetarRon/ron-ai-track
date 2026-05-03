@@ -3,6 +3,8 @@ import { useForm, ValidationError } from "@formspree/react";
 import { CheckCircle2 } from "lucide-react";
 import { Footer } from "@/components/petaron/Footer";
 import { PageShell } from "@/components/petaron/PageShell";
+import { SEO } from "@/components/petaron/SEO";
+import { routeSeo } from "@/lib/seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -14,6 +16,7 @@ const Careers = () => {
 
   return (
     <PageShell>
+      <SEO route={routeSeo.careers} />
       <div className="relative z-10 mx-auto w-full max-w-[900px] px-5 py-10 md:px-8 md:py-14">
         <motion.h1
           className="text-3xl font-serif font-normal tracking-tight text-th-heading md:text-4xl mb-4"
@@ -32,8 +35,9 @@ const Careers = () => {
           custom={1}
           variants={fadeUp}
         >
-          We don't have open positions at the moment, but we are always open to meeting
-          talented people who share our vision.
+          We're a small team in the Netherlands building the future of order intake for the
+          logistics industry. The application below stays open year-round; when we hire,
+          recent applicants are the first people we reach out to.
         </motion.p>
 
         <div className="space-y-10">
@@ -74,8 +78,9 @@ const Careers = () => {
           <motion.section initial="hidden" animate="visible" custom={4} variants={fadeUp}>
             <h2 className="text-xl font-serif font-normal text-th-heading mb-3">Open application</h2>
             <p className="text-sm text-th-body leading-relaxed mb-6">
-              Tell us about yourself, what you are great at, and how you think you could contribute
-              to Petaron.ai. We review every application and will get back to you if there is a fit.
+              No formal openings right now, but we read every application that comes in. Tell us about
+              yourself, what you are great at, and how you think you could contribute to Petaron.ai.
+              We will get in touch when there's a fit.
             </p>
 
             {state.succeeded ? (
