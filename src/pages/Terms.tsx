@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { SpinningLogo } from "@/components/petaron/shared";
-import { ArrowLeft } from "lucide-react";
+import { Footer } from "@/components/petaron/Footer";
+import { PageShell } from "@/components/petaron/PageShell";
+import { SEO } from "@/components/petaron/SEO";
+import { routeSeo } from "@/lib/seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -16,20 +18,9 @@ const Section = ({ title, children, i }: { title: string; children: React.ReactN
 );
 
 const Terms = () => (
-  <div className="relative min-h-screen bg-th-page text-th-body">
-    <div className="pointer-events-none absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10" />
-
-    <div className="relative z-10 mx-auto w-full max-w-[900px] px-5 py-10 md:px-8">
-      <Link to="/" className="inline-flex items-center gap-2 text-sm text-th-muted hover:text-th-heading transition-colors mb-10">
-        <ArrowLeft size={16} />
-        Back to home
-      </Link>
-
-      <div className="flex items-center gap-3 mb-6">
-        <SpinningLogo size={28} />
-        <span className="text-lg font-bold tracking-wide text-th-heading">Petaron.ai</span>
-      </div>
-
+  <PageShell>
+    <SEO route={routeSeo.terms} />
+    <div className="relative z-10 mx-auto w-full max-w-[900px] px-5 py-10 md:px-8 md:py-14">
       <motion.h1
         className="text-3xl font-serif font-normal tracking-tight text-th-heading md:text-4xl mb-2"
         initial="hidden" animate="visible" custom={0} variants={fadeUp}
@@ -151,16 +142,9 @@ const Terms = () => (
         </p>
       </Section>
 
-      <motion.div
-        className="mt-14 border-t border-th-line pt-6 text-center"
-        initial="hidden" animate="visible" custom={12} variants={fadeUp}
-      >
-        <p className="text-xs text-th-faint">
-          &copy; {new Date().getFullYear()} Petaron AI. All rights reserved.
-        </p>
-      </motion.div>
     </div>
-  </div>
+    <Footer />
+  </PageShell>
 );
 
 export default Terms;

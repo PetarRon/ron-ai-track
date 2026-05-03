@@ -35,6 +35,7 @@ const boardSlides = [
 
 export const PlatformPreviewSection = () => {
   const [active, setActive] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
   const current = boardSlides[active];
   const expandedSlide = useMemo(
@@ -43,13 +44,32 @@ export const PlatformPreviewSection = () => {
   );
 
   useEffect(() => {
+    if (!autoplay || expanded) return;
+    const id = window.setInterval(() => {
+      setActive((i) => (i + 1) % boardSlides.length);
+    }, 3000);
+    return () => window.clearInterval(id);
+  }, [autoplay, expanded]);
+
+  const handleTabClick = (i: number) => {
+    setAutoplay(false);
+    setActive(i);
+  };
+
+  useEffect(() => {
     if (!expanded) return;
 
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(null);
+    };
+    window.addEventListener("keydown", onKey);
+
     return () => {
       document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", onKey);
     };
   }, [expanded]);
 
@@ -67,7 +87,7 @@ export const PlatformPreviewSection = () => {
               <button
                 key={slide.id}
                 type="button"
-                onClick={() => setActive(i)}
+                onClick={() => handleTabClick(i)}
                 className={`relative rounded-full px-4 py-1.5 text-[13px] font-medium transition-all duration-300 ${
                   active === i
                     ? "text-white"
@@ -105,6 +125,10 @@ export const PlatformPreviewSection = () => {
                 <img
                   src={current.src}
                   alt={current.title}
+                  width={1600}
+                  height={727}
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full rounded-xl object-contain object-center transition-transform duration-700 group-hover:scale-[1.01]"
                 />
               </button>
@@ -128,6 +152,9 @@ export const PlatformPreviewSection = () => {
             {expandedSlide && (
               <motion.div
                 className="fixed inset-0 z-[999] flex items-center justify-center bg-black/82 p-4 backdrop-blur-sm"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${expandedSlide.title} preview`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -152,6 +179,8 @@ export const PlatformPreviewSection = () => {
                   <img
                     src={expandedSlide.src}
                     alt={expandedSlide.title}
+                    loading="lazy"
+                    decoding="async"
                     className="max-h-[86vh] w-auto max-w-full rounded-xl object-contain"
                   />
                 </motion.div>

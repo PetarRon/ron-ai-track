@@ -1,5 +1,9 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Footer } from "@/components/petaron/Footer";
+import { PageShell } from "@/components/petaron/PageShell";
+import { SEO } from "@/components/petaron/SEO";
+import { routeSeo } from "@/lib/seo";
 
 const NotFound = () => {
   const location = useLocation();
@@ -9,15 +13,20 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
+    <PageShell>
+      <SEO route={routeSeo.notFound} />
+      <div className="relative z-10 mx-auto flex min-h-[60vh] w-full max-w-[900px] flex-col items-center justify-center px-5 py-20 text-center md:px-8">
+        <h1 className="text-6xl font-serif font-normal text-th-heading md:text-8xl">404</h1>
+        <p className="mt-4 text-lg text-th-body">This page does not exist.</p>
+        <Link
+          to="/"
+          className="mt-8 inline-flex items-center justify-center rounded-full border border-th-line bg-th-surface-alt/50 px-7 py-3 text-[13px] font-semibold text-th-heading transition hover:bg-th-line/50"
+        >
+          Return to home
+        </Link>
       </div>
-    </div>
+      <Footer />
+    </PageShell>
   );
 };
 

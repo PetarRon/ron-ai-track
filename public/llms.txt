@@ -1,0 +1,36 @@
+# Petaron.ai
+
+> AI-powered order processing for freight forwarders. From email to TMS, automatically.
+
+Petaron.ai is a Netherlands-based platform that uses AI agents to automate manual order entry for logistics teams. The agent reads incoming order emails (including PDF and Excel attachments), extracts and structures the data, validates critical fields, and prepares TMS-ready drafts for human approval. The product is designed for freight forwarders running existing TMS systems (CargoWise, Descartes, Scope/Riege, SAP, Modality and others).
+
+## Key facts
+
+- **Company**: Petaron AI, based in the Netherlands.
+- **Product category**: AI order processing / automation for logistics.
+- **Hosting**: EU-hosted, GDPR-compliant.
+- **Pricing**: 14-day free pilot with the customer's actual data; pricing scales with order volume.
+- **Onboarding**: typically days, not months. No rip-and-replace; integrates with the customer's existing TMS.
+- **Human-in-the-loop**: every order requires human approval before pushing to the TMS. Uncertain fields are flagged for review.
+
+## Product flow
+
+1. **Capture**: reads emails, PDFs, and attachments across channels into one intake stream.
+2. **Process**: structures order data, maps fields, validates critical details automatically.
+3. **Review**: operators approve ready drafts in seconds and push directly to the TMS.
+
+## Pages
+
+- [Home](https://petaron.ai/): product overview, demo booking, FAQ, cost calculator.
+- [About](https://petaron.ai/about): team, values, mission.
+- [Careers](https://petaron.ai/careers): open application form.
+- [Privacy Policy](https://petaron.ai/privacy): GDPR-compliant data handling.
+- [Terms of Service](https://petaron.ai/terms): website terms.
+
+## Resources
+
+- [Sitemap](https://petaron.ai/sitemap.xml)
+
+## Contact
+
+To book a demo or get in touch, visit https://petaron.ai/?contact=1 or use the demo-booking link on the homepage.
