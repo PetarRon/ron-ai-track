@@ -51,7 +51,14 @@ export const PageShell = ({ children }: PageShellProps) => {
 
   const initCal = useCallback(async () => {
     const cal = await getCalApi({ namespace: "30min" });
-    cal("ui", { hideEventTypeDetails: false, layout: "month_view", theme: "dark" });
+    cal("ui", {
+      cssVarsPerTheme: {
+        light: { "cal-brand": "#000000" },
+        dark: { "cal-brand": "#fafafa" },
+      },
+      hideEventTypeDetails: false,
+      layout: "month_view",
+    });
   }, []);
 
   useEffect(() => {
