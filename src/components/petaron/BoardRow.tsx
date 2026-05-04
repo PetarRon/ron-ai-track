@@ -25,11 +25,12 @@ interface BoardRowProps {
   slide: BoardSlide;
   index: number;
   imageSide: "left" | "right";
+  onExpand: (id: string) => void;
 }
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export const BoardRow = ({ slide, index, imageSide }: BoardRowProps) => {
+export const BoardRow = ({ slide, index, imageSide, onExpand }: BoardRowProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
 
@@ -48,7 +49,14 @@ export const BoardRow = ({ slide, index, imageSide }: BoardRowProps) => {
         transition={{ duration: 0.9, ease, delay: 0.05 }}
         className="lg:basis-[64%] lg:shrink-0"
       >
-        <div className="relative overflow-hidden rounded-2xl border border-th-line bg-th-surface shadow-[0_30px_80px_-20px_rgba(0,0,0,0.4)]">
+        <motion.button
+          type="button"
+          onClick={() => onExpand(slide.id)}
+          aria-label={`Open larger preview of ${slide.title}`}
+          layoutId={`board-${slide.id}`}
+          transition={{ type: "spring", stiffness: 240, damping: 30 }}
+          className="group relative block w-full overflow-hidden rounded-2xl border border-th-line bg-th-surface text-left shadow-[0_30px_80px_-20px_rgba(0,0,0,0.4)] cursor-zoom-in transition-shadow hover:shadow-[0_30px_100px_-20px_rgba(0,0,0,0.55)]"
+        >
           <FakeBrowserChrome />
           <img
             src={slide.src}
@@ -57,9 +65,9 @@ export const BoardRow = ({ slide, index, imageSide }: BoardRowProps) => {
             height={900}
             loading="lazy"
             decoding="async"
-            className="block h-auto w-full"
+            className="block h-auto w-full transition-transform duration-700 group-hover:scale-[1.01]"
           />
-        </div>
+        </motion.button>
       </motion.div>
 
       <motion.div
