@@ -1,8 +1,37 @@
-import { useMemo, useState } from "react";
-import NumberFlow from "@number-flow/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { animate } from "framer-motion";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { TokenSlider, computeResults } from "./calculator/controls";
 import { PETARON_SECTION_SHELL, SectionHeading } from "./shared";
+
+const AnimatedNumber = ({
+  value,
+  format,
+}: {
+  value: number;
+  format: (v: number) => string;
+}) => {
+  const [display, setDisplay] = useState(value);
+  const previous = useRef(0);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const from = started.current ? previous.current : 0;
+    started.current = true;
+    const controls = animate(from, value, {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (latest) => setDisplay(latest),
+    });
+    previous.current = value;
+    return () => controls.stop();
+  }, [value]);
+
+  return <>{format(Math.round(display))}</>;
+};
+
+const formatEuro = (n: number) => `€${n.toLocaleString("en-US")}`;
+const formatNumber = (n: number) => n.toLocaleString("en-US");
 
 const SliderRow = ({
   label,
@@ -77,7 +106,7 @@ export const OrderCostCalculator = () => {
               inactiveZone={0.01}
               borderWidth={2}
             />
-            <div className="relative grid gap-10 rounded-xl border-[0.75px] border-th-line-subtle bg-th-surface p-6 md:p-10 shadow-[0_0_27px_0_rgba(45,45,45,0.15)] lg:grid-cols-[1fr,1.1fr] lg:gap-16">
+            <div className="relative grid gap-8 rounded-xl border-[0.75px] border-th-line-subtle bg-th-surface p-6 md:p-8 shadow-[0_0_27px_0_rgba(45,45,45,0.15)] lg:grid-cols-[1fr,1.1fr] lg:gap-10">
               <div className="space-y-6">
                 <SliderRow
                   label="Orders per day"
@@ -86,7 +115,7 @@ export const OrderCostCalculator = () => {
                   min={20}
                   max={500}
                   step={10}
-                  format={(v) => v.toLocaleString("en-US")}
+                  format={formatNumber}
                   ariaLabel="Orders per day"
                 />
                 <SliderRow
@@ -112,24 +141,17 @@ export const OrderCostCalculator = () => {
               </div>
 
               <div className="flex flex-col items-center justify-center text-center">
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-th-muted mb-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-th-muted mb-10 md:mb-12">
                   Manual entry costs you
                 </p>
-                <NumberFlow
-                  value={annualCost}
-                  format={{
-                    style: "currency",
-                    currency: "EUR",
-                    maximumFractionDigits: 0,
-                  }}
-                  className="font-serif italic text-5xl font-normal leading-[1.05] tracking-tight text-ac-neg md:text-6xl lg:text-7xl"
-                />
-                <p className="mt-3 text-base text-th-body md:text-lg max-w-sm">
+                <p className="font-serif text-5xl font-normal leading-[1.05] tracking-tight text-ac-neg md:text-6xl lg:text-7xl">
+                  <AnimatedNumber value={annualCost} format={formatEuro} />
+                </p>
+                <p className="mt-10 md:mt-12 text-[13px] text-th-body md:text-sm">
                   per year, plus{" "}
-                  <NumberFlow
-                    value={hoursPerMonth}
-                    className="text-th-heading font-semibold tabular-nums"
-                  />{" "}
+                  <span className="text-th-heading font-semibold tabular-nums">
+                    <AnimatedNumber value={hoursPerMonth} format={formatNumber} />
+                  </span>{" "}
                   <span className="text-th-heading font-semibold">hours</span>{" "}
                   of operator time every month.
                 </p>
