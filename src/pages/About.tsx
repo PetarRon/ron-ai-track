@@ -30,7 +30,13 @@ const About = () => (
       </motion.h1>
 
       {/* Floated photo — text wraps around it, then continues below */}
-      <figure className="mb-6 w-full sm:float-right sm:mb-4 sm:ml-7 sm:w-80">
+      <motion.figure
+        className="mb-6 w-full sm:float-right sm:mb-4 sm:ml-7 sm:w-80"
+        initial="hidden"
+        animate="visible"
+        custom={1}
+        variants={fadeUp}
+      >
         <div className="overflow-hidden rounded-2xl border border-th-line bg-th-surface shadow-sm">
           <img
             src="/founders.png"
@@ -62,65 +68,81 @@ const About = () => (
             </a>
           </div>
         </figcaption>
-      </figure>
+      </motion.figure>
 
       {/* Flowing article body — wraps beside the photo, continues full width below */}
-      <div className="text-th-body">
-        <p className="text-base leading-relaxed">
-          Petaron.ai is building the future of order intake for the logistics industry.
-          We combine deep domain knowledge with modern AI to eliminate manual data entry
-          and help teams focus on what truly matters: their customers.
-        </p>
+      <motion.p
+        className="text-base text-th-body leading-relaxed"
+        initial="hidden"
+        animate="visible"
+        custom={2}
+        variants={fadeUp}
+      >
+        Petaron.ai is building the future of order intake for the logistics industry.
+        We combine deep domain knowledge with modern AI to eliminate manual data entry
+        and help teams focus on what truly matters: their customers.
+      </motion.p>
 
-        <h2 className="text-xl font-serif font-normal text-th-heading mt-7 mb-3">Where we come from</h2>
-        <p className="text-sm leading-relaxed">
-          Based in the Netherlands, Petaron.ai is being built by motivated young innovative
-          professionals. Our backgrounds span freight forwarding, enterprise software,
-          and machine learning, giving us a unique perspective on the challenges that
-          logistics companies face every day.
-        </p>
+      <div className="mt-7 space-y-7 text-th-body">
+        <motion.section initial="hidden" animate="visible" custom={3} variants={fadeUp}>
+          <h2 className="text-xl font-serif font-normal text-th-heading mb-3">Where we come from</h2>
+          <p className="text-sm leading-relaxed">
+            Based in the Netherlands, Petaron.ai is being built by motivated young innovative
+            professionals. Our backgrounds span freight forwarding, enterprise software,
+            and machine learning, giving us a unique perspective on the challenges that
+            logistics companies face every day.
+          </p>
+        </motion.section>
 
-        <h2 className="text-xl font-serif font-normal text-th-heading mt-7 mb-3">What drives us</h2>
-        <p className="text-sm leading-relaxed">
-          We believe technology should remove friction, not add complexity. The logistics
-          industry moves the world, yet too many teams still spend hours on manual order
-          entry. Petaron.ai exists to change that. Our AI agents read, understand, and
-          prepare orders so your operators can approve in seconds instead of typing for minutes.
-        </p>
+        <motion.section initial="hidden" animate="visible" custom={4} variants={fadeUp}>
+          <h2 className="text-xl font-serif font-normal text-th-heading mb-3">What drives us</h2>
+          <p className="text-sm leading-relaxed">
+            We believe technology should remove friction, not add complexity. The logistics
+            industry moves the world, yet too many teams still spend hours on manual order
+            entry. Petaron.ai exists to change that. Our AI agents read, understand, and
+            prepare orders so your operators can approve in seconds instead of typing for minutes.
+          </p>
+        </motion.section>
 
-        <h2 className="text-xl font-serif font-normal text-th-heading mt-7 mb-3">The team</h2>
-        <p className="text-sm leading-relaxed">
-          We are a small, fast-moving team based in the Netherlands with roots across
-          Europe and beyond. We speak multiple languages, understand multiple markets,
-          and share one mission: making logistics operations smarter and faster.
-          <span className="text-th-muted italic"> More details coming soon.</span>
-        </p>
+        <motion.section initial="hidden" animate="visible" custom={5} variants={fadeUp}>
+          <h2 className="text-xl font-serif font-normal text-th-heading mb-3">The team</h2>
+          <p className="text-sm leading-relaxed">
+            We are a small, fast-moving team based in the Netherlands with roots across
+            Europe and beyond. We speak multiple languages, understand multiple markets,
+            and share one mission: making logistics operations smarter and faster.
+            <span className="text-th-muted italic"> More details coming soon.</span>
+          </p>
+        </motion.section>
 
-        <h2 className="text-xl font-serif font-normal text-th-heading mt-7 mb-3">Our values</h2>
-        <ul className="space-y-3 text-sm leading-relaxed">
-          <li className="flex gap-3">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ac-1" />
-            <span><strong className="text-th-heading">Reliability first.</strong> Logistics runs on trust. Our platform is built for accuracy and uptime.</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ac-2" />
-            <span><strong className="text-th-heading">Human-in-the-loop.</strong> AI handles the heavy lifting; people make the final call.</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ac-3" />
-            <span><strong className="text-th-heading">Privacy by design.</strong> EU-hosted, GDPR-compliant, and built with security at the core.</span>
-          </li>
-        </ul>
+        <motion.section initial="hidden" animate="visible" custom={6} variants={fadeUp}>
+          <h2 className="text-xl font-serif font-normal text-th-heading mb-3">Our values</h2>
+          <ul className="space-y-3 text-sm leading-relaxed">
+            <li className="flex gap-3">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ac-1" />
+              <span><strong className="text-th-heading">Reliability first.</strong> Logistics runs on trust. Our platform is built for accuracy and uptime.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ac-2" />
+              <span><strong className="text-th-heading">Human-in-the-loop.</strong> AI handles the heavy lifting; people make the final call.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ac-3" />
+              <span><strong className="text-th-heading">Privacy by design.</strong> EU-hosted, GDPR-compliant, and built with security at the core.</span>
+            </li>
+          </ul>
+        </motion.section>
 
-        <h2 className="text-xl font-serif font-normal text-th-heading mt-7 mb-3">Where the name comes from</h2>
-        <p className="text-sm leading-relaxed">
-          <strong className="text-th-heading">Petaron</strong> is the two of us in one word:
-          a blend of <strong className="text-th-heading">Petar</strong> and{" "}
-          <strong className="text-th-heading">Ron</strong>, the founders behind it.
-          And by happy coincidence, <span className="italic">petaron</span> (פתרון) is also the
-          Hebrew word for <strong className="text-th-heading">“solution.”</strong> A name that
-          captures exactly what we set out to build.
-        </p>
+        <motion.section initial="hidden" animate="visible" custom={7} variants={fadeUp}>
+          <h2 className="text-xl font-serif font-normal text-th-heading mb-3">Where the name comes from</h2>
+          <p className="text-sm leading-relaxed">
+            <strong className="text-th-heading">Petaron</strong> is the two of us in one word:
+            a blend of <strong className="text-th-heading">Petar</strong> and{" "}
+            <strong className="text-th-heading">Ron</strong>, the founders behind it.
+            And by happy coincidence, <span className="italic">petaron</span> (פתרון) is also the
+            Hebrew word for <strong className="text-th-heading">“solution.”</strong> A name that
+            captures exactly what we set out to build.
+          </p>
+        </motion.section>
       </div>
     </article>
     <Footer />
