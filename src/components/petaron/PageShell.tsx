@@ -106,7 +106,7 @@ export const PageShell = ({ children }: PageShellProps) => {
           {JSON.stringify(websiteJsonLd())}
         </script>
       </Helmet>
-      <main className="relative min-h-screen overflow-hidden bg-th-page text-th-heading selection:bg-ac-1 selection:text-black">
+      <main className="relative min-h-screen overflow-hidden bg-th-page text-th-heading selection:bg-ac-1/15 selection:text-th-heading">
         <a
           href="#content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-ac-1 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
