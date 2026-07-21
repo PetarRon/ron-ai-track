@@ -56,8 +56,10 @@ export const PlatformPreviewLightbox = ({ slide, onClose }: Props) => {
             aria-hidden="true"
           />
           <motion.div
-            layoutId={`board-${slide.id}`}
-            transition={{ type: "spring", stiffness: 240, damping: 30 }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-[1600px] max-h-[92vh] overflow-hidden rounded-2xl border border-th-line bg-th-surface shadow-[0_30px_100px_rgba(0,0,0,0.55)] cursor-zoom-out"
           >
             <FakeBrowserChrome />

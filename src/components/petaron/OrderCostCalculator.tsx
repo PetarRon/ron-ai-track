@@ -3,6 +3,7 @@ import { animate } from "framer-motion";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { TokenSlider, computeResults } from "./calculator/controls";
 import { PETARON_SECTION_SHELL, SectionHeading } from "./shared";
+import { BeforeAfterTable } from "./BeforeAfterTable";
 
 const AnimatedNumber = ({
   value,
@@ -93,11 +94,16 @@ export const OrderCostCalculator = () => {
     >
       <div className={PETARON_SECTION_SHELL}>
         <SectionHeading
-          title="What manual order entry costs you today"
-          description="Move the inputs to match your operation. The numbers update instantly."
+          title="From chaos to order"
+          description="The manual way versus Petaron. Then see what the difference is worth to your team."
         />
 
-        <div className="mx-auto max-w-5xl">
+        <BeforeAfterTable />
+
+        <div className="mx-auto mt-14 max-w-5xl">
+          <p className="mb-6 text-center text-[11px] font-bold uppercase tracking-[0.3em] text-th-muted">
+            What manual entry costs you today
+          </p>
           <div className="relative rounded-2xl border-[0.75px] border-th-line p-1.5 md:p-2">
             <GlowingEffect
               spread={40}

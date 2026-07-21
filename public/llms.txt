@@ -9,7 +9,7 @@ Petaron.ai is a Netherlands-based platform that uses AI agents to automate manua
 - **Company**: Petaron AI, based in the Netherlands.
 - **Product category**: AI order processing / automation for logistics.
 - **Hosting**: EU-hosted, GDPR-compliant.
-- **Pricing**: 14-day free pilot with the customer's actual data; pricing scales with order volume.
+- **Pricing**: One-month free pilot with the customer's actual data; pricing scales with order volume.
 - **Onboarding**: typically days, not months. No rip-and-replace; integrates with the customer's existing TMS.
 - **Human-in-the-loop**: every order requires human approval before pushing to the TMS. Uncertain fields are flagged for review.
 

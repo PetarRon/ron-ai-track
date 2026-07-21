@@ -56,12 +56,12 @@ export const InteractiveHoverButton = ({
     <Tag
       {...linkProps}
       onClick={onClick}
-      className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-ac-1/50 bg-ac-1 px-7 py-3.5 text-[13px] font-bold text-white shadow-[0_0_24px_rgb(var(--ac-1)/0.35)] transition-all hover:shadow-[0_0_34px_rgb(var(--ac-1)/0.55)]"
+      className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-white/10 bg-[#161310] px-7 py-3.5 text-[13px] font-bold text-white shadow-[0_4px_18px_rgba(0,0,0,0.3)] transition-all hover:border-[#E2D8C4]/70 hover:shadow-[0_6px_22px_rgba(120,108,86,0.3)]"
       {...rest}
     >
-      <span className="absolute left-[20%] top-[40%] h-2 w-2 scale-0 rounded-full bg-ac-3 transition-all duration-500 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.8]" />
+      <span className="absolute left-[20%] top-[40%] h-2 w-2 scale-0 rounded-full bg-gradient-to-br from-[#F3EEE2] to-[#E2D8C4] transition-all duration-500 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:scale-[1.8]" />
       <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-      <span className="relative z-10 transition-colors duration-300 group-hover:text-white">{children}</span>
+      <span className="relative z-10 transition-colors duration-300 group-hover:text-[#2a2000]">{children}</span>
     </Tag>
   );
 };

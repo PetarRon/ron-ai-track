@@ -95,7 +95,7 @@ export const softwareApplicationJsonLd = () => ({
     price: "0",
     priceCurrency: "EUR",
     availability: "https://schema.org/InStock",
-    description: "14-day free pilot with your actual data.",
+    description: "One-month free pilot with your actual data.",
   },
 });
 

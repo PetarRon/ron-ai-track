@@ -71,14 +71,18 @@ export const FAQ = () => {
                       </div>
 
                       <div
-                        id={panelId}
-                        role="region"
-                        aria-labelledby={buttonId}
-                        className={`overflow-hidden text-[13px] leading-relaxed transition-[max-height,opacity] duration-500 ease-out text-th-body ${
-                          open ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                        className={`grid transition-all duration-500 ease-out ${
+                          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                         }`}
                       >
-                        <p className="pr-2">{item.answer}</p>
+                        <div
+                          id={panelId}
+                          role="region"
+                          aria-labelledby={buttonId}
+                          className="overflow-hidden text-[13px] leading-relaxed text-th-body"
+                        >
+                          <p className="pr-2">{item.answer}</p>
+                        </div>
                       </div>
                     </div>
                   </button>

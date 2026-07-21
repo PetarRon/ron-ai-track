@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useCallback, useEffect, useId } from "react";
 import { useForm, ValidationError } from "@formspree/react";
 import { CheckCircle2, X } from "lucide-react";
 
@@ -10,25 +10,32 @@ interface ContactFormProps {
 }
 
 const ContactForm = ({ open, onClose }: ContactFormProps) => {
-  const [state, handleSubmit] = useForm("mreyazvz");
+  const [state, handleSubmit, reset] = useForm("mreyazvz");
   const titleId = useId();
   const nameId = useId();
   const emailId = useId();
   const messageId = useId();
+
+  // Reset the Formspree state on close so reopening always shows a fresh form
+  // instead of the persistent "Message sent" success screen.
+  const handleClose = useCallback(() => {
+    reset();
+    onClose();
+  }, [reset, onClose]);
 
   useEffect(() => {
     if (!open) return;
     const original = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = original;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open, onClose]);
+  }, [open, handleClose]);
 
   if (!open) return null;
 
@@ -41,13 +48,13 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
     >
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
         aria-hidden="true"
       />
       <div className="relative z-10 w-full max-w-md mx-4 rounded-2xl border border-th-line bg-th-elevated p-8 shadow-2xl">
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute right-4 top-4 text-th-muted hover:text-th-heading transition-colors"
           aria-label="Close contact form"
         >
@@ -63,7 +70,7 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
             </p>
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="mt-4 rounded-full border border-th-line bg-th-surface-alt/50 px-6 py-3 text-sm font-semibold text-th-heading hover:bg-th-line/50 transition"
             >
               Close
@@ -92,6 +99,7 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
                   type="text"
                   name="name"
                   required
+                  autoFocus
                   aria-describedby={`${nameId}-error`}
                   className="w-full rounded-xl border border-th-line bg-th-surface-alt/50 px-4 py-3 text-sm text-th-heading placeholder:text-th-faint focus:border-ac-1 focus:outline-none focus:ring-2 focus:ring-ac-1/20 transition"
                 />

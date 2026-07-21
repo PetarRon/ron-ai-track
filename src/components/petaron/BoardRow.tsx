@@ -49,12 +49,10 @@ export const BoardRow = ({ slide, index, imageSide, onExpand }: BoardRowProps) =
         transition={{ duration: 0.9, ease, delay: 0.05 }}
         className="lg:basis-[64%] lg:shrink-0"
       >
-        <motion.button
+        <button
           type="button"
           onClick={() => onExpand(slide.id)}
           aria-label={`Open larger preview of ${slide.title}`}
-          layoutId={`board-${slide.id}`}
-          transition={{ type: "spring", stiffness: 240, damping: 30 }}
           className="group relative block w-full overflow-hidden rounded-2xl border border-th-line bg-th-surface text-left shadow-[0_30px_80px_-20px_rgba(0,0,0,0.4)] cursor-zoom-in transition-shadow hover:shadow-[0_30px_100px_-20px_rgba(0,0,0,0.55)]"
         >
           <FakeBrowserChrome />
@@ -67,7 +65,7 @@ export const BoardRow = ({ slide, index, imageSide, onExpand }: BoardRowProps) =
             decoding="async"
             className="block h-auto w-full transition-transform duration-700 group-hover:scale-[1.01]"
           />
-        </motion.button>
+        </button>
       </motion.div>
 
       <motion.div

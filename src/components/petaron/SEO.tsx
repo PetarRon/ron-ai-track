@@ -5,10 +5,11 @@ import { SITE_URL, type RouteSeo } from "@/lib/seo";
 interface SEOProps {
   route: RouteSeo;
   jsonLd?: object | object[];
+  noindex?: boolean;
   children?: ReactNode;
 }
 
-export const SEO = ({ route, jsonLd, children }: SEOProps) => {
+export const SEO = ({ route, jsonLd, noindex = false, children }: SEOProps) => {
   const url = `${SITE_URL}${route.path === "*" ? "" : route.path}`;
   const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
@@ -16,7 +17,12 @@ export const SEO = ({ route, jsonLd, children }: SEOProps) => {
     <Helmet>
       <title>{route.title}</title>
       <meta name="description" content={route.description} />
-      <link rel="canonical" href={url} />
+      {/* No canonical for noindex pages (e.g. 404) — don't point them at the home page. */}
+      {noindex ? (
+        <meta name="robots" content="noindex, follow" />
+      ) : (
+        <link rel="canonical" href={url} />
+      )}
 
       <meta property="og:title" content={route.title} />
       <meta property="og:description" content={route.description} />

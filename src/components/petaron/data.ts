@@ -114,7 +114,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     question: "Is there a free trial or pilot?",
-    answer: "We offer a free 14-day pilot with your actual data. You will see exactly how it performs before making any commitment.",
+    answer: "We offer a free one-month pilot with your actual data. You will see exactly how it performs before making any commitment.",
     meta: "Pilot",
   },
 ];
