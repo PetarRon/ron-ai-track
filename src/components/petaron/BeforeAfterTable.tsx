@@ -28,7 +28,7 @@ const rows: { without: string; with: string }[] = [
 ];
 
 const withoutCell = "flex items-start gap-2.5 px-5 py-4 md:px-7 border-t border-th-line-subtle";
-const withCell = `${withoutCell} bg-ac-pos/[0.06] sm:border-l sm:border-th-line-subtle`;
+const withCell = `${withoutCell} sm:border-l sm:border-th-line-subtle`;
 
 export const BeforeAfterTable = () => (
   <motion.div
@@ -45,8 +45,8 @@ export const BeforeAfterTable = () => (
           Without Petaron
         </span>
       </div>
-      <div className="border-l border-th-line-subtle bg-ac-pos/[0.06] px-5 py-3.5 md:px-7">
-        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-ac-pos">
+      <div className="border-l border-th-line-subtle px-5 py-3.5 md:px-7">
+        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-th-muted">
           With Petaron
         </span>
       </div>

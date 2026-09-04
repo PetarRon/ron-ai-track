@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Impeccable runtime state (not config)
+.impeccable/hook.cache.json
+.impeccable/live/server.json

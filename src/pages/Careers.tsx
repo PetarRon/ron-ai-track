@@ -86,7 +86,7 @@ const Careers = () => {
             {state.succeeded ? (
               <div className="rounded-2xl border border-th-line bg-th-elevated p-8 text-center space-y-4">
                 <CheckCircle2 className="mx-auto h-14 w-14 text-ac-1" aria-hidden="true" />
-                <h3 className="text-2xl font-bold text-th-heading">Application received</h3>
+                <h3 className="text-2xl font-serif font-normal tracking-tight text-th-heading">Application received</h3>
                 <p className="text-th-body">
                   Thank you for your interest. We will review your application and be in touch soon.
                 </p>

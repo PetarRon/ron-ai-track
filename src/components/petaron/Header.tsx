@@ -100,7 +100,7 @@ export const Header = () => {
       animate={{ y: hidden ? -110 : 0, opacity: hidden ? 0 : 1 }}
       transition={{ type: "spring", stiffness: 280, damping: 30 }}
     >
-      <header className="flex items-center rounded-full border border-th-line bg-th-page/60 pl-3 pr-2 sm:pl-4 sm:pr-3 py-2.5 backdrop-blur-xl shadow-2xl">
+      <header className="flex items-center rounded-full border border-th-line bg-th-page/60 pl-3 pr-2 sm:pl-4 sm:pr-3 py-2.5 backdrop-blur-xl shadow-[0_10px_30px_rgba(28,25,23,0.08),inset_0_1px_0_rgba(255,255,255,0.22)]">
         <Link to="/" className="flex min-h-[44px] shrink-0 items-center gap-1.5" aria-label="Petaron home">
           <img src="/petaron_logo.svg" alt="" className="h-7 w-7" width={28} height={28} />
           <div className="text-sm font-bold tracking-wide text-th-heading whitespace-nowrap">
@@ -135,7 +135,7 @@ export const Header = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="md:hidden mt-2 rounded-2xl border border-th-line bg-th-page/95 backdrop-blur-xl shadow-2xl overflow-hidden"
+            className="md:hidden mt-2 rounded-2xl border border-th-line bg-th-page/95 backdrop-blur-xl shadow-[0_10px_30px_rgba(28,25,23,0.08),inset_0_1px_0_rgba(255,255,255,0.22)] overflow-hidden"
           >
             <nav className="flex flex-col py-2" aria-label="Primary mobile">
               {navItems.map((item) => renderNavItem(item, true))}

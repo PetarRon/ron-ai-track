@@ -21,7 +21,7 @@ export const FAQ = () => {
               Frequently asked questions
             </h3>
             <p className="mt-3 max-w-md text-sm text-th-body mx-auto">
-              A few of the things teams ask most before getting started. More questions? <a href="#booking" className="text-ac-1 hover:underline">Book a demo</a>.
+              Questions worth asking before you start. More questions? <a href="#booking" className="text-ac-1 hover:underline">Book a demo</a>.
             </p>
           </div>
 
@@ -62,7 +62,7 @@ export const FAQ = () => {
 
                     <div className="flex flex-1 flex-col gap-3">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                        <h4 className="text-sm font-medium leading-tight text-th-heading sm:text-[15px]">
+                        <h4 className="font-body text-sm font-medium leading-tight text-th-heading sm:text-[15px]">
                           {item.question}
                         </h4>
                         <span className="inline-flex w-fit items-center rounded-full border border-th-line px-2.5 py-0.5 text-[9px] uppercase tracking-[0.3em] text-th-muted sm:ml-auto">

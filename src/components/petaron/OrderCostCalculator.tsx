@@ -70,7 +70,7 @@ const SliderRow = ({
       step={step}
       ariaLabel={ariaLabel}
     />
-    <div className="flex justify-between text-[10px] uppercase tracking-widest text-th-faint">
+    <div className="flex justify-between text-[10px] uppercase tracking-widest text-th-muted">
       <span>{format(min)}</span>
       <span>{format(max)}</span>
     </div>
@@ -153,13 +153,20 @@ export const OrderCostCalculator = () => {
                 <p className="font-serif text-5xl font-normal leading-[1.05] tracking-tight text-ac-neg md:text-6xl lg:text-7xl">
                   <AnimatedNumber value={annualCost} format={formatEuro} />
                 </p>
-                <p className="mt-10 md:mt-12 text-[13px] text-th-body md:text-sm">
-                  per year, plus{" "}
-                  <span className="text-th-heading font-semibold tabular-nums">
-                    <AnimatedNumber value={hoursPerMonth} format={formatNumber} />
-                  </span>{" "}
-                  <span className="text-th-heading font-semibold">hours</span>{" "}
-                  of operator time every month.
+                <p className="mt-3 text-[13px] text-th-body md:text-sm">per year</p>
+
+                <div className="my-8 h-px w-16 bg-th-line-subtle md:my-10" />
+
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-th-muted mb-3">
+                  Hours back on your desk
+                </p>
+                <p className="font-serif text-3xl font-normal leading-[1.05] tracking-tight text-ac-pos md:text-4xl">
+                  <AnimatedNumber value={hoursPerMonth} format={formatNumber} />
+                </p>
+                <p className="mt-2 text-[13px] text-th-body md:text-sm">every month</p>
+
+                <p className="mt-8 max-w-xs text-[11px] leading-relaxed text-th-muted">
+                  Based on the numbers you set above — your own estimate, not ours.
                 </p>
               </div>
             </div>

@@ -109,7 +109,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     question: "How fast is the ROI?",
-    answer: "Most teams see the impact in the first week. Less time on data entry means more time with customers, that is value from day one.",
+    answer: "The free one-month pilot runs on your own orders, so you see the impact for yourself before committing to anything. Less time on data entry means more time with customers, starting from your first processed order.",
     meta: "Value",
   },
   {

@@ -33,7 +33,7 @@ export const Footer = () => (
 
         {Object.entries(footerLinks).map(([title, links]) => (
           <div key={title}>
-            <h4 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-th-body">{title}</h4>
+            <h4 className="mb-3 font-body text-[10px] font-bold uppercase tracking-[0.2em] text-th-body">{title}</h4>
             <ul className="space-y-1">
               {links.map((link) => (
                 <li key={link.label}>
@@ -51,7 +51,7 @@ export const Footer = () => (
       </div>
 
       <div className="border-t border-th-line pt-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
-        <p className="text-[10px] text-th-faint">
+        <p className="text-[10px] text-th-muted">
           &copy; {new Date().getFullYear()} Petaron AI. All rights reserved.
         </p>
         <div className="flex items-center gap-3">
