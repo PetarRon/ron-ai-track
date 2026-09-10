@@ -8,7 +8,7 @@ export const FAQ = () => {
   const baseId = useId();
 
   return (
-    <section id="faq" className="py-16 relative z-10">
+    <section id="faq" className="scroll-mt-24 py-16 relative z-10">
       <Helmet>
         <script type="application/ld+json">
           {JSON.stringify(faqPageJsonLd(faqItems))}
@@ -17,9 +17,9 @@ export const FAQ = () => {
       <div className="mx-auto max-w-4xl px-5 md:px-8">
         <div className="flex flex-col gap-10">
           <div className="text-center">
-            <h3 className="text-2xl font-serif font-normal tracking-tight text-th-heading md:text-3xl">
+            <h2 className="text-2xl font-serif font-normal tracking-tight text-th-heading md:text-3xl">
               Frequently asked questions
-            </h3>
+            </h2>
             <p className="mt-3 max-w-md text-sm text-th-body mx-auto">
               Questions worth asking before you start. More questions? <a href="#booking" className="text-ac-1 hover:underline">Book a demo</a>.
             </p>
@@ -62,9 +62,9 @@ export const FAQ = () => {
 
                     <div className="flex flex-1 flex-col gap-3">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                        <h4 className="font-body text-sm font-medium leading-tight text-th-heading sm:text-[15px]">
+                        <h3 className="font-body text-sm font-medium leading-tight text-th-heading sm:text-[15px]">
                           {item.question}
-                        </h4>
+                        </h3>
                         <span className="inline-flex w-fit items-center rounded-full border border-th-line px-2.5 py-0.5 text-[9px] uppercase tracking-[0.3em] text-th-muted sm:ml-auto">
                           {item.meta}
                         </span>

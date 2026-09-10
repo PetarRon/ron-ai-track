@@ -16,7 +16,7 @@ import { PETARON_SECTION_SHELL, SectionHeading } from "./shared";
  *  Its height follows --vt-panel-h (set by VerticalTabs) minus the outer padding and borders. */
 const Frame = (children: ReactNode) => (
   <div className="relative rounded-2xl border-[0.75px] border-th-line p-1.5 md:p-2">
-    <div className="relative flex min-h-[420px] flex-col overflow-hidden rounded-xl border-[0.75px] border-th-line-subtle bg-th-surface p-3 shadow-[0_0_27px_0_rgba(45,45,45,0.15)] md:h-[calc(var(--vt-panel-h,558px)-18px)] md:p-4">
+    <div className="relative flex flex-col overflow-hidden rounded-xl border-[0.75px] border-th-line-subtle bg-th-surface p-3 shadow-[0_0_27px_0_rgba(45,45,45,0.15)] md:h-[calc(var(--vt-panel-h,558px)-18px)] md:p-4">
       {children}
     </div>
   </div>
@@ -377,7 +377,7 @@ const MatchScreen = () => (
   </AppShell>
 );
 
-/* 05 — Approve & push ------------------------------------------------------ */
+/* 05 — Approve -----------------------------------------------------------  */
 
 const ApproveScreen = () => {
   const [state, setState] = useState<"idle" | "saved" | "approving" | "approved">("idle");
@@ -439,7 +439,7 @@ const ApproveScreen = () => {
               onClick={approve}
               disabled={state === "approving" || state === "approved"}
             >
-              {state === "approved" ? "Pushed" : "Approve & push"}
+              {state === "approved" ? "Approved" : "Approve"}
             </button>
           </div>
           <p className="dash-toast" aria-live="polite">
@@ -493,7 +493,7 @@ const tabs: VerticalTabItem[] = [
 ];
 
 export const HowItWorks = () => (
-  <section id="process-flow" className="relative z-10 border-y border-th-line-subtle bg-th-page py-16 md:py-20">
+  <section id="process-flow" className="relative z-10 scroll-mt-24 border-y border-th-line-subtle bg-th-page py-16 md:py-20">
     <div className={PETARON_SECTION_SHELL}>
       <SectionHeading title="How it works" description="From your inbox to your TMS, one order at a time." />
       <VerticalTabs items={tabs} frame={Frame} panelHeight="min(558px, calc(100vh - 10rem))" />

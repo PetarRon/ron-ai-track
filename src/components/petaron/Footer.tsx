@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 const footerLinks = {
   Product: [
     { label: "How It Works", href: "/#process-flow" },
-    { label: "Platform", href: "/#platform" },
     { label: "Cost Calculator", href: "/#cost-calculator" },
     { label: "FAQ", href: "/#faq" },
   ],
@@ -22,7 +21,7 @@ export const Footer = () => (
     <div className="mx-auto w-full max-w-[1300px] px-5 py-12 md:px-8">
       <div className="grid grid-cols-2 gap-8 md:grid-cols-4 mb-10">
         <div className="col-span-2 md:col-span-1">
-          <Link to="/" className="flex items-center gap-2 mb-3" aria-label="Petaron home">
+          <Link to="/" className="mb-3 inline-flex min-h-[44px] items-center gap-2" aria-label="Petaron home">
             <img src="/petaron_logo.svg" alt="" className="h-6 w-6" />
             <span className="text-sm font-bold tracking-wide text-th-heading">Petaron.ai</span>
           </Link>
@@ -33,13 +32,13 @@ export const Footer = () => (
 
         {Object.entries(footerLinks).map(([title, links]) => (
           <div key={title}>
-            <h4 className="mb-3 font-body text-[10px] font-bold uppercase tracking-[0.2em] text-th-body">{title}</h4>
+            <h3 className="mb-3 font-body text-[10px] font-bold uppercase tracking-[0.2em] text-th-body">{title}</h3>
             <ul className="space-y-1">
               {links.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.href}
-                    className="inline-flex min-h-[36px] items-center text-xs text-th-muted hover:text-th-heading transition-colors"
+                    className="inline-flex min-h-[44px] items-center text-xs text-th-muted hover:text-th-heading transition-colors"
                   >
                     {link.label}
                   </Link>

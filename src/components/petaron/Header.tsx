@@ -8,7 +8,6 @@ type NavItem =
   | { label: string; type: "route"; path: string };
 
 const navItems: NavItem[] = [
-  { id: "platform", label: "Platform", type: "hash" },
   { id: "process-flow", label: "How it Works", type: "hash" },
   { id: "cost-calculator", label: "Cost Calculator", type: "hash" },
   { path: "/about", label: "About", type: "route" },
@@ -24,7 +23,7 @@ export const Header = () => {
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const lastY = useRef(0);
-  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { scrollY } = useScroll();
 
@@ -130,14 +129,13 @@ export const Header = () => {
         {open && (
           <motion.div
             id="mobile-nav-drawer"
-            ref={drawerRef}
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="md:hidden mt-2 rounded-2xl border border-th-line bg-th-page/95 backdrop-blur-xl shadow-[0_10px_30px_rgba(28,25,23,0.08),inset_0_1px_0_rgba(255,255,255,0.22)] overflow-hidden"
+            className="absolute inset-x-0 top-full mt-2 overflow-hidden rounded-2xl border border-th-line bg-th-page/95 shadow-[0_10px_30px_rgba(28,25,23,0.08),inset_0_1px_0_rgba(255,255,255,0.22)] backdrop-blur-xl md:hidden"
           >
-            <nav className="flex flex-col py-2" aria-label="Primary mobile">
+            <nav ref={drawerRef} className="flex flex-col py-2" aria-label="Primary mobile">
               {navItems.map((item) => renderNavItem(item, true))}
             </nav>
           </motion.div>

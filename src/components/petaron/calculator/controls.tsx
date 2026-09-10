@@ -22,12 +22,20 @@ export const TokenSlider = ({
     min={min}
     max={max}
     step={step}
-    aria-label={ariaLabel}
   >
     <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-th-line">
       <SliderPrimitive.Range className="absolute h-full bg-gradient-to-r from-ac-1 via-ac-2 to-ac-3" />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-ac-1 bg-th-page shadow-md transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ac-1/40 focus-visible:ring-offset-2 focus-visible:ring-offset-th-page" />
+    {/* 44px hit area around a 20px visual thumb; the name lives on the thumb, which is the slider control. */}
+    <SliderPrimitive.Thumb
+      aria-label={ariaLabel}
+      className="calc-thumb flex h-11 w-11 cursor-grab items-center justify-center rounded-full focus-visible:outline-none active:cursor-grabbing"
+    >
+      <span
+        aria-hidden="true"
+        className="block h-5 w-5 rounded-full border-2 border-ac-1 bg-th-page shadow-md transition-transform"
+      />
+    </SliderPrimitive.Thumb>
   </SliderPrimitive.Root>
 );
 

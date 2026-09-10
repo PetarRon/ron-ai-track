@@ -38,7 +38,7 @@ export const BeforeAfterTable = () => (
     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     className="mx-auto max-w-5xl overflow-hidden rounded-2xl border border-th-line bg-th-surface shadow-[0_0_27px_0_rgba(45,45,45,0.10)]"
   >
-    {/* Column headers — hidden on mobile, where the ✕/✓ colour coding carries the meaning */}
+    {/* Column headers from sm up; phones stack the rows and the red/green marks carry the meaning */}
     <div className="hidden grid-cols-2 sm:grid">
       <div className="px-5 py-3.5 md:px-7">
         <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-th-muted">

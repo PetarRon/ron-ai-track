@@ -77,6 +77,36 @@
         "value": "inter",
         "createdAt": "2026-09-02T21:35:29.895Z",
         "reason": "Inter is the pre-existing, deliberately documented body typeface in DESIGN.md (paired with Playfair Display), predating this session; this session only removed unused fonts, never added Inter"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "32px",
+        "createdAt": "2026-09-10T12:10:41.563Z",
+        "reason": "user asked for larger hero text on phones (2026-09-10)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "22px",
+        "createdAt": "2026-09-10T12:10:41.760Z",
+        "reason": "user asked for larger hero text on phones (2026-09-10)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "24px",
+        "createdAt": "2026-09-10T12:10:41.932Z",
+        "reason": "user asked for larger hero text on phones (2026-09-10)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "38px",
+        "createdAt": "2026-09-10T12:12:55.743Z",
+        "reason": "user asked for larger hero text on phones (2026-09-10)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "40px",
+        "createdAt": "2026-09-10T12:12:55.932Z",
+        "reason": "user asked for larger hero text on phones (2026-09-10)"
       }
     ]
   }

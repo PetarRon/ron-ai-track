@@ -144,6 +144,12 @@
   }
 }
 
+/* Calculator slider: 44px thumb hit area, 20px visual dot */
+.calc-thumb:hover > span { transform: scale(1.1); }
+.calc-thumb:focus-visible > span {
+  box-shadow: 0 0 0 2px rgb(var(--th-page)), 0 0 0 4px rgb(var(--ac-1) / 0.4);
+}
+
 /* Cal.com popup -- shrink and remove internal scrollbar */
 div[data-cal-namespace] > div,
 .cal-embed-modal {
@@ -365,6 +371,11 @@ div[data-cal-namespace] > div,
 .dash-picker i { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid var(--dash-text-3); flex-shrink: 0; }
 .dash-divider { border: 0; border-top: 1px solid var(--dash-border); margin: 2px 0; }
 .dash-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Phones: the mock's live buttons need real touch targets */
+@media (max-width: 767px) {
+  .dash-actions { gap: 8px; }
+  .dash-actions .dash-btn { height: 44px; padding: 0 16px; font-size: 12px; }
+}
 .dash-toast { font-size: 10px; color: var(--dash-text-2); min-height: 14px; }
 .dash-split { display: grid; gap: 8px; min-height: 0; flex: 1; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .dash-split { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

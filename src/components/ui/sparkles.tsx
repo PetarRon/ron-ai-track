@@ -93,11 +93,12 @@ export const SparklesSection = ({
       className={`relative flex items-center justify-center overflow-hidden bg-th-page py-20 ${className}`}
     >
       <SparkleParticles particleCount={particleCount} particleColor={particleColor} />
-      <h2
+      <p
+        aria-hidden="true"
         className={`relative z-10 text-6xl font-serif font-normal tracking-tight text-th-heading/[0.06] md:text-8xl lg:text-9xl select-none ${textClassName}`}
       >
         {text}
-      </h2>
+      </p>
     </div>
   );
 };

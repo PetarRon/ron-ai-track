@@ -33,7 +33,7 @@ export const SectionHeading = ({
 }) => (
   <div className="text-center mb-12">
     {showBadge && badge && <SectionBadge tone={tone}>{badge}</SectionBadge>}
-    <h3 className={`${showBadge ? "mt-5" : ""} text-2xl font-serif font-normal tracking-tight text-th-heading md:text-3xl`}>{title}</h3>
+    <h2 className={`${showBadge ? "mt-5" : ""} text-2xl font-serif font-normal tracking-tight text-th-heading md:text-3xl`}>{title}</h2>
     <p className="mx-auto mt-2 max-w-2xl text-sm text-th-body">{description}</p>
   </div>
 );

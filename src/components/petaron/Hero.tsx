@@ -115,12 +115,12 @@ export const Hero = () => {
         className="mh-fade relative z-10 mx-auto max-w-3xl will-change-transform"
         style={fade({ y: copyY }, copyOpacity)}
       >
-        <h1 className="flex flex-col items-center gap-4 text-center font-serif text-[26px] font-normal tracking-tight text-th-heading sm:text-[28px] md:gap-5 md:text-[36px] lg:text-[44px]">
+        <h1 className="flex flex-col items-center gap-4 text-center font-serif text-[38px] font-normal tracking-tight text-th-heading sm:text-[40px] md:gap-5 md:text-[40px] lg:text-[44px]">
           <span className="block w-full leading-[1.2] sm:leading-[1.25] [padding-block-end:0.05em]">
             <RevealText text="Order entry has never been this easy" />
           </span>
           <motion.span
-            className="mx-auto block w-full max-w-2xl bg-gradient-to-r from-ac-hero-from via-ac-hero-via to-ac-hero-to box-decoration-clone bg-clip-text font-serif text-[18px] italic leading-[1.3] text-transparent [padding-block-end:0.1em] sm:text-[20px] md:text-[28px] lg:text-[34px]"
+            className="mx-auto block w-full max-w-2xl bg-gradient-to-r from-ac-hero-from via-ac-hero-via to-ac-hero-to box-decoration-clone bg-clip-text font-serif text-[26px] italic leading-[1.3] text-transparent [padding-block-end:0.1em] sm:text-[28px] md:text-[28px] lg:text-[34px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
@@ -132,7 +132,7 @@ export const Hero = () => {
         </h1>
 
         <motion.p
-          className="mx-auto mt-6 max-w-2xl text-[15px] font-light leading-relaxed text-th-body md:text-base"
+          className="mx-auto mt-6 max-w-2xl text-lg font-light leading-relaxed text-th-body md:text-lg"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
@@ -150,25 +150,6 @@ export const Hero = () => {
         </motion.div>
       </motion.div>
 
-      {/* Scroll cue */}
-      {!reduce && (
-        <motion.div
-          className="mh-fade pointer-events-none absolute inset-x-0 bottom-6 z-10 text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-th-muted"
-          style={fade({}, copyOpacity)}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.6 }}
-          aria-hidden="true"
-        >
-          <motion.span
-            className="block"
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            Scroll
-          </motion.span>
-        </motion.div>
-      )}
     </section>
   );
 };

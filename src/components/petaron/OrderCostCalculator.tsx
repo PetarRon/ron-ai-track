@@ -89,7 +89,7 @@ export const OrderCostCalculator = () => {
   return (
     <section
       id="cost-calculator"
-      className="relative z-10 border-y border-th-line-subtle bg-th-page py-16"
+      className="relative z-10 scroll-mt-24 border-y border-th-line-subtle bg-th-page py-16"
     >
       <div className={PETARON_SECTION_SHELL}>
         <SectionHeading
