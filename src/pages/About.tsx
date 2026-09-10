@@ -38,12 +38,20 @@ const About = () => (
         variants={fadeUp}
       >
         <div className="overflow-hidden rounded-2xl border border-th-line bg-th-surface shadow-sm">
-          <img
-            src="/founders.png"
-            alt="The Petaron.ai founders, Ron Lev Tabuchov and Petar Paskalev"
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
+          {/* Above the fold on this page: load eagerly, in the smallest format the browser supports. */}
+          <picture>
+            <source srcSet="/founders.avif" type="image/avif" />
+            <source srcSet="/founders.webp" type="image/webp" />
+            <img
+              src="/founders.png"
+              alt="The Petaron.ai founders, Ron Lev Tabuchov and Petar Paskalev"
+              width={811}
+              height={648}
+              decoding="async"
+              {...{ fetchpriority: "high" }}
+              className="h-auto w-full object-cover"
+            />
+          </picture>
         </div>
         <figcaption className="mt-3 flex flex-col items-center gap-2 text-center">
           <span className="text-xs text-th-muted">The Petaron.ai founders</span>
