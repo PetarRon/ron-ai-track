@@ -13,22 +13,18 @@ interface Particle {
   delay: number;
 }
 
-interface SparklesProps {
-  text?: string;
-  className?: string;
+interface SparkleParticlesProps {
   particleCount?: number;
   particleColor?: string;
-  textClassName?: string;
+  className?: string;
 }
 
-export const SparklesSection = ({
-  text = "petaron",
-  className = "",
+/** Floating particle layer. Absolutely positioned; parent must be `relative`. */
+export const SparkleParticles = ({
   particleCount = 50,
   particleColor = "rgb(var(--ac-1))",
-  textClassName = "",
-}: SparklesProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  className = "",
+}: SparkleParticlesProps) => {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
@@ -45,36 +41,58 @@ export const SparklesSection = ({
   }, [particleCount]);
 
   return (
+    <div className={`pointer-events-none absolute inset-0 ${className}`} aria-hidden="true">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: p.size,
+            height: p.size,
+            backgroundColor: particleColor,
+          }}
+          animate={{
+            opacity: [0, p.opacity, 0],
+            scale: [0, 1, 0],
+            y: [0, -20, -40],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+interface SparklesProps {
+  text?: string;
+  className?: string;
+  particleCount?: number;
+  particleColor?: string;
+  textClassName?: string;
+}
+
+export const SparklesSection = ({
+  text = "petaron",
+  className = "",
+  particleCount = 50,
+  particleColor = "rgb(var(--ac-1))",
+  textClassName = "",
+}: SparklesProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
     <div
       ref={containerRef}
       className={`relative flex items-center justify-center overflow-hidden bg-th-page py-20 ${className}`}
     >
-      <div className="pointer-events-none absolute inset-0">
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            className="absolute rounded-full"
-            style={{
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              width: p.size,
-              height: p.size,
-              backgroundColor: particleColor,
-            }}
-            animate={{
-              opacity: [0, p.opacity, 0],
-              scale: [0, 1, 0],
-              y: [0, -20, -40],
-            }}
-            transition={{
-              duration: p.duration,
-              delay: p.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+      <SparkleParticles particleCount={particleCount} particleColor={particleColor} />
       <h2
         className={`relative z-10 text-6xl font-serif font-normal tracking-tight text-th-heading/[0.06] md:text-8xl lg:text-9xl select-none ${textClassName}`}
       >

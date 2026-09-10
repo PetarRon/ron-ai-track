@@ -1,8 +1,9 @@
+import { ChaosToOrder } from "@/components/petaron/ChaosToOrder";
 import { CTASection } from "@/components/petaron/CTASection";
-import { DashboardTour } from "@/components/petaron/DashboardTour";
 import { FAQ } from "@/components/petaron/FAQ";
 import { Footer } from "@/components/petaron/Footer";
 import { Hero } from "@/components/petaron/Hero";
+import { HowItWorks } from "@/components/petaron/HowItWorks";
 import { OrderCostCalculator } from "@/components/petaron/OrderCostCalculator";
 import { PageShell } from "@/components/petaron/PageShell";
 import { SEO } from "@/components/petaron/SEO";
@@ -14,7 +15,10 @@ const Petaron = () => (
   <PageShell>
     <SEO route={routeSeo.home} jsonLd={softwareApplicationJsonLd()} />
     <Hero />
-    <DashboardTour />
+    {/* Everything below scrolls over the sticky hero, so it needs an opaque background. */}
+    <div className="relative z-10 bg-th-page">
+    <HowItWorks />
+    <ChaosToOrder />
     <OrderCostCalculator />
     <SellLine text="Every minute saved on data entry is a minute with a customer." />
     <CTASection />
@@ -25,6 +29,7 @@ const Petaron = () => (
     <SellLine text="Your team runs the business. Let the busywork run itself." />
     <Footer />
     <SparklesSection text="PETARON" particleCount={80} particleColor="rgb(var(--ac-1))" />
+    </div>
   </PageShell>
 );
 

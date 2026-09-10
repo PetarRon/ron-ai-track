@@ -1,15 +1,5 @@
 import { BrainCircuit, CheckCircle2, FileJson, Link, Mail, ScanText, type LucideIcon } from "lucide-react";
 
-export const integrations = [
-  { name: "CargoWise", domain: "cargowise.com" },
-  { name: "SAP", domain: "sap.com" },
-  { name: "Descartes", domain: "descartes.com" },
-  { name: "Scope", domain: "riege.com" },
-  { name: "Modality", domain: "modality.com" },
-  { name: "Gmail", domain: "gmail.com" },
-  { name: "Microsoft", domain: "microsoft.com" },
-];
-
 export type ProcessStage = {
   title: string;
   description: string;
