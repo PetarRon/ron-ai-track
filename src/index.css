@@ -144,12 +144,6 @@
   }
 }
 
-/* Calculator slider: 44px thumb hit area, 20px visual dot */
-.calc-thumb:hover > span { transform: scale(1.1); }
-.calc-thumb:focus-visible > span {
-  box-shadow: 0 0 0 2px rgb(var(--th-page)), 0 0 0 4px rgb(var(--ac-1) / 0.4);
-}
-
 /* Cal.com popup -- shrink and remove internal scrollbar */
 div[data-cal-namespace] > div,
 .cal-embed-modal {

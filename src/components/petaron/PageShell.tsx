@@ -126,7 +126,7 @@ export const PageShell = ({ children }: PageShellProps) => {
           aria-hidden="true"
         />
 
-        <div className="relative mx-auto w-full max-w-[1300px] px-5 pt-5 md:px-8 md:pt-6 z-10">
+        <div className="relative z-20 mx-auto w-full max-w-[1300px] px-5 pt-5 md:px-8 md:pt-6">
           <Header />
         </div>
 
