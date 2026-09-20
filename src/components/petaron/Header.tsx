@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 type NavItem =
@@ -15,28 +15,61 @@ const navItems: NavItem[] = [
   { id: "faq", label: "FAQ", type: "hash" },
 ];
 
-const SCROLL_HIDE_THRESHOLD = 80;
+const SCROLL_HIDE_THRESHOLD = 80; // always shown above this
+const UP_REVEAL = 8; // px of upward travel that brings the bar back
+const DOWN_HIDE = 12; // px of downward travel that takes it away
 
 export const Header = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const lastY = useRef(0);
   const drawerRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (y) => {
-    const prev = lastY.current;
-    lastY.current = y;
-    if (y < SCROLL_HIDE_THRESHOLD) {
-      setHidden(false);
-      return;
-    }
-    if (y > prev + 4) setHidden(true);
-    else if (y < prev - 4) setHidden(false);
-  });
+  // Show on any scroll up, hide on scroll down.
+  //
+  // Travel is accumulated per direction rather than compared between
+  // consecutive events: a slow drag arrives as a stream of 2-3px deltas, so
+  // comparing one event to the last never cleared the threshold and the bar
+  // stayed hidden until you flicked hard. Plain listener rather than
+  // useScroll() for the reason described in Hero.tsx.
+  useEffect(() => {
+    if (open) return; // an open drawer keeps the bar put
+    let lastY = window.scrollY;
+    let travel = 0;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      if (delta === 0) return;
+      if (y < SCROLL_HIDE_THRESHOLD) {
+        travel = 0;
+        setHidden(false);
+        return;
+      }
+      // a change of direction starts the count over
+      if (delta < 0 !== travel < 0) travel = 0;
+      travel += delta;
+      if (travel <= -UP_REVEAL) {
+        travel = 0;
+        setHidden(false);
+      } else if (travel >= DOWN_HIDE) {
+        travel = 0;
+        setHidden(true);
+      }
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [open]);
 
   useEffect(() => {
     setOpen(false);

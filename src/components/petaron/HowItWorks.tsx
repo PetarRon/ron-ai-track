@@ -137,7 +137,7 @@ const OrdersScreen = () => (
         <em>Search</em>
         <Search className="h-3 w-3" />
       </div>
-      <span className="dash-hide-sm" style={{ color: "var(--dash-text-3)", fontSize: 10 }}>
+      <span className="dash-hide-sm" style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-sm)" }}>
         This week · 2 need a look
       </span>
     </div>
@@ -222,7 +222,7 @@ const DocumentsScreen = () => (
               <FileText className="h-3 w-3 shrink-0" style={{ color: "var(--dash-text-3)" }} />
               <div className="min-w-0 flex-1">
                 <p className="truncate">{d.name}</p>
-                <p style={{ color: "var(--dash-text-3)", fontSize: 9.5 }}>{d.kind}</p>
+                <p style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-xs)" }}>{d.kind}</p>
               </div>
               <span className="dash-chip green">{d.state}</span>
             </div>
@@ -359,7 +359,7 @@ const MatchScreen = () => (
           <p className="dash-section">Matched to your TMS</p>
           {matches.map((m) => (
             <div key={m.label}>
-              <p style={{ color: "var(--dash-text-3)", fontSize: 9.5 }}>{m.label}</p>
+              <p style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-xs)" }}>{m.label}</p>
               <div className={`dash-picker${m.ok ? "" : " is-empty"}`}>
                 <span>{m.ok ? `${m.code} — ${m.name}` : "Pick a code"}</span>
                 {m.ok ? <span className="dash-chip green">Matched</span> : <span className="dash-chip amber">For you</span>}
