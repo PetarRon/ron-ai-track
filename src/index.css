@@ -388,3 +388,39 @@ div[data-cal-namespace] > div,
 .dash-split > * { min-height: 0; }
 .dash-hide-sm { display: none; }
 @media (min-width: 640px) { .dash-hide-sm { display: flex; } }
+
+/* ============================================================
+   RELAY DIRECTION (src/pages/RelayPreview.tsx)
+   Dark scope: overrides the th-* / ac-* tokens so every existing
+   utility class renders black + lime inside .relay. Promote these
+   values to :root to retheme the whole site.
+   ============================================================ */
+.relay {
+  color-scheme: dark;
+  --th-page:        7 8 6;
+  --th-surface:     16 18 14;
+  --th-surface-alt: 22 25 20;
+  --th-elevated:    26 29 24;
+  --th-heading:     240 241 236;
+  --th-body:        168 172 160;
+  --th-muted:       118 123 110;
+  --th-faint:       86 90 80;
+  --th-line:        44 48 40;
+  --th-line-subtle: 28 31 26;
+  --ac-1:     199 242 60;     /* lime */
+  --ac-2:     168 214 40;
+  --ac-3:     120 160 30;
+  --ac-hero-from: 240 241 236;
+  --ac-hero-via:  220 224 210;
+  --ac-hero-to:   199 242 60;
+}
+.relay ::selection { background: rgb(199 242 60 / 0.3); }
+
+/* faint dot grid behind the hero, fading out towards the edges */
+.relay-dots {
+  background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1.2px);
+  background-size: 80px 80px;
+  background-position: 40px 40px;
+  mask-image: radial-gradient(ellipse 70% 80% at 40% 45%, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 80% at 40% 45%, black 20%, transparent 75%);
+}
