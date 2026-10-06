@@ -58,10 +58,10 @@ type Field = { section: string; label: string; value: string; span?: 2 };
 const formFields: Field[] = [
   { section: "Consignor", label: "Consignor", value: "Rotterdam Distribution B.V.", span: 2 },
   { section: "Load Site", label: "Load Site", value: "Antwerp, Quay 730", span: 2 },
-  { section: "Load Site", label: "Date", value: "11 Sep 2026" },
+  { section: "Load Site", label: "Date", value: "11/09/2026" },
   { section: "Load Site", label: "Time", value: "08:00" },
   { section: "Unload Site", label: "Unload Site", value: "Hamburg, Dock 4", span: 2 },
-  { section: "Unload Site", label: "Date", value: "12 Sep 2026" },
+  { section: "Unload Site", label: "Date", value: "12/09/2026" },
   { section: "Unload Site", label: "Time", value: "16:00" },
   { section: "Goods", label: "Weight", value: "3,240 kg" },
   { section: "Goods", label: "Packed", value: "Pallets" },
@@ -108,8 +108,8 @@ const Review = ({ phase }: { phase: Phase }) => {
           <p style={{ color: "var(--dash-text-2)", fontFamily: "var(--font-body)" }}>Booking request, Rotterdam to Hamburg</p>
           <p style={{ marginTop: 6, lineHeight: 1.5 }}>
             Hi, please book a pickup at <Mark on={reading} i={1}>Antwerp, Quay 730</Mark> on{" "}
-            <Mark on={reading} i={2}>11 Sep</Mark> at <Mark on={reading} i={3}>08:00</Mark>. Delivery to{" "}
-            <Mark on={reading} i={4}>Hamburg, Dock 4</Mark> by <Mark on={reading} i={5}>12 Sep</Mark>, <Mark on={reading} i={6}>16:00</Mark>.{" "}
+            <Mark on={reading} i={2}>11/09</Mark> at <Mark on={reading} i={3}>08:00</Mark>. Delivery to{" "}
+            <Mark on={reading} i={4}>Hamburg, Dock 4</Mark> by <Mark on={reading} i={5}>12/09</Mark>, <Mark on={reading} i={6}>16:00</Mark>.{" "}
             <Mark on={reading} i={9}>24</Mark> <Mark on={reading} i={8}>pallets</Mark>, total weight{" "}
             <Mark on={reading} i={7}>3,240 kg</Mark>. Thanks.
           </p>
