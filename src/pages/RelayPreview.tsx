@@ -1,28 +1,32 @@
-import { Helmet } from "react-helmet-async";
-import { LightStream } from "@/components/relay/LightStream";
+import { RelayShell } from "@/components/relay/RelayShell";
 import { RelayHero } from "@/components/relay/RelayHero";
 import { RelayIntegrations } from "@/components/relay/RelayIntegrations";
+import { RelayProcess } from "@/components/relay/RelayProcess";
+import { RelayPlate } from "@/components/relay/RelayPlate";
+import { RelayReliability } from "@/components/relay/RelayReliability";
+import { RelayDashboard } from "@/components/relay/RelayDashboard";
+import { RelayNumbers } from "@/components/relay/RelayNumbers";
+import { RelayCalculator } from "@/components/relay/RelayCalculator";
+import { RelayFAQ } from "@/components/relay/RelayFAQ";
+import { RelayFooter } from "@/components/relay/RelayFooter";
 
 /**
  * Design prototype: the Relay-direction redesign (black + lime, one stream of
  * light down the page). Not linked from navigation; reached at /preview/relay.
  */
 const RelayPreview = () => (
-  <div className="relay min-h-screen bg-th-page text-th-heading">
-    <Helmet>
-      <title>Relay direction preview</title>
-      <meta name="robots" content="noindex" />
-    </Helmet>
-    {/* The stream wraps both sections so it runs from the hero into the next block. */}
-    <div className="relative overflow-hidden">
-      <LightStream className="z-0" />
-      <div className="relative z-10">
-        <RelayHero />
-        <RelayIntegrations />
-      </div>
-    </div>
-    <div className="h-[60vh] border-t border-th-line/40" />
-  </div>
+  <RelayShell title="Relay direction preview">
+    <RelayHero />
+    <RelayIntegrations />
+    <RelayProcess />
+    <RelayPlate />
+    <RelayReliability />
+    <RelayDashboard />
+    <RelayNumbers />
+    <RelayCalculator />
+    <RelayFAQ />
+    <RelayFooter />
+  </RelayShell>
 );
 
 export default RelayPreview;

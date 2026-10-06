@@ -4,10 +4,11 @@ import { motion, useInView } from "framer-motion";
 const apps = [
   { code: "EM", name: "email" },
   { code: "PD", name: "pdf" },
+  { code: "SC", name: "scan" },
   { code: "XL", name: "excel" },
-  { code: "ER", name: "erp" },
+  { code: "DO", name: "word" },
+  { code: "FW", name: "forwarded" },
   { code: "TM", name: "tms" },
-  { code: "WA", name: "whatsapp" },
 ];
 
 const Typewriter = ({ text, active }: { text: string; active: boolean }) => {
@@ -25,22 +26,14 @@ const Typewriter = ({ text, active }: { text: string; active: boolean }) => {
   );
 };
 
-// "arrives out of focus and settles": blur + rise on first view
-const settle = {
-  initial: { opacity: 0, y: 24, filter: "blur(14px)" },
-  whileInView: { opacity: 1, y: 0, filter: "blur(0px)" },
-  viewport: { once: true, margin: "-20% 0px" },
-  transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] as const },
-};
-
 export const RelayIntegrations = () => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-20% 0px" });
 
   return (
     <section id="how" className="relative">
-      <div ref={ref} className="relative mx-auto w-full max-w-[1240px] px-6 py-28 md:px-8">
-        <Typewriter text="connects to your inbox, your ERP, and to whatever comes next" active={inView} />
+      <div ref={ref} className="relative mx-auto w-full max-w-[1240px] px-6 pb-16 pt-28 md:px-8">
+        <Typewriter text="from your inbox to your TMS, one order at a time" active={inView} />
 
         {/* app row with the travelling dot */}
         <div className="relative mt-10 flex items-start overflow-hidden [mask-image:linear-gradient(to_right,black_55%,transparent_100%)]">
@@ -73,31 +66,6 @@ export const RelayIntegrations = () => {
           ))}
         </div>
 
-        {/* next block: eyebrow pill + headline that settles into focus */}
-        <div className="mt-40 border-t border-th-line/50 pt-28">
-          <motion.span
-            {...settle}
-            className="inline-flex items-center gap-2 rounded-full border border-th-line bg-th-surface/50 px-3.5 py-1.5 font-body text-[13px] text-th-body"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-ac-1" /> order intake
-          </motion.span>
-          <motion.h2
-            {...settle}
-            transition={{ ...settle.transition, delay: 0.15 }}
-            className="mt-6 max-w-2xl font-body text-[36px] font-semibold leading-[1.05] tracking-[-0.03em] text-th-heading sm:text-[48px]"
-          >
-            Most of a dispatcher&apos;s day is retyping what a customer already wrote.
-          </motion.h2>
-          <motion.div {...settle} transition={{ ...settle.transition, delay: 0.3 }} className="mt-10 h-px w-52 bg-th-line" />
-          <motion.p
-            {...settle}
-            transition={{ ...settle.transition, delay: 0.4 }}
-            className="mt-8 max-w-lg font-body text-[16px] leading-relaxed text-th-body"
-          >
-            Orders arrive as emails, PDFs and spreadsheets. Petaron turns each one into a clean, validated draft, and a
-            person only steps in when a field needs a decision.
-          </motion.p>
-        </div>
       </div>
     </section>
   );

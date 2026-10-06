@@ -13,6 +13,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const RelayPreview = lazy(() => import("./pages/RelayPreview"));
+const RelayAbout = lazy(() => import("./pages/RelayAbout"));
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/preview/relay" element={<RelayPreview />} />
+              <Route path="/preview/relay/about" element={<RelayAbout />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

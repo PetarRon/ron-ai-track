@@ -2,27 +2,29 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Play } from "lucide-react";
+import { useContact } from "@/components/petaron/contact-context";
+import { CalButton, LogoMark, buttonVariants } from "./shared";
+import { RelayHeroLoop } from "./RelayHeroLoop";
 
 const navLinks = [
-  { label: "Product", href: "#product" },
-  { label: "How it works", href: "#how" },
-  { label: "Customers", href: "#customers" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Product", href: "/preview/relay#process" },
+  { label: "How it works", href: "/preview/relay#how" },
+  { label: "Calculator", href: "/preview/relay#calculator" },
+  { label: "FAQ", href: "/preview/relay#faq" },
+  { label: "About", href: "/preview/relay/about" },
 ];
 
 export const RelayNav = () => (
   <header className="relative z-20 mx-auto flex w-full max-w-[1240px] items-center justify-between px-6 py-5 md:px-8">
-    <Link to="/" className="flex items-center gap-2.5">
-      <span className="grid h-7 w-7 place-items-center rounded-md bg-ac-1 text-th-page">
-        <img src="/petaron_logo.svg" alt="" className="h-4 w-4 brightness-0" width={16} height={16} />
-      </span>
+    <Link to="/preview/relay" className="flex items-center gap-2.5">
+      <LogoMark size={28} />
       <span className="font-body text-[17px] font-medium tracking-tight text-th-heading">Petaron</span>
     </Link>
     <nav className="hidden items-center gap-8 md:flex">
       {navLinks.map((l) => (
-        <a key={l.label} href={l.href} className="font-body text-[14px] text-th-body transition hover:text-th-heading">
+        <Link key={l.label} to={l.href} className="font-body text-[14px] text-th-body transition hover:text-th-heading">
           {l.label}
-        </a>
+        </Link>
       ))}
     </nav>
     <div className="flex items-center gap-3">
@@ -30,112 +32,12 @@ export const RelayNav = () => (
         <span className="h-1.5 w-1.5 rounded-full bg-ac-1 shadow-[0_0_8px_rgb(var(--ac-1))]" />
         all systems normal
       </span>
-      <a
-        href="#demo"
-        className="rounded-full bg-ac-1 px-5 py-2.5 font-body text-[14px] font-medium text-th-page transition hover:brightness-110"
-      >
-        Book a demo
-      </a>
+      <CalButton className="!px-5 !py-2.5">Book a Demo</CalButton>
     </div>
   </header>
 );
 
-/* ---------- the tilted glass workflow window ---------- */
-
-const Node = ({
-  x,
-  y,
-  title,
-  sub,
-  w = 176,
-}: {
-  x: number;
-  y: number;
-  title: string;
-  sub: string;
-  w?: number;
-}) => (
-  <div
-    className="absolute rounded-xl border border-th-line bg-th-surface/90 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
-    style={{ left: x, top: y, width: w }}
-  >
-    <div className="font-body text-[14px] font-medium text-th-heading">{title}</div>
-    <div className="mt-0.5 font-mono text-[11px] text-th-muted">{sub}</div>
-  </div>
-);
-
-const WorkflowWindow = () => (
-  <div className="relative h-[480px] w-[620px] rounded-2xl border border-th-line bg-th-surface/40 backdrop-blur-md">
-    {/* header */}
-    <div className="flex items-center gap-4 border-b border-th-line/70 px-7 py-5 font-mono text-[12px]">
-      <span className="text-th-heading">Orders over 5000</span>
-      <span className="h-3 w-px bg-th-line" />
-      <span className="text-th-body">3 steps / 1 branch</span>
-      <span className="ml-auto text-th-faint/60">run #4812</span>
-    </div>
-    {/* tool rail */}
-    <div className="absolute left-7 top-[86px] flex flex-col gap-2">
-      {["↖", "+", "↻"].map((g) => (
-        <span
-          key={g}
-          className="grid h-7 w-7 place-items-center rounded-md border border-th-line bg-th-surface text-[12px] text-th-body"
-        >
-          {g}
-        </span>
-      ))}
-    </div>
-    <span className="absolute right-7 top-[86px] rounded-md border border-th-line bg-th-surface px-2.5 py-1 font-mono text-[11px] text-th-body">
-      100%
-    </span>
-
-    {/* connectors */}
-    <svg className="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 620 480" fill="none" aria-hidden>
-      <path d="M -10 230 C 30 230, 50 170, 110 170" stroke="rgb(var(--ac-1))" strokeWidth="1.2" opacity="0.9" />
-      <path d="M -10 230 C 30 230, 50 300, 110 300" stroke="rgb(var(--th-line))" strokeWidth="1.2" />
-      <path d="M 290 170 C 330 170, 330 240, 370 240" stroke="rgb(var(--ac-1))" strokeWidth="1.2" opacity="0.9" />
-      <path d="M 290 300 C 330 300, 330 240, 370 240" stroke="rgb(var(--th-line))" strokeWidth="1.2" />
-      <circle cx="-10" cy="230" r="3" fill="rgb(var(--ac-1))" />
-      <text x="56" y="192" fill="rgb(var(--th-muted))" fontFamily="var(--font-mono)" fontSize="11">
-        true
-      </text>
-      <text x="56" y="286" fill="rgb(var(--th-muted))" fontFamily="var(--font-mono)" fontSize="11">
-        else
-      </text>
-    </svg>
-
-    {/* the first node hangs over the left edge like in the reference */}
-    <div
-      className="absolute left-[-96px] top-[204px] rounded-xl border border-th-line bg-th-surface/95 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
-      style={{ width: 160 }}
-    >
-      <div className="font-body text-[14px] font-medium text-th-heading">Order received</div>
-      <div className="mt-0.5 font-mono text-[11px] text-th-muted">email</div>
-    </div>
-    <Node x={110} y={144} title="Amount over 5000" sub="condition" />
-    <Node x={110} y={274} title="Push to ERP" sub="system" />
-    <Node x={370} y={212} title="Ask sales" sub="waiting on a yes" w={156} />
-    <span className="absolute left-[370px] top-[280px] flex items-center gap-1.5 rounded-md border border-th-line bg-th-surface px-2 py-1 font-mono text-[10px] text-th-body">
-      <span className="h-1 w-1 rounded-full bg-ac-1" /> 26 min
-    </span>
-
-    {/* last runs */}
-    <div className="absolute bottom-0 left-0 right-0 border-t border-th-line/60 px-7 py-5 font-mono text-[11px]">
-      <div className="text-th-body">last runs</div>
-      <div className="mt-2 flex items-center gap-4 text-th-muted">
-        <span className="h-1 w-1 rounded-full bg-th-muted" />
-        <span>08:41:02</span>
-        <span>orders over 5000</span>
-        <span className="ml-auto">129 ms</span>
-      </div>
-      <div className="mt-2 flex items-center gap-4 text-th-muted/50">
-        <span className="h-1 w-1 rounded-full bg-th-muted/50" />
-        <span>08:39:50</span>
-        <span>weekly export</span>
-        <span className="ml-auto">88 ms</span>
-      </div>
-    </div>
-  </div>
-);
+/* ---------- the tilted glass window: one order on a loop ---------- */
 
 const TiltWindow = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -169,7 +71,7 @@ const TiltWindow = () => {
         transition={{ duration: 1.4, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
         style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
       >
-        <WorkflowWindow />
+        <RelayHeroLoop />
       </motion.div>
     </div>
   );
@@ -183,49 +85,42 @@ const rise = (delay: number) => ({
   transition: { duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
 
-export const RelayHero = () => (
+export const RelayHero = () => {
+  const { openContact } = useContact();
+  return (
   <section className="relative overflow-hidden">
-    <div className="relay-dots pointer-events-none absolute inset-0" aria-hidden />
     <RelayNav />
-    <div className="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 items-center gap-12 px-6 pb-28 pt-16 md:px-8 lg:grid-cols-[minmax(0,1fr)_620px] lg:pt-24">
+    <div className="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 items-center gap-12 px-6 pb-28 pt-16 md:px-8 lg:grid-cols-[minmax(0,1fr)_620px] lg:pt-14">
       <div className="relative z-10">
         <motion.span
           {...rise(0.1)}
           className="inline-flex items-center gap-2 rounded-md border border-th-line bg-th-surface/50 px-3 py-1.5 font-mono text-[12px] text-th-heading"
         >
           <span className="h-1.5 w-1.5 rounded-sm bg-ac-1" />
-          open beta / 240 carriers connected
+          free one-month pilot / from email to TMS
         </motion.span>
         <h1 className="mt-7 font-body text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-th-heading sm:text-[56px] lg:text-[60px]">
           <motion.span {...rise(0.2)} className="block">
-            Order entry runs
+            Automate your
           </motion.span>
           <motion.span
             {...rise(0.35)}
             className="block font-serif text-[48px] font-normal italic tracking-[-0.02em] text-th-heading/90 sm:text-[62px] lg:text-[72px]"
           >
-            itself.
+            order entry.
           </motion.span>
         </h1>
         <motion.p {...rise(0.5)} className="mt-7 max-w-md font-body text-[17px] leading-relaxed text-th-body">
-          Petaron reads every order that lands in your inbox and only pings a person when it matters.
+          No more manual entry. The moment an order arrives, our AI agent gets to work, side by side with your team, from inbox to TMS.
         </motion.p>
         <motion.div {...rise(0.65)} className="mt-9 flex flex-wrap items-center gap-3">
-          <a
-            href="#demo"
-            className="rounded-full bg-ac-1 px-6 py-3 font-body text-[14px] font-medium text-th-page transition hover:brightness-110"
-          >
-            Book a demo
-          </a>
-          <a
-            href="#how"
-            className="flex items-center gap-2 rounded-full border border-th-line bg-th-surface/50 px-6 py-3 font-body text-[14px] font-medium text-th-heading transition hover:bg-th-surface"
-          >
-            <Play className="h-3 w-3 fill-current" /> Watch an order, 2 minutes
-          </a>
+          <CalButton>Book a Demo for Free</CalButton>
+          <button type="button" onClick={openContact} className={buttonVariants.ghost}>
+            <Play className="h-3 w-3 fill-current" /> Get in Touch
+          </button>
         </motion.div>
         <motion.p {...rise(0.8)} className="mt-6 font-mono text-[12px] text-th-muted">
-          free pilot for 14 days /
+          runs on your own orders / no card / your TMS stays as it is
         </motion.p>
       </div>
       <div className="relative hidden lg:block">
@@ -234,4 +129,5 @@ export const RelayHero = () => (
       </div>
     </div>
   </section>
-);
+  );
+};

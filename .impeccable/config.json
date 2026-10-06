@@ -107,6 +107,12 @@
         "value": "40px",
         "createdAt": "2026-09-10T12:12:55.932Z",
         "reason": "user asked for larger hero text on phones (2026-09-10)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(171,171,171,0.16)",
+        "createdAt": "2026-10-06T21:29:19.967Z",
+        "reason": "Claude: dashboard replica's own highlight tint (#ababab29) animated via framer-motion, which cannot interpolate a CSS variable; mirrors the real app"
       }
     ]
   }

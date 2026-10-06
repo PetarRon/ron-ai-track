@@ -416,11 +416,52 @@ div[data-cal-namespace] > div,
 }
 .relay ::selection { background: rgb(199 242 60 / 0.3); }
 
-/* faint dot grid behind the hero, fading out towards the edges */
-.relay-dots {
-  background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1.2px);
-  background-size: 80px 80px;
-  background-position: 40px 40px;
-  mask-image: radial-gradient(ellipse 70% 80% at 40% 45%, black 20%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 80% at 40% 45%, black 20%, transparent 75%);
+/* recolours the black logo svg to lime for the inverse mark */
+.relay-logo-lime { filter: brightness(0) saturate(100%) invert(93%) sepia(40%) saturate(900%) hue-rotate(20deg) brightness(104%); }
+
+/* Hero queue (src/components/relay/RelayHeroLoop.tsx): four fixed columns at
+   every width, since the window is always ~620px, and an amber count for a
+   row that still has an empty field. */
+.dash-tr.relay-queue-row { grid-template-columns: 6.2rem minmax(0, 1fr) 3.2rem 4.6rem; }
+.dash-tr.relay-queue-row:not(.is-head) { padding-top: 0; padding-bottom: 0; }
+.relay-seg {
+  display: inline-flex; gap: 2px; padding: 2px; border-radius: 4px;
+  background: var(--dash-bg); border: 1px solid var(--dash-border);
+  font-size: var(--dash-fs-sm); color: var(--dash-text-3);
 }
+.relay-seg span { padding: 1px 6px; border-radius: 3px; border: 1px solid transparent; }
+.relay-seg span.is-active { background: var(--dash-surface); border-color: var(--dash-border-2); color: var(--dash-text); font-weight: 500; }
+
+/* Dark glass variant of the dashboard replica, for the Relay hero: the same
+   layout and type scale, the site's dark palette and lime accents. */
+.relay .dash.is-glass {
+  --dash-bg: rgb(13 15 12 / 0.9);
+  --dash-surface: rgb(20 23 18 / 0.9);
+  --dash-card: rgb(10 11 9 / 0.7);
+  --dash-border: rgb(44 48 40 / 0.9);
+  --dash-border-2: rgb(62 68 56);
+  --dash-text: #f0f1ec;
+  --dash-text-2: #a8aca0;
+  --dash-text-3: #767b6e;
+  --dash-primary: #c7f23c;
+  --dash-primary-2: #a8d628;
+  --dash-amber: #fbbf24;
+  --dash-green: #c7f23c;
+  --dash-grey: #8a8f82;
+  --dash-red: #f87171;
+  border-color: rgb(var(--th-line));
+  background: rgb(13 15 12 / 0.82);
+  color-scheme: dark;
+}
+.relay .dash.is-glass .dash-side { background: rgb(16 18 14 / 0.6); }
+.relay .dash.is-glass .dash-tr.is-head { background: rgb(20 23 18 / 0.8); }
+.relay .dash.is-glass .dash-chip.grey { color: var(--dash-text-2); }
+/* Review-page origin treatments, as the app draws them: history values get a
+   blue left border, an unsettled code an amber border, a human-edited value
+   a green one. */
+.dash-field.is-history { border-left: 3px solid #5b8ec9; }
+.dash-field.is-unsettled { border-color: var(--dash-amber); }
+.dash-field.is-human { border-color: var(--dash-primary); }
+.relay .dash.is-glass .dash-mark { color: var(--dash-text); }
+.relay .dash.is-glass .dash-btn.is-primary { color: #0b0c0a; }
+.relay-actions .dash-btn { height: 22px; padding: 0 7px; font-size: var(--dash-fs-sm); }
