@@ -342,32 +342,27 @@ export const RelayHeroLoop = () => {
           </div>
         </header>
         <div className="dash-main">
+          {/* Both pages stay mounted and fade directly: an exit animation under
+              the 3D tilt lingered and let the queue show through the review. */}
           <div className="relative h-full min-h-0">
-            <AnimatePresence initial={false}>
-              {onReview ? (
-                <motion.div
-                  key="review"
-                  className="absolute inset-0"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <Review phase={phase} />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="queue"
-                  className="absolute inset-0 flex flex-col gap-2.5"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <Queue rows={rowsFor(phase)} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <motion.div
+              className="absolute inset-0 flex flex-col gap-2.5"
+              initial={false}
+              animate={{ opacity: onReview ? 0 : 1, y: onReview ? -6 : 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ visibility: onReview ? "hidden" : "visible", transitionProperty: "visibility", transitionDelay: onReview ? "0.3s" : "0s" }}
+            >
+              <Queue rows={rowsFor(phase)} />
+            </motion.div>
+            <motion.div
+              className="absolute inset-0"
+              initial={false}
+              animate={{ opacity: onReview ? 1 : 0, y: onReview ? 0 : 10 }}
+              transition={{ duration: 0.3 }}
+              style={{ visibility: onReview ? "visible" : "hidden", transitionProperty: "visibility", transitionDelay: onReview ? "0s" : "0.3s" }}
+            >
+              <Review phase={phase} />
+            </motion.div>
           </div>
         </div>
       </div>
