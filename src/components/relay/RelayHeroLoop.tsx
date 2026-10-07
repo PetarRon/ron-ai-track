@@ -22,16 +22,16 @@ const chip: Record<Status, { cls: string; label: string }> = {
 };
 
 const base: Row[] = [
-  { id: "a", subject: "Pickup Thursday, 24 pallets to Hamburg", status: "completed", fields: "31/31", received: "06 Oct, 09:12" },
-  { id: "b", subject: "Reefer container, temp-controlled", status: "completed", fields: "31/31", received: "06 Oct, 08:57" },
-  { id: "c", subject: "Weekly consolidation, Antwerp to Lyon", status: "completed", fields: "31/31", received: "06 Oct, 08:40" },
-  { id: "d", subject: "Re: Invoice 4471, payment confirmation", status: "none", received: "06 Oct, 08:21" },
-  { id: "e", subject: "Two containers ex Piraeus", status: "completed", fields: "31/31", received: "05 Oct, 16:02" },
-  { id: "f", subject: "Bulk salt, 3 trucks Monday", status: "completed", fields: "31/31", received: "05 Oct, 14:48" },
-  { id: "g", subject: "Re: change unload time, order 48114", status: "completed", fields: "31/31", received: "05 Oct, 11:30" },
+  { id: "a", subject: "Pickup Thursday, 24 pallets to Hamburg", status: "completed", fields: "31/31", received: "07 Jul, 09:12" },
+  { id: "b", subject: "Reefer container, temp-controlled", status: "completed", fields: "31/31", received: "07 Jul, 08:57" },
+  { id: "c", subject: "Weekly consolidation, Antwerp to Lyon", status: "completed", fields: "31/31", received: "07 Jul, 08:40" },
+  { id: "d", subject: "Re: Invoice 4471, payment confirmation", status: "none", received: "07 Jul, 08:21" },
+  { id: "e", subject: "Two containers ex Piraeus", status: "completed", fields: "31/31", received: "06 Jul, 16:02" },
+  { id: "f", subject: "Bulk salt, 3 trucks Monday", status: "completed", fields: "31/31", received: "06 Jul, 14:48" },
+  { id: "g", subject: "Re: change unload time, order 48114", status: "completed", fields: "31/31", received: "06 Jul, 11:30" },
 ];
 
-const incoming: Row = { id: "n1", subject: "Booking request, Rotterdam to Hamburg", status: "processing", received: "06 Oct, 09:41" };
+const incoming: Row = { id: "n1", subject: "Booking request, Rotterdam to Hamburg", status: "processing", received: "07 Jul, 09:41" };
 const patch = (r: Row, p: Partial<Row>): Row => ({ ...r, ...p });
 
 type Phase = "queue" | "landed" | "flagged" | "reading" | "approving" | "approved" | "done";
@@ -58,10 +58,10 @@ type Field = { section: string; label: string; value: string; span?: 2 };
 const formFields: Field[] = [
   { section: "Consignor", label: "Consignor", value: "Rotterdam Distribution B.V.", span: 2 },
   { section: "Load Site", label: "Load Site", value: "Antwerp, Quay 730", span: 2 },
-  { section: "Load Site", label: "Date", value: "14/10/2026" },
+  { section: "Load Site", label: "Date", value: "14/07/2026" },
   { section: "Load Site", label: "Time", value: "08:00" },
   { section: "Unload Site", label: "Unload Site", value: "Hamburg, Dock 4", span: 2 },
-  { section: "Unload Site", label: "Date", value: "15/10/2026" },
+  { section: "Unload Site", label: "Date", value: "15/07/2026" },
   { section: "Unload Site", label: "Time", value: "16:00" },
   { section: "Goods", label: "Weight", value: "3,240 kg" },
   { section: "Goods", label: "Packed", value: "Pallets" },
@@ -101,15 +101,15 @@ const Review = ({ phase }: { phase: Phase }) => {
           </span>
         </div>
         <div className="dash-mono-body" style={{ borderTop: "1px solid var(--dash-border)", padding: 8, overflow: "hidden" }}>
-          <span className="dash-chip grey">06 Oct, 09:41</span>
+          <span className="dash-chip grey">07 Jul, 09:41</span>
           <p style={{ marginTop: 6, fontWeight: 600, fontFamily: "var(--font-body)", fontSize: "var(--dash-fs)" }}>
-            planning@rotterdam-distribution.example
+            Rotterdam Distribution B.V. · Planning
           </p>
           <p style={{ color: "var(--dash-text-2)", fontFamily: "var(--font-body)" }}>Booking request, Rotterdam to Hamburg</p>
           <p style={{ marginTop: 6, lineHeight: 1.5 }}>
             Hi, please book a pickup at <Mark on={reading} i={1}>Antwerp, Quay 730</Mark> on{" "}
-            <Mark on={reading} i={2}>14/10</Mark> at <Mark on={reading} i={3}>08:00</Mark>. Delivery to{" "}
-            <Mark on={reading} i={4}>Hamburg, Dock 4</Mark> by <Mark on={reading} i={5}>15/10</Mark>, <Mark on={reading} i={6}>16:00</Mark>.{" "}
+            <Mark on={reading} i={2}>14/07</Mark> at <Mark on={reading} i={3}>08:00</Mark>. Delivery to{" "}
+            <Mark on={reading} i={4}>Hamburg, Dock 4</Mark> by <Mark on={reading} i={5}>15/07</Mark>, <Mark on={reading} i={6}>16:00</Mark>.{" "}
             <Mark on={reading} i={9}>24</Mark> <Mark on={reading} i={8}>pallets</Mark>, total weight{" "}
             <Mark on={reading} i={7}>3,240 kg</Mark>. Thanks.
           </p>
@@ -332,12 +332,12 @@ export const RelayHeroLoop = () => {
           </p>
           <div className="dash-top-right">
             <span className="dash-td-mono">09:41:07</span>
-            <span className="dash-hide-sm">ops@yourcompany · demo</span>
+            <span className="dash-hide-sm">M. de Vries · Operations</span>
             <span
               className="flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold"
               style={{ background: "var(--dash-surface)", border: "1px solid var(--dash-border-2)", color: "var(--dash-text-2)" }}
             >
-              OP
+              MV
             </span>
           </div>
         </header>

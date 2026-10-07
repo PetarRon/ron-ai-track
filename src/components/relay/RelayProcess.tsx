@@ -67,8 +67,8 @@ const fields = [
   { label: "Load Reference", value: "PO 48291", from: "Read from the email" },
   { label: "Unload Site Code", value: "", from: "" },
   { label: "Gross Weight", value: "3,240 kg", from: "Read from the email" },
-  { label: "Load From", value: "14/10/2026, 08:00", from: "Read from the email" },
-  { label: "Unload Until", value: "15/10/2026, 16:00", from: "Copied from a past order" },
+  { label: "Load From", value: "14/07/2026, 08:00", from: "Read from the email" },
+  { label: "Unload Until", value: "15/07/2026, 16:00", from: "Copied from a past order" },
 ];
 
 const ReviewCard = () => (
