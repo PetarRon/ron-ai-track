@@ -322,14 +322,7 @@ export const RelayHeroLoop = () => {
           </nav>
         </aside>
         <header className="dash-top">
-          <p className="dash-crumb">
-            Orders
-            {onReview && (
-              <>
-                <span>&gt;</span>Flag Order
-              </>
-            )}
-          </p>
+          <p className="dash-crumb">Orders</p>
           <div className="dash-top-right">
             <span className="dash-td-mono">09:41:07</span>
             <span className="dash-hide-sm">M. de Vries · Operations</span>
