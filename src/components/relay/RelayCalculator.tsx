@@ -77,7 +77,7 @@ export const RelayCalculator = () => {
         <Card className="grid gap-10 p-7 md:p-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           <div>
             <span className="font-mono text-[12px] text-th-muted">estimate</span>
-            <h3 className="mt-2 font-body text-[20px] font-medium tracking-[-0.02em] text-th-heading">
+            <h3 className="mt-2 font-display text-[20px] font-medium tracking-[-0.02em] text-th-heading">
               How many orders does your team type in a day?
             </h3>
             <div className="mt-10 space-y-9">

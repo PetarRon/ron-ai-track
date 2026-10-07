@@ -64,7 +64,7 @@ export const RelayFooter = () => {
         <motion.div {...settle(0.15)} id="demo" className="scroll-mt-24">
           <div className="h-full rounded-2xl bg-ac-1 p-7 md:p-9">
             <span className="font-mono text-[12px] text-th-page/60">what now</span>
-            <h2 className="mt-3 font-body text-[30px] font-semibold leading-[1.1] tracking-[-0.03em] text-th-page sm:text-[36px]">
+            <h2 className="mt-3 font-display text-[30px] font-semibold leading-[1.1] tracking-[-0.03em] text-th-page sm:text-[36px]">
               Ready to automate your <Em dark>order entry</Em>?
             </h2>
             <p className="mt-4 max-w-xl font-body text-[15px] leading-relaxed text-th-page/75">

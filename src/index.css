@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -413,7 +413,14 @@ div[data-cal-namespace] > div,
   --ac-hero-from: 240 241 236;
   --ac-hero-via:  220 224 210;
   --ac-hero-to:   199 242 60;
+  /* three faces: titles pair Space Grotesk (font-display) with an IBM Plex Sans
+     accent word (font-serif); everything else is JetBrains Mono (font-body). */
+  --font-heading: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-body:    'JetBrains Mono', monospace;
 }
+/* the dashboard replica mimics the product, which is set in a sans; the token
+   is re-pointed so font-body utilities inside it resolve to Plex too */
+.relay .dash { --font-body: 'IBM Plex Sans', system-ui, sans-serif; font-family: var(--font-body); }
 .relay ::selection { background: rgb(199 242 60 / 0.3); }
 
 /* recolours the black logo svg to lime for the inverse mark */

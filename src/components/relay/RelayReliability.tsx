@@ -97,7 +97,7 @@ export const RelayReliability = () => (
     <div className="mt-14 grid gap-6 lg:grid-cols-2">
       <motion.div {...settle(0.1)}>
         <Card className="h-full p-7 md:p-8">
-          <h3 className="font-body text-[22px] font-medium tracking-[-0.02em] text-th-heading">Understands the message, not just the fields</h3>
+          <h3 className="font-display text-[22px] font-medium tracking-[-0.02em] text-th-heading">Understands the message, not just the fields</h3>
           <p className="mt-2 max-w-md font-body text-[14px] leading-relaxed text-th-body">
             A reply that changes an unload time is an update, not a new order. A cancellation closes the right order. An
             email that only looks like an order is quarantined, and anything that is not an order is simply filed.
@@ -108,7 +108,7 @@ export const RelayReliability = () => (
       </motion.div>
       <motion.div {...settle(0.2)}>
         <Card className="h-full p-7 md:p-8">
-          <h3 className="font-body text-[22px] font-medium tracking-[-0.02em] text-th-heading">The manual way, side by side</h3>
+          <h3 className="font-display text-[22px] font-medium tracking-[-0.02em] text-th-heading">The manual way, side by side</h3>
           <p className="mt-2 max-w-md font-body text-[14px] leading-relaxed text-th-body">
             Your TMS stays exactly as it is. Orders arrive in its own format. The typing in front of it goes away.
           </p>

@@ -18,9 +18,9 @@ export const Eyebrow = ({ children }: { children: ReactNode }) => (
   </span>
 );
 
-/** One serif italic word inside a sans headline. */
+/** One light Plex word inside a grotesk headline: the title's second face, no italics. */
 export const Em = ({ children, dark = false }: { children: ReactNode; dark?: boolean }) => (
-  <em className={`font-serif font-normal italic tracking-[-0.01em] ${dark ? "text-th-page/85" : "text-th-heading/85"}`}>
+  <em className={`font-serif font-light not-italic tracking-[-0.02em] ${dark ? "text-th-page/80" : "text-th-heading/80"}`}>
     {children}
   </em>
 );
@@ -33,7 +33,7 @@ export const SectionIntro = ({ eyebrow, title, aside }: { eyebrow: string; title
       </motion.div>
       <motion.h2
         {...settle(0.1)}
-        className="mt-6 font-body text-[34px] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading sm:text-[44px]"
+        className="mt-6 font-display text-[34px] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading sm:text-[44px]"
       >
         {title}
       </motion.h2>

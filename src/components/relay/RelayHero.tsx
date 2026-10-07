@@ -99,13 +99,13 @@ export const RelayHero = () => {
           <span className="h-1.5 w-1.5 rounded-sm bg-ac-1" />
           free one-month pilot / from email to TMS
         </motion.span>
-        <h1 className="mt-7 font-body text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-th-heading sm:text-[56px] lg:text-[60px]">
+        <h1 className="mt-7 font-display text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-th-heading sm:text-[56px] lg:text-[60px]">
           <motion.span {...rise(0.2)} className="block">
             Automate your
           </motion.span>
           <motion.span
             {...rise(0.35)}
-            className="block font-serif text-[48px] font-normal italic tracking-[-0.02em] text-th-heading/90 sm:text-[62px] lg:text-[72px]"
+            className="block font-serif text-[48px] font-light tracking-[-0.03em] text-th-heading/90 sm:text-[62px] lg:text-[72px]"
           >
             order entry.
           </motion.span>

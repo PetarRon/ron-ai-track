@@ -207,7 +207,7 @@ const Feature = ({
   <div className={`grid items-center gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] ${reverse ? "lg:[&>*:first-child]:order-2" : ""}`}>
     <motion.div {...settle()}>
       <span className="font-mono text-[14px] text-th-muted">{glyph}</span>
-      <h3 className="mt-4 font-body text-[24px] font-medium tracking-[-0.02em] text-th-heading">{title}</h3>
+      <h3 className="mt-4 font-display text-[24px] font-medium tracking-[-0.02em] text-th-heading">{title}</h3>
       <p className="mt-3 max-w-sm font-body text-[15px] leading-relaxed text-th-body">{body}</p>
     </motion.div>
     <motion.div {...settle(0.15)}>{mock}</motion.div>

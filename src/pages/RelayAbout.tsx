@@ -55,7 +55,7 @@ const RelayAbout = () => (
           </motion.div>
           <motion.h1
             {...settle(0.1)}
-            className="mt-6 font-body text-[40px] font-semibold leading-[1.04] tracking-[-0.03em] text-th-heading sm:text-[56px]"
+            className="mt-6 font-display text-[40px] font-semibold leading-[1.04] tracking-[-0.03em] text-th-heading sm:text-[56px]"
           >
             Two people who were tired of <Em>retyping</Em> orders.
           </motion.h1>
@@ -103,7 +103,7 @@ const RelayAbout = () => (
           <motion.div key={s.title} {...settle(0.05 * i)}>
             <Card className="h-full p-7 md:p-8">
               <span className="font-mono text-[12px] text-th-muted">{s.meta}</span>
-              <h2 className="mt-3 font-body text-[22px] font-medium tracking-[-0.02em] text-th-heading">{s.title}</h2>
+              <h2 className="mt-3 font-display text-[22px] font-medium tracking-[-0.02em] text-th-heading">{s.title}</h2>
               <p className="mt-3 font-body text-[15px] leading-relaxed text-th-body">{s.body}</p>
             </Card>
           </motion.div>
@@ -115,7 +115,7 @@ const RelayAbout = () => (
         <div className="mt-5 grid gap-6 md:grid-cols-3">
           {values.map((v) => (
             <div key={v.title}>
-              <h3 className="font-body text-[20px] font-semibold tracking-[-0.02em] text-th-page">{v.title}</h3>
+              <h3 className="font-display text-[20px] font-semibold tracking-[-0.02em] text-th-page">{v.title}</h3>
               <p className="mt-2 font-body text-[14px] leading-relaxed text-th-page/75">{v.body}</p>
             </div>
           ))}
