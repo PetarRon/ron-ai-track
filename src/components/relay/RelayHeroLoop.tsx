@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Activity, BarChart3, Check, Eye, FileText, Home, Mail, Package, Search, User } from "lucide-react";
+import { Activity, BarChart3, Check, Clock, Eye, FileText, Home, Mail, Package, Paperclip, Search, User } from "lucide-react";
 
 /**
  * The hero window: a miniature of the operator dashboard (the `.dash` replica
@@ -34,21 +34,21 @@ const base: Row[] = [
 const incoming: Row = { id: "n1", subject: "Booking request, Rotterdam to Hamburg", status: "processing", received: "07 Jul, 09:41" };
 const patch = (r: Row, p: Partial<Row>): Row => ({ ...r, ...p });
 
-type Phase = "queue" | "landed" | "flagged" | "reading" | "approving" | "approved" | "done";
+type Phase = "queue" | "landed" | "flagged" | "reading" | "approving" | "approved" | "done" | "dashboard";
 const script: { name: Phase; ms: number }[] = [
   { name: "queue", ms: 1400 },
   { name: "landed", ms: 1600 },
   { name: "flagged", ms: 1200 },
   { name: "reading", ms: 3800 },
   { name: "approving", ms: 1600 },
-  { name: "approved", ms: 1800 },
-  { name: "done", ms: 2600 },
+  { name: "approved", ms: 3000 },
+  { name: "dashboard", ms: 4200 },
 ];
 
 const rowsFor = (phase: Phase): Row[] => {
   if (phase === "queue") return base;
   if (phase === "landed") return [incoming, ...base];
-  if (phase === "done") return [patch(incoming, { status: "completed", fields: "31/31" }), ...base];
+  if (phase === "done" || phase === "dashboard") return [patch(incoming, { status: "completed", fields: "31/31" }), ...base];
   return [incoming, ...base];
 };
 
@@ -85,6 +85,14 @@ const Mark = ({ children, on, i }: { children: string; on: boolean; i: number })
 const Review = ({ phase }: { phase: Phase }) => {
   const reading = phase !== "flagged";
   const decided = phase === "approved";
+  const approveRef = useRef<HTMLSpanElement>(null);
+  const [target, setTarget] = useState({ x: 200, y: 340 });
+  useEffect(() => {
+    // offsetLeft/Top are layout values, so the window's 3D tilt does not skew them
+    const el = approveRef.current;
+    const bar = el?.offsetParent as HTMLElement | null;
+    if (el && bar) setTarget({ x: bar.offsetLeft + el.offsetLeft + el.offsetWidth / 2, y: bar.offsetTop + el.offsetTop + el.offsetHeight / 2 });
+  }, [phase]);
   return (
     <div className="grid h-full min-h-0 grid-cols-2 gap-2">
       {/* left: source pane */}
@@ -167,29 +175,15 @@ const Review = ({ phase }: { phase: Phase }) => {
           ) : (
             <span className="dash-btn">Save draft</span>
           )}
-          <AnimatePresence mode="wait" initial={false}>
-            {decided ? (
-              <motion.span
-                key="next"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="dash-btn is-primary ml-auto"
-                style={{ boxShadow: "0 0 14px 2px rgb(var(--ac-1) / 0.4)" }}
-              >
-                Go next →
-              </motion.span>
-            ) : (
-              <motion.span
-                key="approve"
-                exit={{ opacity: 0 }}
-                animate={phase === "approving" ? { scale: [1, 0.92, 1] } : { scale: 1 }}
-                transition={phase === "approving" ? { delay: 1.1, duration: 0.3 } : { duration: 0.25 }}
-                className="dash-btn is-primary ml-auto"
-              >
-                Approve
-              </motion.span>
-            )}
-          </AnimatePresence>
+          <motion.span
+            ref={approveRef}
+            animate={phase === "approving" ? { scale: [1, 0.92, 1] } : { scale: 1 }}
+            transition={phase === "approving" ? { delay: 1.1, duration: 0.3 } : { duration: 0.25 }}
+            className="dash-btn is-primary ml-auto"
+            style={decided ? { opacity: 0.7 } : undefined}
+          >
+            {decided ? "Approved" : "Approve"}
+          </motion.span>
         </div>
 
         {/* the cursor that picks the code and approves */}
@@ -200,8 +194,8 @@ const Review = ({ phase }: { phase: Phase }) => {
               viewBox="0 0 24 24"
               className="absolute h-4 w-4 drop-shadow"
               style={{ fill: "var(--dash-text)" }}
-              initial={{ opacity: 0, left: 120, top: 260 }}
-              animate={{ opacity: 1, left: [120, 222, 222], top: [240, 330, 330] }}
+              initial={{ opacity: 0, left: 110, top: 220 }}
+              animate={{ opacity: 1, left: [110, target.x - 4, target.x - 4], top: [220, target.y - 3, target.y - 3] }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.3, times: [0, 0.75, 1], ease: [0.22, 1, 0.36, 1] }}
             >
@@ -209,6 +203,198 @@ const Review = ({ phase }: { phase: Phase }) => {
             </motion.svg>
           )}
         </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
+/* ---------- the dashboard page: stat cards, pipeline sankey, two small charts ---------- */
+
+const stats = [
+  { label: "Avg. Processing Time", value: "27", unit: "s", Icon: Clock },
+  { label: "Total Emails", value: "612", unit: "", Icon: Mail },
+  { label: "Total Conversations", value: "284", unit: "", Icon: Package },
+  { label: "Total Attachments", value: "48", unit: "", Icon: Paperclip },
+];
+
+type Node = { x: number; y: number; h: number; label: string; color: string; align?: "left" | "right" };
+const W = 600;
+const nodes: Record<string, Node> = {
+  a: { x: 4, y: 18, h: 112, label: "Extracting (210)", color: "var(--dash-text-3)" },
+  b: { x: 180, y: 18, h: 112, label: "Processed (210)", color: "var(--dash-text-3)" },
+  c: { x: 360, y: 48, h: 82, label: "Order (165)", color: "var(--dash-primary)" },
+  d: { x: W - 4, y: 6, h: 24, label: "Non-Order (45)", color: "var(--dash-text-3)", align: "right" },
+  e: { x: W - 4, y: 48, h: 72, label: "Passed (160)", color: "var(--dash-primary)", align: "right" },
+  f: { x: W - 4, y: 132, h: 8, label: "Awaiting review (5)", color: "var(--dash-amber)", align: "right" },
+};
+
+// a ribbon from a slice of one node bar to a slice of another
+const ribbon = (x1: number, y1: number, h1: number, x2: number, y2: number, h2: number) => {
+  const m = (x1 + x2) / 2;
+  return `M ${x1} ${y1} C ${m} ${y1}, ${m} ${y2}, ${x2} ${y2} L ${x2} ${y2 + h2} C ${m} ${y2 + h2}, ${m} ${y1 + h1}, ${x1} ${y1 + h1} Z`;
+};
+
+const flows = [
+  { d: ribbon(nodes.a.x, nodes.a.y, nodes.a.h, nodes.b.x, nodes.b.y, nodes.b.h), color: "var(--dash-text-3)", o: 0.18 },
+  { d: ribbon(nodes.b.x, nodes.b.y, 24, nodes.d.x, nodes.d.y, nodes.d.h), color: "var(--dash-text-3)", o: 0.14 },
+  { d: ribbon(nodes.b.x, nodes.b.y + 30, 82, nodes.c.x, nodes.c.y, nodes.c.h), color: "var(--dash-primary)", o: 0.16 },
+  { d: ribbon(nodes.c.x, nodes.c.y, 72, nodes.e.x, nodes.e.y, nodes.e.h), color: "var(--dash-primary)", o: 0.22 },
+  { d: ribbon(nodes.c.x, nodes.c.y + 74, 8, nodes.f.x, nodes.f.y, nodes.f.h), color: "var(--dash-amber)", o: 0.45 },
+];
+
+const Sankey = () => (
+  <svg viewBox={`0 0 ${W} 150`} className="mt-1 min-h-0 w-full flex-1" preserveAspectRatio="none" aria-hidden>
+    {flows.map((f, i) => (
+      <motion.path
+        key={i}
+        d={f.d}
+        fill={f.color}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: f.o }}
+        transition={{ delay: 0.3 + i * 0.12, duration: 0.6 }}
+      />
+    ))}
+    {Object.values(nodes).map((n, i) => (
+      <motion.g key={n.label} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 + i * 0.1 }}>
+        <rect x={n.x - 2} y={n.y} width="4" height={n.h} rx="1" fill={n.color} />
+        <text
+          x={n.align === "right" ? n.x - 8 : n.x + 8}
+          y={n.y + 10}
+          textAnchor={n.align === "right" ? "end" : "start"}
+          fill="var(--dash-text-2)"
+          fontFamily="var(--font-body)"
+          fontSize="11"
+        >
+          {n.label}
+        </text>
+      </motion.g>
+    ))}
+  </svg>
+);
+
+const Seg = ({ active }: { active: string }) => (
+  <span className="relay-seg">
+    {["D", "W", "M"].map((k) => (
+      <span key={k} className={k === active ? "is-active" : ""}>
+        {k}
+      </span>
+    ))}
+  </span>
+);
+
+const Dashboard = () => {
+  const r = 26;
+  const c = 2 * Math.PI * r;
+  const segments = [
+    { label: "Validated", share: 0.5, color: "var(--dash-primary)" },
+    { label: "Passed", share: 0.34, color: "#e18181" },
+    { label: "Non-Order", share: 0.1, color: "var(--dash-text-3)" },
+    { label: "Pending Review", share: 0.06, color: "var(--dash-amber)" },
+  ];
+  let acc = 0;
+  const card = "dash-card flex min-h-0 flex-col p-2.5";
+  const title = { color: "var(--dash-text)", fontSize: "var(--dash-fs-sm)" } as const;
+  return (
+    <div className="flex h-full min-h-0 flex-col gap-2">
+      <div className="grid grid-cols-4 gap-2">
+        {stats.map((k, i) => (
+          <motion.div
+            key={k.label}
+            className="dash-card px-2.5 py-2"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 + i * 0.07, duration: 0.4 }}
+          >
+            <div className="flex items-start justify-between gap-1">
+              <span className="truncate" style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-sm)" }}>
+                {k.label}
+              </span>
+              <span className="grid h-4 w-4 shrink-0 place-items-center rounded-full" style={{ background: "var(--dash-primary)", color: "#0b0c0a" }}>
+                <k.Icon className="h-2.5 w-2.5" />
+              </span>
+            </div>
+            <p className="mt-1 font-body text-[17px] font-semibold leading-none tracking-tight" style={{ color: "var(--dash-text)" }}>
+              {k.value}
+              <span className="text-[10px] font-normal" style={{ color: "var(--dash-text-2)" }}>
+                {k.unit}
+              </span>
+            </p>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className={card} style={{ flex: "1.1 1 0" }}>
+        <div className="flex items-center justify-between" style={title}>
+          <span>Agentic Pipeline</span>
+          <Seg active="D" />
+        </div>
+        <Sankey />
+      </div>
+
+      <div className="grid min-h-0 grid-cols-[1fr_1.4fr] gap-2" style={{ flex: "1 1 0" }}>
+        <div className={card}>
+          <div className="flex items-center justify-between" style={title}>
+            <span>Conversations Status</span>
+            <Seg active="M" />
+          </div>
+          <div className="flex min-h-0 flex-1 items-center gap-2.5">
+            <svg viewBox="0 0 64 64" className="h-[62px] w-[62px] shrink-0 -rotate-90" aria-hidden>
+              {segments.map((seg) => {
+                const start = acc;
+                acc += seg.share;
+                return (
+                  <motion.circle
+                    key={seg.label}
+                    cx="32"
+                    cy="32"
+                    r={r}
+                    fill="none"
+                    stroke={seg.color}
+                    strokeWidth="11"
+                    strokeDasharray={`${seg.share * c} ${c}`}
+                    initial={{ strokeDashoffset: -start * c + c * 0.2, opacity: 0 }}
+                    animate={{ strokeDashoffset: -start * c, opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                );
+              })}
+            </svg>
+            <ul className="space-y-1" style={{ fontSize: "var(--dash-fs-xs)", color: "var(--dash-text-2)" }}>
+              {segments.map((seg) => (
+                <li key={seg.label} className="flex items-center gap-1.5 whitespace-nowrap">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: seg.color }} />
+                  {seg.label}
+                  <span style={{ color: "var(--dash-text-3)" }}>{Math.round(seg.share * 100)}%</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className={card}>
+          <div className="flex items-center justify-between" style={title}>
+            <span>Emails Throughput</span>
+            <Seg active="M" />
+          </div>
+          <svg viewBox="0 0 300 100" className="mt-1 min-h-0 w-full flex-1" preserveAspectRatio="none" aria-hidden>
+            {[0, 25, 50, 75].map((y) => (
+              <line key={y} x1="0" x2="300" y1={y + 8} y2={y + 8} stroke="var(--dash-border)" strokeWidth="1" />
+            ))}
+            <motion.path
+              d="M0 70 C 40 60, 60 30, 95 32 S 150 85, 180 80 S 225 10, 255 14 S 285 40, 300 44"
+              fill="none"
+              stroke="var(--dash-primary)"
+              strokeWidth="2"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: 0.4, duration: 1.4, ease: "easeInOut" }}
+            />
+          </svg>
+          <div className="mt-0.5 flex justify-between" style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-xs)" }}>
+            {["Jul 01", "Jul 08", "Jul 15", "Jul 22", "Jul 29"].map((d) => (
+              <span key={d}>{d}</span>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -291,6 +477,13 @@ export const RelayHeroLoop = () => {
   const reduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const phase: Phase = reduced ? "done" : script[i].name;
   const onReview = phase === "flagged" || phase === "reading" || phase === "approving" || phase === "approved";
+  const onDashboard = phase === "dashboard";
+  const pane = (visible: boolean, hiddenY: number) => ({
+    initial: false as const,
+    animate: { opacity: visible ? 1 : 0, y: visible ? 0 : hiddenY },
+    transition: { duration: 0.3 },
+    style: { visibility: visible ? "visible" : "hidden", transitionProperty: "visibility", transitionDelay: visible ? "0s" : "0.3s" } as const,
+  });
 
   useEffect(() => {
     if (reduced) return;
@@ -310,10 +503,10 @@ export const RelayHeroLoop = () => {
             <span className="dash-nav-item">
               <Home className="h-3 w-3" /> Home
             </span>
-            <span className="dash-nav-item">
+            <span className={`dash-nav-item${onDashboard ? " is-active" : ""}`}>
               <BarChart3 className="h-3 w-3" /> Dashboard
             </span>
-            <span className="dash-nav-item is-active">
+            <span className={`dash-nav-item${onDashboard ? "" : " is-active"}`}>
               <Package className="h-3 w-3" /> Orders
             </span>
             <span className="dash-nav-item">
@@ -322,7 +515,7 @@ export const RelayHeroLoop = () => {
           </nav>
         </aside>
         <header className="dash-top">
-          <p className="dash-crumb">Orders</p>
+          <p className="dash-crumb">{onDashboard ? "Dashboard" : "Orders"}</p>
           <div className="dash-top-right">
             <span className="dash-td-mono">09:41:07</span>
             <span className="dash-hide-sm">Operations</span>
@@ -338,23 +531,14 @@ export const RelayHeroLoop = () => {
           {/* Both pages stay mounted and fade directly: an exit animation under
               the 3D tilt lingered and let the queue show through the review. */}
           <div className="relative h-full min-h-0">
-            <motion.div
-              className="absolute inset-0 flex flex-col gap-2.5"
-              initial={false}
-              animate={{ opacity: onReview ? 0 : 1, y: onReview ? -6 : 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ visibility: onReview ? "hidden" : "visible", transitionProperty: "visibility", transitionDelay: onReview ? "0.3s" : "0s" }}
-            >
+            <motion.div className="absolute inset-0 flex flex-col gap-2.5" {...pane(!onReview && !onDashboard, -6)}>
               <Queue rows={rowsFor(phase)} />
             </motion.div>
-            <motion.div
-              className="absolute inset-0"
-              initial={false}
-              animate={{ opacity: onReview ? 1 : 0, y: onReview ? 0 : 10 }}
-              transition={{ duration: 0.3 }}
-              style={{ visibility: onReview ? "visible" : "hidden", transitionProperty: "visibility", transitionDelay: onReview ? "0s" : "0.3s" }}
-            >
+            <motion.div className="absolute inset-0" {...pane(onReview, 10)}>
               <Review phase={phase} />
+            </motion.div>
+            <motion.div className="absolute inset-0" {...pane(onDashboard, 10)}>
+              {onDashboard && <Dashboard />}
             </motion.div>
           </div>
         </div>
