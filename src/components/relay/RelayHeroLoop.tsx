@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Activity, BarChart3, Check, Clock, Eye, FileText, Home, Mail, Package, Paperclip, Search, User } from "lucide-react";
 
@@ -211,65 +211,81 @@ const Review = ({ phase }: { phase: Phase }) => {
 /* ---------- the dashboard page: stat cards, pipeline sankey, two small charts ---------- */
 
 const stats = [
-  { label: "Avg. Processing Time", value: "27", unit: "s", Icon: Clock },
-  { label: "Total Emails", value: "612", unit: "", Icon: Mail },
-  { label: "Total Conversations", value: "284", unit: "", Icon: Package },
-  { label: "Total Attachments", value: "48", unit: "", Icon: Paperclip },
+  { label: "Avg. processing", value: "27", unit: "s", Icon: Clock },
+  { label: "Emails", value: "612", unit: "", Icon: Mail },
+  { label: "Conversations", value: "284", unit: "", Icon: Package },
+  { label: "Attachments", value: "48", unit: "", Icon: Paperclip },
 ];
 
-type Node = { x: number; y: number; h: number; label: string; color: string; align?: "left" | "right" };
-const W = 600;
-const nodes: Record<string, Node> = {
-  a: { x: 4, y: 18, h: 112, label: "Extracting (210)", color: "var(--dash-text-3)" },
-  b: { x: 180, y: 18, h: 112, label: "Processed (210)", color: "var(--dash-text-3)" },
-  c: { x: 360, y: 48, h: 82, label: "Order (165)", color: "var(--dash-primary)" },
-  d: { x: W - 4, y: 6, h: 24, label: "Non-Order (45)", color: "var(--dash-text-3)", align: "right" },
-  e: { x: W - 4, y: 48, h: 72, label: "Passed (160)", color: "var(--dash-primary)", align: "right" },
-  f: { x: W - 4, y: 132, h: 8, label: "Awaiting review (5)", color: "var(--dash-amber)", align: "right" },
-};
-
-// a ribbon from a slice of one node bar to a slice of another
-const ribbon = (x1: number, y1: number, h1: number, x2: number, y2: number, h2: number) => {
-  const m = (x1 + x2) / 2;
-  return `M ${x1} ${y1} C ${m} ${y1}, ${m} ${y2}, ${x2} ${y2} L ${x2} ${y2 + h2} C ${m} ${y2 + h2}, ${m} ${y1 + h1}, ${x1} ${y1 + h1} Z`;
-};
-
-const flows = [
-  { d: ribbon(nodes.a.x, nodes.a.y, nodes.a.h, nodes.b.x, nodes.b.y, nodes.b.h), color: "var(--dash-text-3)", o: 0.18 },
-  { d: ribbon(nodes.b.x, nodes.b.y, 24, nodes.d.x, nodes.d.y, nodes.d.h), color: "var(--dash-text-3)", o: 0.14 },
-  { d: ribbon(nodes.b.x, nodes.b.y + 30, 82, nodes.c.x, nodes.c.y, nodes.c.h), color: "var(--dash-primary)", o: 0.16 },
-  { d: ribbon(nodes.c.x, nodes.c.y, 72, nodes.e.x, nodes.e.y, nodes.e.h), color: "var(--dash-primary)", o: 0.22 },
-  { d: ribbon(nodes.c.x, nodes.c.y + 74, 8, nodes.f.x, nodes.f.y, nodes.f.h), color: "var(--dash-amber)", o: 0.45 },
+const stages = [
+  { label: "Received", n: 210 },
+  { label: "Read", n: 210 },
+  { label: "Orders", n: 165 },
+  { label: "Completed", n: 160 },
 ];
+const outcomes = [
+  { label: "Completed", n: 160, color: "var(--dash-primary)" },
+  { label: "Needs review", n: 5, color: "var(--dash-amber)" },
+  { label: "Processing", n: 10, color: "var(--dash-text-2)" },
+  { label: "Not an order", n: 45, color: "var(--dash-border-2)" },
+];
+const total = outcomes.reduce((a, o) => a + o.n, 0);
 
-const Sankey = () => (
-  <svg viewBox={`0 0 ${W} 150`} className="mt-1 min-h-0 w-full flex-1" preserveAspectRatio="none" aria-hidden>
-    {flows.map((f, i) => (
-      <motion.path
-        key={i}
-        d={f.d}
-        fill={f.color}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: f.o }}
-        transition={{ delay: 0.3 + i * 0.12, duration: 0.6 }}
-      />
-    ))}
-    {Object.values(nodes).map((n, i) => (
-      <motion.g key={n.label} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 + i * 0.1 }}>
-        <rect x={n.x - 2} y={n.y} width="4" height={n.h} rx="1" fill={n.color} />
-        <text
-          x={n.align === "right" ? n.x - 8 : n.x + 8}
-          y={n.y + 10}
-          textAnchor={n.align === "right" ? "end" : "start"}
-          fill="var(--dash-text-2)"
-          fontFamily="var(--font-body)"
-          fontSize="11"
-        >
-          {n.label}
-        </text>
-      </motion.g>
-    ))}
-  </svg>
+const Pipeline = () => (
+  <div className="flex min-h-0 flex-1 flex-col justify-center gap-3">
+    <div className="grid items-end gap-1" style={{ gridTemplateColumns: "1fr 10px 1fr 10px 1fr 10px 1fr" }}>
+      {stages.map((st, i) => (
+        <Fragment key={st.label}>
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + i * 0.12, duration: 0.4 }}
+          >
+            <span style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-sm)" }}>{st.label}</span>
+            <p className="mt-0.5 font-body text-[16px] font-semibold leading-none tracking-tight" style={{ color: "var(--dash-text)" }}>
+              {st.n}
+            </p>
+            <div className="mt-1.5 h-1 overflow-hidden rounded-full" style={{ background: "var(--dash-border)" }}>
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: "var(--dash-primary)" }}
+                initial={{ width: 0 }}
+                animate={{ width: `${(st.n / stages[0].n) * 100}%` }}
+                transition={{ delay: 0.35 + i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </div>
+          </motion.div>
+          {i < stages.length - 1 && (
+            <span className="pb-3 text-center" style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs)" }}>
+              ›
+            </span>
+          )}
+        </Fragment>
+      ))}
+    </div>
+    <div>
+      <div className="flex h-2.5 w-full overflow-hidden rounded-full" style={{ background: "var(--dash-border)" }}>
+        {outcomes.map((o, i) => (
+          <motion.span
+            key={o.label}
+            style={{ background: o.color }}
+            initial={{ width: 0 }}
+            animate={{ width: `${(o.n / total) * 100}%` }}
+            transition={{ delay: 0.7 + i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          />
+        ))}
+      </div>
+      <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1" style={{ fontSize: "var(--dash-fs-xs)", color: "var(--dash-text-2)" }}>
+        {outcomes.map((o) => (
+          <span key={o.label} className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: o.color }} />
+            {o.label}
+            <span style={{ color: "var(--dash-text-3)" }}>{o.n}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
 );
 
 const Seg = ({ active }: { active: string }) => (
@@ -285,12 +301,7 @@ const Seg = ({ active }: { active: string }) => (
 const Dashboard = () => {
   const r = 26;
   const c = 2 * Math.PI * r;
-  const segments = [
-    { label: "Validated", share: 0.5, color: "var(--dash-primary)" },
-    { label: "Passed", share: 0.34, color: "#e18181" },
-    { label: "Non-Order", share: 0.1, color: "var(--dash-text-3)" },
-    { label: "Pending Review", share: 0.06, color: "var(--dash-amber)" },
-  ];
+  const segments = outcomes.map((o) => ({ label: o.label, share: o.n / total, color: o.color }));
   let acc = 0;
   const card = "dash-card flex min-h-0 flex-col p-2.5";
   const title = { color: "var(--dash-text)", fontSize: "var(--dash-fs-sm)" } as const;
@@ -325,16 +336,16 @@ const Dashboard = () => {
 
       <div className={card} style={{ flex: "1.1 1 0" }}>
         <div className="flex items-center justify-between" style={title}>
-          <span>Agentic Pipeline</span>
+          <span>Pipeline · today</span>
           <Seg active="D" />
         </div>
-        <Sankey />
+        <Pipeline />
       </div>
 
       <div className="grid min-h-0 grid-cols-[1fr_1.4fr] gap-2" style={{ flex: "1 1 0" }}>
         <div className={card}>
           <div className="flex items-center justify-between" style={title}>
-            <span>Conversations Status</span>
+            <span>Status · this month</span>
             <Seg active="M" />
           </div>
           <div className="flex min-h-0 flex-1 items-center gap-2.5">
