@@ -463,5 +463,5 @@ div[data-cal-namespace] > div,
 .dash-field.is-unsettled { border-color: var(--dash-amber); }
 .dash-field.is-human { border-color: var(--dash-primary); }
 .relay .dash.is-glass .dash-mark { color: var(--dash-text); }
-.relay .dash.is-glass .dash-btn.is-primary { color: #0b0c0a; }
+.relay .dash.is-glass .dash-btn.is-primary { color: rgb(var(--th-page)); }
 .relay-actions .dash-btn { height: 22px; padding: 0 7px; font-size: var(--dash-fs-sm); }

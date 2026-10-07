@@ -113,6 +113,12 @@
         "value": "rgba(171,171,171,0.16)",
         "createdAt": "2026-10-06T21:29:19.967Z",
         "reason": "Claude: dashboard replica's own highlight tint (#ababab29) animated via framer-motion, which cannot interpolate a CSS variable; mirrors the real app"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#e18181",
+        "createdAt": "2026-10-07T06:50:40.861Z",
+        "reason": "Claude: the real operator dashboard's chart red for the Passed slice, mirrored in the hero mimic"
       }
     ]
   }

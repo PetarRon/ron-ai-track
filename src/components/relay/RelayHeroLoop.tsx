@@ -309,7 +309,7 @@ const Dashboard = () => {
               <span className="truncate" style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-sm)" }}>
                 {k.label}
               </span>
-              <span className="grid h-4 w-4 shrink-0 place-items-center rounded-full" style={{ background: "var(--dash-primary)", color: "#0b0c0a" }}>
+              <span className="grid h-4 w-4 shrink-0 place-items-center rounded-full" style={{ background: "var(--dash-primary)", color: "rgb(var(--th-page))" }}>
                 <k.Icon className="h-2.5 w-2.5" />
               </span>
             </div>
