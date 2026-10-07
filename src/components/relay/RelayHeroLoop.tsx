@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Activity, BarChart3, Check, Eye, FileText, Home, Mail, Package, Search } from "lucide-react";
+import { Activity, BarChart3, Check, Eye, FileText, Home, Mail, Package, Search, User } from "lucide-react";
 
 /**
  * The hero window: a miniature of the operator dashboard (the `.dash` replica
@@ -325,12 +325,12 @@ export const RelayHeroLoop = () => {
           <p className="dash-crumb">Orders</p>
           <div className="dash-top-right">
             <span className="dash-td-mono">09:41:07</span>
-            <span className="dash-hide-sm">M. de Vries · Operations</span>
+            <span className="dash-hide-sm">Operations</span>
             <span
-              className="flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold"
+              className="flex h-5 w-5 items-center justify-center rounded-full"
               style={{ background: "var(--dash-surface)", border: "1px solid var(--dash-border-2)", color: "var(--dash-text-2)" }}
             >
-              MV
+              <User className="h-3 w-3" />
             </span>
           </div>
         </header>
