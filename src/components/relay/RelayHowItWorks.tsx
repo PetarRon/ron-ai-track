@@ -1,33 +1,45 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useInView, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
-import { Paperclip } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Em, LogoMark, RELAY_SHELL, SectionIntro } from "./shared";
 import { streamSignal } from "./streamSignal";
 
 /**
- * How it works: three steps pinned on the left, one glass panel on the right
- * that swaps between the inbox, the traced review and the approval. Each
- * panel plays its own short animation when it appears. Below lg the steps
- * stack and each panel plays when scrolled into view.
+ * How it works: the five steps of the live site, pinned on the left, with one
+ * glass panel on the right that shows a flattened dashboard card per step
+ * (the live site's screens without sidebar, top bar or split views). Each
+ * card plays one short animation when it appears. Below lg the steps stack.
  */
 
 const steps = [
   {
     n: "01",
-    title: "Forward the inbox",
-    body: "Every email and attachment is read and sorted: new order, update, cancellation, or not an order.",
+    title: "Every order lands in one queue",
+    body: "Emails, PDFs and forwarded threads arrive in one inbox, sorted into orders and everything else.",
   },
   {
     n: "02",
-    title: "Review a traced draft",
-    body: "A form that mirrors your TMS. Every value points to the line it came from.",
+    title: "Every attachment gets read",
+    body: "PDFs, scans, spreadsheets and forwarded emails are all read, whatever they are called.",
   },
   {
     n: "03",
-    title: "Approve, and it exports",
-    body: "Nothing leaves without your click. Each approval teaches the agent.",
+    title: "Every value traces back to its source",
+    body: "Each field shows where it was read from. Anything uncertain is flagged for a person, not guessed.",
+  },
+  {
+    n: "04",
+    title: "Matched to your TMS",
+    body: "Customers and sites are matched to the codes your TMS already uses. What the agent cannot settle is left for you.",
+  },
+  {
+    n: "05",
+    title: "Nothing moves until your team says so",
+    body: "Review, save a draft, or approve. Only approval pushes the order to your TMS.",
   },
 ];
+
+const labels = ["Orders", "PO 48291 · Documents", "PO 48291 · Review", "PO 48291 · TMS codes", "PO 48291 · Approve"];
 
 /** Counts how many of the given millisecond marks have passed since `play` went true. */
 const useBeats = (play: boolean, beats: number[]) => {
@@ -45,6 +57,7 @@ const useBeats = (play: boolean, beats: number[]) => {
 };
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+const stagger = (count: number, from = 300, gap = 160) => Array.from({ length: count }, (_, i) => from + i * gap);
 
 /* ---------- the glass frame ---------- */
 
@@ -53,94 +66,102 @@ const Panel = ({ label, children }: { label: string; children: ReactNode }) => (
     <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
       <div className="flex items-center gap-2.5">
         <LogoMark size={22} />
-        <span className="font-mono text-[12px] text-th-heading">Petaron agent</span>
+        <span className="font-mono text-[12px] text-th-heading">Petaron</span>
       </div>
       <span className="font-mono text-[11px] text-th-muted">{label}</span>
     </div>
-    <div className="p-4">{children}</div>
+    <div className="dash is-glass relay-flat p-4">{children}</div>
   </div>
 );
 
-const Inset = ({ className = "", children }: { className?: string; children: ReactNode }) => (
-  <div className={`relay-glass-inset rounded-xl ${className}`}>{children}</div>
+const Field = ({ label, value, state, on = true }: { label: string; value?: string; state?: "empty-required" | "active"; on?: boolean }) => (
+  <div className={`dash-field${on && state ? ` is-${state}` : ""}`}>
+    <em>{label}</em>
+    <motion.span className="v" initial={{ opacity: 0 }} animate={{ opacity: on ? 1 : 0 }} transition={{ duration: 0.35 }}>
+      {value ?? ""}
+    </motion.span>
+  </div>
 );
 
-/* ---------- step 1: one email, sorted ---------- */
+/* ---------- 01: the orders queue ---------- */
 
-const Inbox = ({ play }: { play: boolean }) => {
-  const beats = useBeats(play, [1400]);
-  const sorted = beats >= 1;
+type Row = { status: "review" | "processing" | "completed" | "none"; subject: string; reference: string; route: string; received: string };
+
+const rows: Row[] = [
+  { status: "review", subject: "Pickup Thursday, 24 pallets to Hamburg", reference: "PO 48291", route: "Rotterdam → Hamburg", received: "14:32" },
+  { status: "processing", subject: "Reefer container, temp-controlled", reference: "PO 48114", route: "Gothenburg → Bremerhaven", received: "14:20" },
+  { status: "review", subject: "Bulk salt, 3 trucks Monday", reference: "SO 79697", route: "Wesseling → Antwerp", received: "11:05" },
+  { status: "completed", subject: "Weekly consolidation, Antwerp to Lyon", reference: "PO 47960", route: "Antwerp → Lyon", received: "Yesterday" },
+  { status: "completed", subject: "Two containers ex Piraeus", reference: "PO 47812", route: "Piraeus → Milan", received: "Yesterday" },
+  { status: "none", subject: "Re: Invoice #4471, payment confirmation", reference: "—", route: "—", received: "Yesterday" },
+];
+
+const chip: Record<Row["status"], { cls: string; label: string }> = {
+  review: { cls: "amber", label: "Needs review" },
+  processing: { cls: "grey", label: "Processing" },
+  completed: { cls: "green", label: "Completed" },
+  none: { cls: "outline", label: "No order" },
+};
+
+const OrdersScreen = ({ play }: { play: boolean }) => {
+  const beats = useBeats(play, stagger(rows.length, 250, 140));
   return (
-    <Inset className="p-4">
-      <div className="flex items-center justify-between font-mono text-[11px] text-th-muted">
-        <span>Rotterdam Distribution B.V. · Planning</span>
-        <span>07 Jul, 09:41</span>
+    <div className="dash-table">
+      <div className="dash-tr is-head">
+        <span>Status</span>
+        <span>Subject</span>
+        <span>Reference</span>
+        <span className="dash-col-lg">Route</span>
+        <span className="dash-col-lg dash-td-num">Received</span>
       </div>
-      <p className="mt-2 font-body text-[15px] font-medium text-th-heading">Transport request PO 48291</p>
-      <p className="mt-1.5 font-body text-[13px] leading-relaxed text-th-body">
-        Good morning, attached is the order for pickup Thursday at our Antwerp site, 2 trucks, delivery in Hamburg by Friday 16:00.
-      </p>
-      <div className="mt-4 flex items-center gap-2">
-        {["ORDER_48291.pdf", "packing_list.xlsx"].map((a) => (
-          <span key={a} className="inline-flex items-center gap-1.5 rounded-md border border-th-line px-2 py-1 font-mono text-[11px] text-th-body">
-            <Paperclip className="h-3 w-3" />
-            {a}
-          </span>
-        ))}
-        <span
-          className={`ml-auto rounded-md px-2 py-1 font-mono text-[11px] transition-colors duration-500 ${
-            sorted ? "bg-ac-1 font-medium text-th-page" : "border border-th-line text-th-muted"
-          }`}
+      {rows.map((r, i) => (
+        <motion.div
+          key={r.reference + i}
+          className={`dash-tr${r.status === "completed" ? " is-done" : ""}${r.status === "none" ? " is-none" : ""}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: beats > i ? 1 : 0 }}
+          transition={{ duration: 0.35 }}
         >
-          {sorted ? "new order" : "reading"}
-        </span>
-      </div>
-    </Inset>
+          <span className="dash-chip-cell">
+            <span className={`dash-chip ${chip[r.status].cls}`}>{chip[r.status].label}</span>
+          </span>
+          <span className="dash-td-ellipsis">{r.subject}</span>
+          <span className="dash-td-mono">{r.reference}</span>
+          <span className="dash-col-lg dash-td-ellipsis">{r.route}</span>
+          <span className="dash-col-lg dash-td-num">{r.received}</span>
+        </motion.div>
+      ))}
+    </div>
   );
 };
 
-/* ---------- step 2: the fields fill in, each with its source ---------- */
+/* ---------- 02: the documents ---------- */
 
-const fields = [
-  { k: "Consignor", v: "Rotterdam Distribution B.V.", from: "from the email" },
-  { k: "Load Site", v: "Antwerp, Quay 730", from: "from ORDER_48291.pdf" },
-  { k: "Unload Site", v: "Hamburg, Dock 4", from: "from ORDER_48291.pdf" },
-  { k: "Gross Weight", v: "3,240 kg", from: "from packing_list.xlsx" },
-  { k: "Load From", v: "14/07/2026, 08:00", from: "from the email" },
-  { k: "Unload Site Code", v: "", from: "2 candidates" },
+const documents = [
+  { name: "ORDER_48291.pdf", kind: "PDF · 3 pages" },
+  { name: "packing_list.xlsx", kind: "Spreadsheet" },
+  { name: "FW_ booking confirmation.eml", kind: "Forwarded email" },
+  { name: "dock_photo.jpg", kind: "Scan" },
 ];
 
-const Review = ({ play }: { play: boolean }) => {
-  const beats = useBeats(play, fields.map((_, i) => 500 + i * 350));
+const DocumentsScreen = ({ play }: { play: boolean }) => {
+  const beats = useBeats(play, stagger(documents.length, 500, 420));
   return (
-    <div className="grid grid-cols-2 gap-2">
-      {fields.map((f, i) => {
-        const on = beats > i;
-        const open = !f.v;
+    <div className="dash-card">
+      {documents.map((d, i) => {
+        const read = beats > i;
         return (
           <div
-            key={f.k}
-            className={`rounded-lg border px-3 py-2 transition-colors duration-500 ${
-              !on ? "border-th-line/60" : open ? "border-amber-400/60" : "border-ac-1/40"
-            }`}
+            key={d.name}
+            className="flex items-center gap-2 px-3 py-2.5"
+            style={{ borderBottom: i < documents.length - 1 ? "1px solid var(--dash-border)" : undefined, color: "var(--dash-text)" }}
           >
-            <p className="font-mono text-[10px] text-th-muted">{f.k}</p>
-            <motion.p
-              className={`font-body text-[13px] leading-5 ${open ? "text-amber-300" : "text-th-heading"}`}
-              initial={{ opacity: 0 }}
-              animate={on ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              {open ? "Not settled" : f.v}
-            </motion.p>
-            <motion.p
-              className="font-mono text-[10px] text-th-muted"
-              initial={{ opacity: 0 }}
-              animate={on ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-            >
-              {f.from}
-            </motion.p>
+            <FileText className="h-3 w-3 shrink-0" style={{ color: "var(--dash-text-3)" }} />
+            <div className="min-w-0 flex-1">
+              <p className="truncate">{d.name}</p>
+              <p style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-xs)" }}>{d.kind}</p>
+            </div>
+            <span className={`dash-chip ${read ? "green" : "grey"}`}>{read ? "Read" : "Reading"}</span>
           </div>
         );
       })}
@@ -148,54 +169,122 @@ const Review = ({ play }: { play: boolean }) => {
   );
 };
 
-/* ---------- step 3: approve, then the TMS row lights ---------- */
+/* ---------- 03: traced to its source ---------- */
 
-const Approve = ({ play }: { play: boolean }) => {
-  // 1: the button is pressed, 2: the order has landed
-  const beats = useBeats(play, [1300, 2200]);
-  const landed = beats >= 2;
+const ReviewScreen = ({ play }: { play: boolean }) => {
+  // six order fields, then the weight, then its quote
+  const beats = useBeats(play, stagger(8, 300, 220));
+  return (
+    <div className="dash-card">
+      <div className="dash-form">
+        <p className="dash-section">Order</p>
+        <div className="dash-fields">
+          <Field label="Customer" value="Rotterdam Distribution B.V." on={beats > 0} />
+          <Field label="Reference" value="PO 48291" on={beats > 1} />
+          <Field label="Pickup" value="14/07, 08:00" on={beats > 2} />
+          <Field label="Delivery" value="Hamburg, Dock 4" on={beats > 3} />
+          <Field label="Delivery postcode" state="empty-required" on={beats > 4} />
+          <Field label="Quantity" value="24 pallets" on={beats > 5} />
+        </div>
+        <p className="dash-section">Weight</p>
+        <div className="dash-fields">
+          <Field label="Gross weight" value="3,240 kg" state="active" on={beats > 6} />
+        </div>
+        <motion.div className="dash-quote" initial={{ opacity: 0 }} animate={{ opacity: beats > 7 ? 1 : 0 }} transition={{ duration: 0.4 }}>
+          "Total weight: 3,240 kg" — read from the email
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+/* ---------- 04: matched to your TMS ---------- */
+
+const matches = [
+  { label: "Customer", name: "Rotterdam Distribution B.V.", code: "ROTDIS01", ok: true },
+  { label: "Delivery site", name: "Hamburg Freight GmbH, Dock 4", code: "HAMFRE02", ok: true },
+  { label: "Invoice to", name: "NL Purchasing Organization", code: "", ok: false },
+];
+
+const MatchScreen = ({ play }: { play: boolean }) => {
+  const beats = useBeats(play, stagger(matches.length + 1, 500, 450));
+  return (
+    <div className="dash-card">
+      <div className="dash-form">
+        <p className="dash-section">Matched to your TMS</p>
+        {matches.map((m, i) => {
+          const on = beats > i;
+          const matched = on && m.ok;
+          return (
+            <div key={m.label}>
+              <p style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-xs)" }}>{m.label}</p>
+              <div className={`dash-picker${matched ? "" : " is-empty"}`}>
+                <span>{matched ? `${m.code} — ${m.name}` : on ? "Pick a code" : "Matching…"}</span>
+                {matched ? <span className="dash-chip green">Matched</span> : on ? <span className="dash-chip amber">For you</span> : null}
+              </div>
+            </div>
+          );
+        })}
+        <p className="dash-section">Filled from past orders</p>
+        <div className="dash-fields">
+          <Field label="Incoterm" value="FCA" on={beats > 3} />
+          <Field label="Department" value="Export" on={beats > 3} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ---------- 05: approve ---------- */
+
+const ApproveScreen = ({ play }: { play: boolean }) => {
+  // 1: the button is pressed, 2: the order is in the TMS
+  const beats = useBeats(play, [1500, 2300]);
+  const approved = beats >= 2;
   useEffect(() => {
     if (beats === 2) streamSignal.surge = 1;
   }, [beats]);
   return (
-    <div className="flex flex-col gap-2">
-      <Inset className="flex items-center justify-between px-4 py-3">
-        <div>
-          <p className="font-body text-[13px] text-th-heading">PO 48291 · Antwerp to Hamburg · 2 trucks</p>
-          <p className="font-mono text-[11px] text-th-muted">{landed ? "approved 09:44" : "ready for review"}</p>
+    <div className="dash-card">
+      <div className="dash-form">
+        <div className="flex items-center justify-between gap-2">
+          <p className="dash-section">PO 48291 · Rotterdam → Hamburg</p>
+          <span className={`dash-chip ${approved ? "green" : "amber"}`}>{approved ? "Completed" : "Needs review"}</span>
         </div>
-        <motion.span
-          className={`rounded-full px-4 py-1.5 font-body text-[12px] font-medium transition-colors duration-500 ${
-            landed ? "border border-th-line text-th-muted" : "bg-ac-1 text-th-page"
-          }`}
-          animate={beats === 1 ? { scale: 0.92 } : { scale: 1 }}
-          transition={{ duration: 0.15 }}
-        >
-          {landed ? "Approved" : "Approve"}
-        </motion.span>
-      </Inset>
-      <Inset className="flex items-center justify-between px-4 py-3">
-        <div>
-          <p className="font-body text-[13px] text-th-heading">Your TMS</p>
-          <p className="font-mono text-[11px] text-th-muted">{landed ? "order 48291 · exported 09:44" : "waiting for approval"}</p>
+        <div className={`dash-audit${approved ? "" : " is-warn"}`}>
+          {approved ? "Order created in your TMS. No one typed a thing." : "1 field to confirm before this order can go: the carrier rate looks higher than usual."}
         </div>
-        <span className={`font-mono text-[11px] transition-colors duration-500 ${landed ? "text-ac-1" : "text-th-faint"}`}>
-          {landed ? "exported" : "idle"}
-        </span>
-      </Inset>
+        <p className="dash-section">Summary</p>
+        <div className="dash-fields is-three">
+          <Field label="Customer" value="Rotterdam Distribution B.V." />
+          <Field label="Pickup" value="14/07, 08:00" />
+          <Field label="Delivery" value="Hamburg, Dock 4" />
+          <Field label="Quantity" value="24 pallets" />
+          <Field label="Weight" value="3,240 kg" />
+          <Field label="Carrier rate" value="€1,180" state={approved ? undefined : "active"} />
+        </div>
+        <hr className="dash-divider" />
+        <div className="dash-actions">
+          <span className="dash-btn">Save draft</span>
+          <motion.span className="dash-btn is-primary" animate={{ scale: beats === 1 ? 0.94 : 1 }} transition={{ duration: 0.15 }}>
+            {approved ? "Approved" : "Approve"}
+          </motion.span>
+        </div>
+        <p className="dash-toast">{approved ? "Pushed to your TMS." : beats === 1 ? "Approving…" : ""}</p>
+      </div>
     </div>
   );
 };
 
 /* ---------- putting it together ---------- */
 
-const labels = ["inbox · 1 new", "review · PO 48291", "approve · PO 48291"];
-
 const StepPanel = ({ i, play }: { i: number; play: boolean }) => (
   <Panel label={labels[i]}>
-    {i === 0 && <Inbox play={play} />}
-    {i === 1 && <Review play={play} />}
-    {i === 2 && <Approve play={play} />}
+    {i === 0 && <OrdersScreen play={play} />}
+    {i === 1 && <DocumentsScreen play={play} />}
+    {i === 2 && <ReviewScreen play={play} />}
+    {i === 3 && <MatchScreen play={play} />}
+    {i === 4 && <ApproveScreen play={play} />}
   </Panel>
 );
 
@@ -203,12 +292,12 @@ const StepText = ({ i, active }: { i: number; active: boolean }) => (
   <div className={`transition-opacity duration-500 ${active ? "opacity-100" : "opacity-40"}`}>
     <span
       key={active ? "on" : "off"}
-      className={`font-mono text-[13px] ${active ? "relay-flicker text-ac-1 [text-shadow:0_0_16px_rgb(var(--ac-1)/0.9)]" : "text-th-muted"}`}
+      className={`font-mono text-[12px] ${active ? "relay-flicker text-ac-1 [text-shadow:0_0_16px_rgb(var(--ac-1)/0.9)]" : "text-th-muted"}`}
     >
       {steps[i].n}
     </span>
-    <h3 className="mt-2 font-display text-[26px] font-semibold tracking-[-0.02em] text-th-heading">{steps[i].title}</h3>
-    <p className="mt-2 max-w-sm font-body text-[14px] leading-relaxed text-th-body">{steps[i].body}</p>
+    <h3 className="mt-1.5 font-display text-[21px] font-semibold leading-tight tracking-[-0.02em] text-th-heading">{steps[i].title}</h3>
+    <p className="mt-1.5 max-w-sm font-body text-[13px] leading-relaxed text-th-body">{steps[i].body}</p>
   </div>
 );
 
@@ -221,7 +310,7 @@ const Pinned = () => {
   const rail = useTransform(scrollYProgress, [0, 1], [0.04, 1]);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setStep(Math.min(2, Math.floor(v * 3)));
+    setStep(Math.min(steps.length - 1, Math.floor(v * steps.length)));
   });
 
   // while the block is pinned, ask the stream for a packet at the panel's height
@@ -242,13 +331,16 @@ const Pinned = () => {
   }, []);
 
   return (
-    <div ref={ref} className="relative hidden lg:block" style={{ height: "300vh" }}>
+    <div ref={ref} className="relative hidden lg:block" style={{ height: `${100 + steps.length * 80}vh` }}>
       <div className="sticky top-0 flex h-screen items-center">
         <div className="grid w-full grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-16">
           <div className="relative pl-8">
             <div className="absolute inset-y-1 left-0 w-px bg-th-line/70" />
-            <motion.div className="absolute left-0 top-1 w-px origin-top bg-ac-1 shadow-[0_0_10px_rgb(var(--ac-1))]" style={{ height: "calc(100% - 8px)", scaleY: rail }} />
-            <ol className="space-y-10">
+            <motion.div
+              className="absolute left-0 top-1 w-px origin-top bg-ac-1 shadow-[0_0_10px_rgb(var(--ac-1))]"
+              style={{ height: "calc(100% - 8px)", scaleY: rail }}
+            />
+            <ol className="space-y-7">
               {steps.map((s, i) => (
                 <li key={s.n}>
                   <StepText i={i} active={i === step} />
@@ -297,7 +389,7 @@ export const RelayHowItWorks = () => (
       eyebrow="how it works"
       title={
         <>
-          From inbox to TMS, in <Em>three steps</Em>.
+          From your inbox to your TMS, <Em>one order at a time</Em>.
         </>
       }
       aside="Forward the order inbox. The agent reads, drafts, and waits for your approval."
