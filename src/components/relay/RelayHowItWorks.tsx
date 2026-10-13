@@ -15,17 +15,17 @@ const steps = [
   {
     n: "01",
     title: "Forward the inbox",
-    body: "Every email and attachment is read. The agent decides what it is: a new order, an update, a cancellation, or not an order at all.",
+    body: "Every email and attachment is read and sorted: new order, update, cancellation, or not an order.",
   },
   {
     n: "02",
     title: "Review a traced draft",
-    body: "The form mirrors your TMS screen. Every value points back to the line it was read from. What the agent could not settle stays empty and flagged.",
+    body: "A form that mirrors your TMS. Every value points to the line it came from.",
   },
   {
     n: "03",
     title: "Approve, and it exports",
-    body: "Nothing leaves before your approval. One click exports the order in your TMS format and teaches the agent that customer's habits.",
+    body: "Nothing leaves without your click. Each approval teaches the agent.",
   },
 ];
 
@@ -57,7 +57,7 @@ const Panel = ({ label, children }: { label: string; children: ReactNode }) => (
       </div>
       <span className="font-mono text-[11px] text-th-muted">{label}</span>
     </div>
-    <div className="relative h-[440px] p-4">{children}</div>
+    <div className="relative h-[400px] p-4">{children}</div>
   </div>
 );
 
@@ -68,12 +68,11 @@ const Inset = ({ className = "", children }: { className?: string; children: Rea
 /* ---------- step 1: the inbox ---------- */
 
 const attachments = ["ORDER_48291.pdf", "packing_list.xlsx"];
-const reads = ["read email", "read ORDER_48291.pdf", "read packing_list.xlsx", "matched consignor to ROTDIS01"];
-const kinds = ["new order", "update", "cancellation", "not an order"];
 
 const Inbox = ({ play }: { play: boolean }) => {
-  // 1-4: read lines, 5: the picker slides, 6: it lands on "new order"
-  const beats = useBeats(play, [700, 1100, 1500, 1900, 2300, 3000]);
+  // 1-2: attachments read, 3: the queue row appears, 4: it is sorted
+  const beats = useBeats(play, [1200, 1600, 2100, 2900]);
+  const sorted = beats >= 4;
   return (
     <div className="flex h-full flex-col gap-3">
       <Inset className="relative overflow-hidden p-4">
@@ -87,7 +86,7 @@ const Inbox = ({ play }: { play: boolean }) => {
         </p>
         <div className="mt-3 flex gap-2">
           {attachments.map((a, i) => {
-            const read = beats > i + 1;
+            const read = beats > i;
             return (
               <span
                 key={a}
@@ -110,50 +109,27 @@ const Inbox = ({ play }: { play: boolean }) => {
         />
       </Inset>
 
-      <ul className="space-y-1.5 px-1 font-mono text-[12px]">
-        {reads.map((r, i) => {
-          const on = beats > i;
-          return (
-            <motion.li
-              key={r}
-              className="flex items-center gap-2"
-              initial={{ opacity: 0, x: -6 }}
-              animate={on ? { opacity: 1, x: 0 } : { opacity: 0, x: -6 }}
-              transition={{ duration: 0.4, ease: EASE }}
-            >
-              <Check className="h-3 w-3 text-ac-1" />
-              <span className="text-th-body">{r}</span>
-            </motion.li>
-          );
-        })}
-      </ul>
-
-      <div className="mt-auto">
-        <p className="mb-2 px-1 font-mono text-[11px] text-th-muted">what is this message</p>
-        <div className="relative grid grid-cols-4 rounded-full border border-th-line/70 bg-th-page/50 p-1 font-mono text-[11px]">
-          <motion.span
-            className="absolute inset-y-1 rounded-full bg-ac-1"
-            style={{ width: "calc(25% - 4px)" }}
-            initial={{ left: "calc(75% + 2px)", opacity: 0 }}
-            animate={
-              beats >= 5
-                ? { left: ["calc(75% + 2px)", "calc(50% + 2px)", "calc(25% + 2px)", "4px"], opacity: 1 }
-                : { left: "calc(75% + 2px)", opacity: 0 }
-            }
-            transition={{ duration: 0.8, ease: EASE, times: [0, 0.4, 0.7, 1] }}
-          />
-          {kinds.map((k, i) => (
-            <span
-              key={k}
-              className={`relative z-10 py-1.5 text-center transition-colors duration-300 ${
-                beats >= 6 && i === 0 ? "font-medium text-th-page" : "text-th-body"
-              }`}
-            >
-              {k}
-            </span>
-          ))}
-        </div>
-      </div>
+      <motion.div
+        className="mt-auto"
+        initial={{ opacity: 0, y: 8 }}
+        animate={beats >= 3 ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+        transition={{ duration: 0.5, ease: EASE }}
+      >
+        <p className="mb-2 px-1 font-mono text-[11px] text-th-muted">orders</p>
+        <Inset className="flex items-center justify-between px-4 py-3">
+          <div className="min-w-0">
+            <p className="truncate font-body text-[13px] text-th-heading">Rotterdam Distribution B.V. · PO 48291</p>
+            <p className="font-mono text-[11px] text-th-muted">Antwerp to Hamburg · 2 trucks · 07 Jul, 09:41</p>
+          </div>
+          <span
+            className={`shrink-0 rounded-md px-2 py-0.5 font-mono text-[11px] transition-colors duration-500 ${
+              sorted ? "bg-ac-1 font-medium text-th-page" : "border border-th-line text-th-muted"
+            }`}
+          >
+            {sorted ? "new order" : "reading"}
+          </span>
+        </Inset>
+      </motion.div>
     </div>
   );
 };
@@ -166,9 +142,7 @@ const doc = [
   "Load site: Antwerp, Quay 730",
   "Load from: 14/07/2026 08:00",
   "Unload site: Hamburg, Dock 4",
-  "Unload until: 15/07/2026 16:00",
   "Goods: 24 pallets, gross weight 3,240 kg",
-  "Trucks: 2 x 13.6 m curtainsider",
 ];
 
 const traces = [
@@ -176,8 +150,7 @@ const traces = [
   { field: "Load Site", value: "Antwerp, Quay 730", line: 2 },
   { field: "Load From", value: "14/07/2026, 08:00", line: 3 },
   { field: "Unload Site", value: "Hamburg, Dock 4", line: 4 },
-  { field: "Unload Until", value: "15/07/2026, 16:00", line: 5 },
-  { field: "Gross Weight", value: "3,240 kg", line: 6 },
+  { field: "Gross Weight", value: "3,240 kg", line: 5 },
   { field: "Unload Site Code", value: "", line: -1 },
 ];
 
@@ -230,7 +203,7 @@ const Trace = ({ play }: { play: boolean }) => {
     <div ref={box} className="relative grid h-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-10">
       <Inset className="relative overflow-hidden p-4">
         <p className="font-mono text-[10px] text-th-faint">ORDER_48291.pdf · page 1</p>
-        <div className="mt-3 space-y-2">
+        <div className="mt-3 space-y-3">
           {doc.map((line, i) => (
             <div key={line}>
               <span
@@ -242,11 +215,6 @@ const Trace = ({ play }: { play: boolean }) => {
                 {line}
               </span>
             </div>
-          ))}
-        </div>
-        <div className="mt-4 space-y-2 opacity-60">
-          {[72, 88, 60, 80].map((w, i) => (
-            <div key={i} className="h-1 rounded-full bg-th-line/70" style={{ width: `${w}%` }} />
           ))}
         </div>
         {/* the scan line */}
@@ -328,9 +296,6 @@ const summary = [
   { k: "Consignor", v: "ROTDIS01" },
   { k: "Load Site", v: "ANTQ730" },
   { k: "Unload Site", v: "HAMFRE04", human: true },
-  { k: "Load From", v: "14/07, 08:00" },
-  { k: "Unload Until", v: "15/07, 16:00" },
-  { k: "Gross Weight", v: "3,240 kg" },
 ];
 
 const Approve = ({ play }: { play: boolean }) => {
@@ -352,8 +317,8 @@ const Approve = ({ play }: { play: boolean }) => {
     });
   }, []);
 
-  // 1: cursor moves, 2: click, 3: packet flies, 4: it lands, 5: the history line
-  const beats = useBeats(play, [300, 1500, 1750, 2650, 3100]);
+  // 1: cursor moves, 2: click, 3: packet flies, 4: it lands
+  const beats = useBeats(play, [300, 1500, 1750, 2650]);
   useEffect(() => {
     if (beats === 4) streamSignal.surge = 1;
   }, [beats]);
@@ -416,14 +381,6 @@ const Approve = ({ play }: { play: boolean }) => {
       </motion.div>
 
       <div>
-        <motion.p
-          className="mb-2 px-1 font-mono text-[11px] text-th-muted"
-          initial={{ opacity: 0 }}
-          animate={beats >= 5 ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          kept in history · learned: this customer unloads at HAMFRE04
-        </motion.p>
         <Inset className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <span
@@ -598,7 +555,7 @@ export const RelayHowItWorks = () => (
           From inbox to TMS, in <Em>three steps</Em>.
         </>
       }
-      aside="Forward the order inbox and the agent takes it from there. It reads, it drafts, it waits for you. The one thing it never does is send without your approval."
+      aside="Forward the order inbox. The agent reads, drafts, and waits for your approval."
     />
     <Pinned />
     <div className="mt-16 space-y-20 pb-20 lg:hidden">

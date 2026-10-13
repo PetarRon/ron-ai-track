@@ -133,12 +133,13 @@ function tForY(y: number, w: number, H: number) {
 
 /** 0 where the strands are sharp, 1 where they go soft and wide (the middle of the page). */
 function diffuse(yFrac: number) {
-  const a = 0.1;
-  const b = 0.9;
-  if (yFrac <= a || yFrac >= b) return 0;
-  const s = (yFrac - a) / (b - a);
-  // ramps to full haze quickly and holds it, so headlines never sit on bright strands
-  return Math.min(1, Math.pow(Math.sin(Math.PI * s), 0.25));
+  // eases in over the first stretch of the page and out over the last, so the
+  // strands widen gradually instead of kinking where the haze begins
+  const smooth = (x: number) => {
+    const c = Math.min(Math.max(x, 0), 1);
+    return c * c * (3 - 2 * c);
+  };
+  return Math.min(smooth((yFrac - 0.08) / 0.16), smooth((0.95 - yFrac) / 0.1));
 }
 
 export const LightStream = ({ className = "" }: { className?: string }) => {
