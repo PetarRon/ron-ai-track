@@ -318,9 +318,9 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
         }
         ctx.lineCap = "round";
         const passes: [number, number][] = [
-          [16, 0.1],
-          [6, 0.3],
-          [1.6, 0.95],
+          [16, 0.08],
+          [6, 0.22],
+          [1.4, 0.6],
         ];
         for (const [lw, a] of passes) {
           ctx.strokeStyle = `hsla(78, 95%, 82%, ${a * pulse})`;
