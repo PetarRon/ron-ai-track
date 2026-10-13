@@ -39,16 +39,16 @@ const STEPS_PER_WAYPOINT = 32;
 const FRAME_MS = 1000 / 30; // the stream reads fine at 30 fps and costs half as much
 
 // Where the stream wanders, as [fraction of viewport width, fraction of page height].
-// Right of the hero, then straight down behind the How-it-works glass panel
-// (right column, roughly x 0.5 to 0.9), then back and forth down the page,
-// ending under the footer.
+// Right of the hero, then hugging the right edge past the centred How-it-works
+// timeline (roughly the 0.06 to 0.33 band of the page), then back and forth
+// down the page, ending under the footer.
 const WAYPOINTS: [number, number][] = [
   [0.66, -0.03],
-  [0.88, 0.05],
-  [0.8, 0.11],
-  [0.7, 0.17],
-  [0.72, 0.24],
-  [0.62, 0.3],
+  [0.88, 0.04],
+  [0.97, 0.1],
+  [1.0, 0.18],
+  [0.99, 0.26],
+  [0.9, 0.33],
   [0.3, 0.42],
   [0.5, 0.54],
   [0.78, 0.66],
