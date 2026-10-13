@@ -1,12 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useInView, useMotionValueEvent, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useInView, useMotionValue, useMotionValueEvent, useScroll, useSpring, useTransform } from "framer-motion";
 import { RELAY_SHELL } from "./shared";
 import { streamSignal } from "./streamSignal";
 
 /**
  * How it works: three steps with a vertical line on their left, the pair
- * centred on the page. The line fills with scroll, a packet of light rides its
- * tip, and each step's dot lights as the tip reaches it. Reaching the last
+ * centred on the page. Scroll picks the step; the line then fills to that
+ * step's dot and a packet of light travels down it and stops exactly on the dot. Reaching the last
  * step sends a surge down the page's light stream. Below lg the steps stack
  * as plain text.
  */
@@ -51,25 +51,21 @@ const Pinned = () => {
   const [step, setStep] = useState(0);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const smooth = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4 });
-  // the tip reaches the last stop a little before the pin ends, then holds
-  const tip = useTransform(smooth, [0.06, 0.8], [0, 1], { clamp: true });
-  const tipPct = useTransform(tip, (t) => `${t * 100}%`);
-  // the packet's tail fades in as it leaves the first stop, so it never pokes above the line
-  const tail = useTransform(tip, [0, 0.08], [0, 1]);
-
-  useMotionValueEvent(tip, "change", (t) => {
-    let next = 0;
-    fracs.current.forEach((f, i) => {
-      if (t >= f - 0.01) next = i;
-    });
-    setStep(next);
+  // scroll picks the step; the tip then travels to that step's dot and stops exactly on it
+  useMotionValueEvent(scrollYProgress, "change", (p) => {
+    setStep(Math.min(steps.length - 1, Math.floor(p * steps.length)));
   });
+  const tip = useSpring(0, { stiffness: 90, damping: 22 });
+  const tipPct = useTransform(tip, (t) => `${t * 100}%`);
+  // the tail is never longer than the line already travelled, so nothing shows above the first dot
+  const railH = useMotionValue(0);
+  const tailH = useTransform([tip, railH], ([t, h]: number[]) => Math.min(56, Math.max(0, t * h)));
 
-  // the order landing in the TMS pushes a surge through the background stream
   useEffect(() => {
+    tip.set(fracs.current[step] ?? 0);
+    // the order landing in the TMS pushes a surge through the background stream
     if (step === steps.length - 1) streamSignal.surge = 1;
-  }, [step]);
+  }, [step, tip]);
 
   // the line runs from the first dot to the last
   useLayoutEffect(() => {
@@ -84,13 +80,14 @@ const Pinned = () => {
       const top = ys[0];
       const span = ys[ys.length - 1] - top || 1;
       fracs.current = ys.map((y) => (y - top) / span);
+      railH.set(span);
       setRail({ top, height: span });
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (listRef.current) ro.observe(listRef.current);
     return () => ro.disconnect();
-  }, []);
+  }, [railH]);
 
   return (
     <div ref={ref} className="relative hidden lg:block" style={{ height: `${100 + steps.length * 80}vh` }}>
@@ -127,8 +124,8 @@ const Pinned = () => {
           <div className="pointer-events-none absolute left-5 w-px" style={{ top: rail.top, height: rail.height }}>
             <motion.div className="absolute left-0 top-0" style={{ top: tipPct }}>
               <motion.span
-                className="absolute bottom-0 left-0 h-14 w-[3px] -translate-x-1/2 rounded-full bg-gradient-to-b from-transparent via-ac-1/60 to-white"
-                style={{ opacity: tail }}
+                className="absolute bottom-0 left-0 w-[3px] -translate-x-1/2 rounded-full bg-gradient-to-b from-transparent via-ac-1/60 to-white"
+                style={{ height: tailH }}
               />
               <span className="absolute left-0 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_14px_5px_rgb(var(--ac-1)/0.8)]" />
             </motion.div>

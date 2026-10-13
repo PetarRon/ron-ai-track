@@ -232,7 +232,7 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
           anyVisible = true;
           const d = diffuse(p.y / H);
           const wobble = Math.sin(t * s.freq * Math.PI * 2 + s.phase + time * s.speed + scrollPhase);
-          const spread = 1 + 2.6 * d;
+          const spread = 1 + 1.2 * d;
           const off = (s.lane * spread + wobble * s.amp) * unit;
           pts.push([p.x + p.nx * off, p.y + p.ny * off, d]);
         }
@@ -249,10 +249,11 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
         const d = dN ? dSum / dN : 0;
         // the stream gathers in from nothing at the very top of the page
         const topFade = Math.min(1, Math.max(0, (scrollY + h / 2) / 700 + 0.35));
-        const alpha = s.alpha * (1 - 0.84 * d) * topFade;
-        const width = s.width * (1 + 4 * d);
-        const core = Math.max(0, 1 - 1.6 * d); // bright centre line fades out as the haze takes over
-        const mid = Math.max(0.25, 1 - d); // the mid pass thins out too, leaving mostly glow
+        // away from the top the strands dim a little and fan out a little, but stay crisp lines
+        const alpha = s.alpha * (1 - 0.5 * d) * topFade;
+        const width = s.width * (1 + 0.4 * d);
+        const core = Math.max(0, 1 - 0.4 * d);
+        const mid = Math.max(0.5, 1 - 0.5 * d);
         const color = `hsla(${s.hue}, ${s.sat}%, ${s.light}%, `;
 
         ctx.beginPath();
