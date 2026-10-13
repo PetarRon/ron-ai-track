@@ -31,7 +31,7 @@ export const RelayIntegrations = () => {
   const inView = useInView(ref, { once: true, margin: "-20% 0px" });
 
   return (
-    <section id="how" className="relative">
+    <section id="integrations" className="relative">
       <div ref={ref} className="relative mx-auto w-full max-w-[1240px] px-6 pb-16 pt-28 md:px-8">
         <Typewriter text="from your inbox to your TMS, one order at a time" active={inView} />
 

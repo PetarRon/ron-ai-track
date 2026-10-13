@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { streamSignal } from "./streamSignal";
 
 /**
  * The "stream of light": one bundle of glowing strands that follows a single
@@ -38,14 +39,16 @@ const STEPS_PER_WAYPOINT = 32;
 const FRAME_MS = 1000 / 30; // the stream reads fine at 30 fps and costs half as much
 
 // Where the stream wanders, as [fraction of viewport width, fraction of page height].
-// Right of the hero, sweeps left through the intake section, then back and
-// forth down the page, ending under the footer.
+// Right of the hero, then straight down behind the How-it-works glass panel
+// (right column, roughly x 0.5 to 0.9), then back and forth down the page,
+// ending under the footer.
 const WAYPOINTS: [number, number][] = [
   [0.66, -0.03],
   [0.88, 0.05],
-  [1.0, 0.12],
-  [0.98, 0.2],
-  [0.7, 0.3],
+  [0.8, 0.11],
+  [0.7, 0.17],
+  [0.72, 0.24],
+  [0.62, 0.3],
   [0.3, 0.42],
   [0.5, 0.54],
   [0.78, 0.66],
@@ -116,6 +119,18 @@ function spine(t: number, w: number, H: number) {
   return { x, y, nx: -dy / len, ny: dx / len };
 }
 
+/** The spine's t for a page-space y; the waypoints only ever go down, so a bisection works. */
+function tForY(y: number, w: number, H: number) {
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 22; i++) {
+    const mid = (lo + hi) / 2;
+    if (spine(mid, w, H).y < y) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
 /** 0 where the strands are sharp, 1 where they go soft and wide (the middle of the page). */
 function diffuse(yFrac: number) {
   const a = 0.1;
@@ -151,6 +166,7 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
     let lastScroll = window.scrollY;
     let velocity = 0; // smoothed px per frame
     let flow = 0; // extra time added by scrolling
+    let pulse = 0; // eased 0..1 presence of the section-requested packet
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, quality);
@@ -167,6 +183,12 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
       velocity = velocity * 0.85 + Math.abs(scrollY - lastScroll) * 0.15;
       lastScroll = scrollY;
       flow += velocity * 0.012;
+      // a surge (an approval landing, say) pushes the flow and brightens the particles for a moment
+      const surge = streamSignal.surge;
+      if (surge > 0) {
+        flow += surge * 0.6;
+        streamSignal.surge = surge < 0.01 ? 0 : surge * 0.9;
+      }
       const time = (now - start) / 1000 + flow;
       const scrollPhase = scrollY * 0.003;
       const unit = Math.min(w, h);
@@ -266,13 +288,44 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
         const off = pt.off * unit * (1 + d);
         const x = p.x + p.nx * off;
         const y = p.y + p.ny * off;
-        const twinkle = 0.55 + 0.45 * Math.sin(time * 1.6 + pt.phase);
+        const twinkle = (0.55 + 0.45 * Math.sin(time * 1.6 + pt.phase)) * (1 + surge * 1.5);
         ctx.fillStyle = pt.bokeh
-          ? `hsla(190, 70%, 65%, ${pt.alpha * twinkle})`
-          : `hsla(78, 90%, 78%, ${pt.alpha * twinkle * (1 - 0.8 * d)})`;
+          ? `hsla(190, 70%, 65%, ${Math.min(1, pt.alpha * twinkle)})`
+          : `hsla(78, 90%, 78%, ${Math.min(1, pt.alpha * twinkle * (1 - 0.8 * d))})`;
         ctx.beginPath();
         ctx.arc(x, y, pt.r, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      // the packet: a bright knot on the spine where a section asks for it
+      pulse += ((streamSignal.pulseOn ? 1 : 0) - pulse) * 0.08;
+      if (pulse > 0.01) {
+        const tc = tForY(streamSignal.pulseY, w, H);
+        const c = spine(tc, w, H);
+        const r = unit * 0.18;
+        const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, r);
+        g.addColorStop(0, `hsla(80, 90%, 65%, ${0.32 * pulse})`);
+        g.addColorStop(0.4, `hsla(80, 90%, 65%, ${0.1 * pulse})`);
+        g.addColorStop(1, "hsla(80, 90%, 65%, 0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(c.x - r, c.y - r, r * 2, r * 2);
+        ctx.beginPath();
+        for (let k = -14; k <= 14; k++) {
+          const q = spine(Math.min(1, Math.max(0, tc + k * 0.0025)), w, H);
+          if (k === -14) ctx.moveTo(q.x, q.y);
+          else ctx.lineTo(q.x, q.y);
+        }
+        ctx.lineCap = "round";
+        const passes: [number, number][] = [
+          [16, 0.1],
+          [6, 0.3],
+          [1.6, 0.95],
+        ];
+        for (const [lw, a] of passes) {
+          ctx.strokeStyle = `hsla(78, 95%, 82%, ${a * pulse})`;
+          ctx.lineWidth = lw;
+          ctx.stroke();
+        }
       }
 
       ctx.restore();
