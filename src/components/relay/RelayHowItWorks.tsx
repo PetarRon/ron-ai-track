@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useInView, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
-import { FileText } from "lucide-react";
 import { Em, LogoMark, RELAY_SHELL, SectionIntro } from "./shared";
 import { streamSignal } from "./streamSignal";
 
 /**
- * How it works: the five steps of the live site, pinned on the left, with one
+ * How it works: three of the live site's steps, pinned on the left, with one
  * glass panel on the right that shows a flattened dashboard card per step
  * (the live site's screens without sidebar, top bar or split views). Each
  * card plays one short animation when it appears. Below lg the steps stack.
@@ -19,27 +18,17 @@ const steps = [
   },
   {
     n: "02",
-    title: "Every attachment gets read",
-    body: "PDFs, scans, spreadsheets and forwarded emails are all read, whatever they are called.",
-  },
-  {
-    n: "03",
     title: "Every value traces back to its source",
     body: "Each field shows where it was read from. Anything uncertain is flagged for a person, not guessed.",
   },
   {
-    n: "04",
-    title: "Matched to your TMS",
-    body: "Customers and sites are matched to the codes your TMS already uses. What the agent cannot settle is left for you.",
-  },
-  {
-    n: "05",
+    n: "03",
     title: "Nothing moves until your team says so",
     body: "Review, save a draft, or approve. Only approval pushes the order to your TMS.",
   },
 ];
 
-const labels = ["Orders", "PO 48291 · Documents", "PO 48291 · Review", "PO 48291 · TMS codes", "PO 48291 · Approve"];
+const labels = ["Orders", "PO 48291 · Review", "PO 48291 · Approve"];
 
 /** Counts how many of the given millisecond marks have passed since `play` went true. */
 const useBeats = (play: boolean, beats: number[]) => {
@@ -135,41 +124,7 @@ const OrdersScreen = ({ play }: { play: boolean }) => {
   );
 };
 
-/* ---------- 02: the documents ---------- */
-
-const documents = [
-  { name: "ORDER_48291.pdf", kind: "PDF · 3 pages" },
-  { name: "packing_list.xlsx", kind: "Spreadsheet" },
-  { name: "FW_ booking confirmation.eml", kind: "Forwarded email" },
-  { name: "dock_photo.jpg", kind: "Scan" },
-];
-
-const DocumentsScreen = ({ play }: { play: boolean }) => {
-  const beats = useBeats(play, stagger(documents.length, 500, 420));
-  return (
-    <div className="dash-card">
-      {documents.map((d, i) => {
-        const read = beats > i;
-        return (
-          <div
-            key={d.name}
-            className="flex items-center gap-2 px-3 py-2.5"
-            style={{ borderBottom: i < documents.length - 1 ? "1px solid var(--dash-border)" : undefined, color: "var(--dash-text)" }}
-          >
-            <FileText className="h-3 w-3 shrink-0" style={{ color: "var(--dash-text-3)" }} />
-            <div className="min-w-0 flex-1">
-              <p className="truncate">{d.name}</p>
-              <p style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-xs)" }}>{d.kind}</p>
-            </div>
-            <span className={`dash-chip ${read ? "green" : "grey"}`}>{read ? "Read" : "Reading"}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-/* ---------- 03: traced to its source ---------- */
+/* ---------- 02: traced to its source ---------- */
 
 const ReviewScreen = ({ play }: { play: boolean }) => {
   // six order fields, then the weight, then its quote
@@ -198,44 +153,7 @@ const ReviewScreen = ({ play }: { play: boolean }) => {
   );
 };
 
-/* ---------- 04: matched to your TMS ---------- */
-
-const matches = [
-  { label: "Customer", name: "Rotterdam Distribution B.V.", code: "ROTDIS01", ok: true },
-  { label: "Delivery site", name: "Hamburg Freight GmbH, Dock 4", code: "HAMFRE02", ok: true },
-  { label: "Invoice to", name: "NL Purchasing Organization", code: "", ok: false },
-];
-
-const MatchScreen = ({ play }: { play: boolean }) => {
-  const beats = useBeats(play, stagger(matches.length + 1, 500, 450));
-  return (
-    <div className="dash-card">
-      <div className="dash-form">
-        <p className="dash-section">Matched to your TMS</p>
-        {matches.map((m, i) => {
-          const on = beats > i;
-          const matched = on && m.ok;
-          return (
-            <div key={m.label}>
-              <p style={{ color: "var(--dash-text-3)", fontSize: "var(--dash-fs-xs)" }}>{m.label}</p>
-              <div className={`dash-picker${matched ? "" : " is-empty"}`}>
-                <span>{matched ? `${m.code} — ${m.name}` : on ? "Pick a code" : "Matching…"}</span>
-                {matched ? <span className="dash-chip green">Matched</span> : on ? <span className="dash-chip amber">For you</span> : null}
-              </div>
-            </div>
-          );
-        })}
-        <p className="dash-section">Filled from past orders</p>
-        <div className="dash-fields">
-          <Field label="Incoterm" value="FCA" on={beats > 3} />
-          <Field label="Department" value="Export" on={beats > 3} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ---------- 05: approve ---------- */
+/* ---------- 03: approve ---------- */
 
 const ApproveScreen = ({ play }: { play: boolean }) => {
   // 1: the button is pressed, 2: the order is in the TMS
@@ -281,10 +199,8 @@ const ApproveScreen = ({ play }: { play: boolean }) => {
 const StepPanel = ({ i, play }: { i: number; play: boolean }) => (
   <Panel label={labels[i]}>
     {i === 0 && <OrdersScreen play={play} />}
-    {i === 1 && <DocumentsScreen play={play} />}
-    {i === 2 && <ReviewScreen play={play} />}
-    {i === 3 && <MatchScreen play={play} />}
-    {i === 4 && <ApproveScreen play={play} />}
+    {i === 1 && <ReviewScreen play={play} />}
+    {i === 2 && <ApproveScreen play={play} />}
   </Panel>
 );
 
@@ -296,8 +212,8 @@ const StepText = ({ i, active }: { i: number; active: boolean }) => (
     >
       {steps[i].n}
     </span>
-    <h3 className="mt-1.5 font-display text-[21px] font-semibold leading-tight tracking-[-0.02em] text-th-heading">{steps[i].title}</h3>
-    <p className="mt-1.5 max-w-sm font-body text-[13px] leading-relaxed text-th-body">{steps[i].body}</p>
+    <h3 className="mt-2 font-display text-[24px] font-semibold leading-tight tracking-[-0.02em] text-th-heading">{steps[i].title}</h3>
+    <p className="mt-2 max-w-sm font-body text-[14px] leading-relaxed text-th-body">{steps[i].body}</p>
   </div>
 );
 
@@ -340,7 +256,7 @@ const Pinned = () => {
               className="absolute left-0 top-1 w-px origin-top bg-ac-1 shadow-[0_0_10px_rgb(var(--ac-1))]"
               style={{ height: "calc(100% - 8px)", scaleY: rail }}
             />
-            <ol className="space-y-7">
+            <ol className="space-y-10">
               {steps.map((s, i) => (
                 <li key={s.n}>
                   <StepText i={i} active={i === step} />
