@@ -98,7 +98,7 @@ function makeParticles(): Particle[] {
 }
 
 /** Catmull-Rom spline through the waypoints; t in [0, 1] over the whole page. */
-function spine(t: number, w: number, H: number) {
+export function spine(t: number, w: number, H: number) {
   const n = WAYPOINTS.length - 1;
   const f = Math.min(Math.max(t, 0), 0.99999) * n;
   const i = Math.floor(f);
@@ -120,7 +120,7 @@ function spine(t: number, w: number, H: number) {
 }
 
 /** The spine's t for a page-space y; the waypoints only ever go down, so a bisection works. */
-function tForY(y: number, w: number, H: number) {
+export function tForY(y: number, w: number, H: number) {
   let lo = 0;
   let hi = 1;
   for (let i = 0; i < 22; i++) {
@@ -168,6 +168,7 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
     let velocity = 0; // smoothed px per frame
     let flow = 0; // extra time added by scrolling
     let pulse = 0; // eased 0..1 presence of the section-requested packet
+    let pulseY = 0; // eased page-space position, so the packet slides along the spine between targets
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, quality);
@@ -299,9 +300,12 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
       }
 
       // the packet: a bright knot on the spine where a section asks for it
+      const wasOff = pulse <= 0.01;
       pulse += ((streamSignal.pulseOn ? 1 : 0) - pulse) * 0.08;
+      if (wasOff) pulseY = streamSignal.pulseY;
+      else pulseY += (streamSignal.pulseY - pulseY) * 0.16;
       if (pulse > 0.01) {
-        const tc = tForY(streamSignal.pulseY, w, H);
+        const tc = tForY(pulseY, w, H);
         const c = spine(tc, w, H);
         const r = unit * 0.18;
         const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, r);
@@ -312,15 +316,15 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
         ctx.fillRect(c.x - r, c.y - r, r * 2, r * 2);
         ctx.beginPath();
         for (let k = -14; k <= 14; k++) {
-          const q = spine(Math.min(1, Math.max(0, tc + k * 0.0025)), w, H);
+          const q = spine(Math.min(1, Math.max(0, tc + k * 0.0008)), w, H);
           if (k === -14) ctx.moveTo(q.x, q.y);
           else ctx.lineTo(q.x, q.y);
         }
         ctx.lineCap = "round";
         const passes: [number, number][] = [
-          [16, 0.08],
-          [6, 0.22],
-          [1.4, 0.6],
+          [16, 0.1],
+          [6, 0.28],
+          [1.5, 0.8],
         ];
         for (const [lw, a] of passes) {
           ctx.strokeStyle = `hsla(78, 95%, 82%, ${a * pulse})`;

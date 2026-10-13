@@ -1,13 +1,15 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, useInView, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { Mail } from "lucide-react";
 import { Em, LogoMark, RELAY_SHELL, SectionIntro } from "./shared";
+import { spine, tForY } from "./LightStream";
 import { streamSignal } from "./streamSignal";
 
 /**
- * How it works: three of the live site's steps, pinned on the left, with one
- * glass panel on the right that shows a flattened dashboard card per step
- * (the live site's screens without sidebar, top bar or split views). Each
- * card plays one short animation when it appears. Below lg the steps stack.
+ * How it works: three steps pinned on the left; on the right the light stream
+ * itself is the diagram. Three nodes (inbox, agent, TMS) sit on the stream's
+ * spine, and the bright packet on the stream slides from one node to the next
+ * as the active step changes. Below lg the steps stack as plain text.
  */
 
 const steps = [
@@ -15,194 +17,24 @@ const steps = [
     n: "01",
     title: "Every order lands in one queue",
     body: "Emails, PDFs and forwarded threads arrive in one inbox, sorted into orders and everything else.",
+    node: { name: "inbox", detail: "PO 48291 · 2 attachments" },
   },
   {
     n: "02",
     title: "Every value traces back to its source",
     body: "Each field shows where it was read from. Anything uncertain is flagged for a person, not guessed.",
+    node: { name: "agent", detail: "30 of 31 fields · 1 for you" },
   },
   {
     n: "03",
     title: "Nothing moves until your team says so",
     body: "Review, save a draft, or approve. Only approval pushes the order to your TMS.",
+    node: { name: "your TMS", detail: "exported after approval" },
   },
 ];
 
-const labels = ["Orders", "PO 48291 · Review", "PO 48291 · Approve"];
-
-/** Counts how many of the given millisecond marks have passed since `play` went true. */
-const useBeats = (play: boolean, beats: number[]) => {
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    if (!play) {
-      setN(0);
-      return;
-    }
-    const ids = beats.map((ms, i) => setTimeout(() => setN(i + 1), ms));
-    return () => ids.forEach(clearTimeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [play]);
-  return n;
-};
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-const stagger = (count: number, from = 300, gap = 160) => Array.from({ length: count }, (_, i) => from + i * gap);
-
-/* ---------- the glass frame ---------- */
-
-const Panel = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="relay-glass relative overflow-hidden rounded-2xl">
-    <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
-      <div className="flex items-center gap-2.5">
-        <LogoMark size={22} />
-        <span className="font-mono text-[12px] text-th-heading">Petaron</span>
-      </div>
-      <span className="font-mono text-[11px] text-th-muted">{label}</span>
-    </div>
-    <div className="dash is-glass relay-flat p-4">{children}</div>
-  </div>
-);
-
-const Field = ({ label, value, state, on = true }: { label: string; value?: string; state?: "empty-required" | "active"; on?: boolean }) => (
-  <div className={`dash-field${on && state ? ` is-${state}` : ""}`}>
-    <em>{label}</em>
-    <motion.span className="v" initial={{ opacity: 0 }} animate={{ opacity: on ? 1 : 0 }} transition={{ duration: 0.35 }}>
-      {value ?? ""}
-    </motion.span>
-  </div>
-);
-
-/* ---------- 01: the orders queue ---------- */
-
-type Row = { status: "review" | "processing" | "completed" | "none"; subject: string; reference: string; route: string; received: string };
-
-const rows: Row[] = [
-  { status: "review", subject: "Pickup Thursday, 24 pallets to Hamburg", reference: "PO 48291", route: "Rotterdam → Hamburg", received: "14:32" },
-  { status: "processing", subject: "Reefer container, temp-controlled", reference: "PO 48114", route: "Gothenburg → Bremerhaven", received: "14:20" },
-  { status: "review", subject: "Bulk salt, 3 trucks Monday", reference: "SO 79697", route: "Wesseling → Antwerp", received: "11:05" },
-  { status: "completed", subject: "Weekly consolidation, Antwerp to Lyon", reference: "PO 47960", route: "Antwerp → Lyon", received: "Yesterday" },
-  { status: "completed", subject: "Two containers ex Piraeus", reference: "PO 47812", route: "Piraeus → Milan", received: "Yesterday" },
-  { status: "none", subject: "Re: Invoice #4471, payment confirmation", reference: "—", route: "—", received: "Yesterday" },
-];
-
-const chip: Record<Row["status"], { cls: string; label: string }> = {
-  review: { cls: "amber", label: "Needs review" },
-  processing: { cls: "grey", label: "Processing" },
-  completed: { cls: "green", label: "Completed" },
-  none: { cls: "outline", label: "No order" },
-};
-
-const OrdersScreen = ({ play }: { play: boolean }) => {
-  const beats = useBeats(play, stagger(rows.length, 250, 140));
-  return (
-    <div className="dash-table">
-      <div className="dash-tr is-head">
-        <span>Status</span>
-        <span>Subject</span>
-        <span>Reference</span>
-        <span className="dash-col-lg">Route</span>
-        <span className="dash-col-lg dash-td-num">Received</span>
-      </div>
-      {rows.map((r, i) => (
-        <motion.div
-          key={r.reference + i}
-          className={`dash-tr${r.status === "completed" ? " is-done" : ""}${r.status === "none" ? " is-none" : ""}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: beats > i ? 1 : 0 }}
-          transition={{ duration: 0.35 }}
-        >
-          <span className="dash-chip-cell">
-            <span className={`dash-chip ${chip[r.status].cls}`}>{chip[r.status].label}</span>
-          </span>
-          <span className="dash-td-ellipsis">{r.subject}</span>
-          <span className="dash-td-mono">{r.reference}</span>
-          <span className="dash-col-lg dash-td-ellipsis">{r.route}</span>
-          <span className="dash-col-lg dash-td-num">{r.received}</span>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-/* ---------- 02: traced to its source ---------- */
-
-const ReviewScreen = ({ play }: { play: boolean }) => {
-  // six order fields, then the weight, then its quote
-  const beats = useBeats(play, stagger(8, 300, 220));
-  return (
-    <div className="dash-card">
-      <div className="dash-form">
-        <p className="dash-section">Order</p>
-        <div className="dash-fields">
-          <Field label="Customer" value="Rotterdam Distribution B.V." on={beats > 0} />
-          <Field label="Reference" value="PO 48291" on={beats > 1} />
-          <Field label="Pickup" value="14/07, 08:00" on={beats > 2} />
-          <Field label="Delivery" value="Hamburg, Dock 4" on={beats > 3} />
-          <Field label="Delivery postcode" state="empty-required" on={beats > 4} />
-          <Field label="Quantity" value="24 pallets" on={beats > 5} />
-        </div>
-        <p className="dash-section">Weight</p>
-        <div className="dash-fields">
-          <Field label="Gross weight" value="3,240 kg" state="active" on={beats > 6} />
-        </div>
-        <motion.div className="dash-quote" initial={{ opacity: 0 }} animate={{ opacity: beats > 7 ? 1 : 0 }} transition={{ duration: 0.4 }}>
-          "Total weight: 3,240 kg" — read from the email
-        </motion.div>
-      </div>
-    </div>
-  );
-};
-
-/* ---------- 03: approve ---------- */
-
-const ApproveScreen = ({ play }: { play: boolean }) => {
-  // 1: the button is pressed, 2: the order is in the TMS
-  const beats = useBeats(play, [1500, 2300]);
-  const approved = beats >= 2;
-  useEffect(() => {
-    if (beats === 2) streamSignal.surge = 1;
-  }, [beats]);
-  return (
-    <div className="dash-card">
-      <div className="dash-form">
-        <div className="flex items-center justify-between gap-2">
-          <p className="dash-section">PO 48291 · Rotterdam → Hamburg</p>
-          <span className={`dash-chip ${approved ? "green" : "amber"}`}>{approved ? "Completed" : "Needs review"}</span>
-        </div>
-        <div className={`dash-audit${approved ? "" : " is-warn"}`}>
-          {approved ? "Order created in your TMS. No one typed a thing." : "1 field to confirm before this order can go: the carrier rate looks higher than usual."}
-        </div>
-        <p className="dash-section">Summary</p>
-        <div className="dash-fields is-three">
-          <Field label="Customer" value="Rotterdam Distribution B.V." />
-          <Field label="Pickup" value="14/07, 08:00" />
-          <Field label="Delivery" value="Hamburg, Dock 4" />
-          <Field label="Quantity" value="24 pallets" />
-          <Field label="Weight" value="3,240 kg" />
-          <Field label="Carrier rate" value="€1,180" state={approved ? undefined : "active"} />
-        </div>
-        <hr className="dash-divider" />
-        <div className="dash-actions">
-          <span className="dash-btn">Save draft</span>
-          <motion.span className="dash-btn is-primary" animate={{ scale: beats === 1 ? 0.94 : 1 }} transition={{ duration: 0.15 }}>
-            {approved ? "Approved" : "Approve"}
-          </motion.span>
-        </div>
-        <p className="dash-toast">{approved ? "Pushed to your TMS." : beats === 1 ? "Approving…" : ""}</p>
-      </div>
-    </div>
-  );
-};
-
-/* ---------- putting it together ---------- */
-
-const StepPanel = ({ i, play }: { i: number; play: boolean }) => (
-  <Panel label={labels[i]}>
-    {i === 0 && <OrdersScreen play={play} />}
-    {i === 1 && <ReviewScreen play={play} />}
-    {i === 2 && <ApproveScreen play={play} />}
-  </Panel>
-);
+/** where each node sits, as a fraction of the pinned viewport's height */
+const NODE_Y = [0.24, 0.5, 0.76];
 
 const StepText = ({ i, active }: { i: number; active: boolean }) => (
   <div className={`transition-opacity duration-500 ${active ? "opacity-100" : "opacity-40"}`}>
@@ -217,39 +49,76 @@ const StepText = ({ i, active }: { i: number; active: boolean }) => (
   </div>
 );
 
-const Glow = () => <div className="pointer-events-none absolute -inset-10 rounded-full bg-ac-1/[0.06] blur-[100px]" aria-hidden />;
+const NodeMark = ({ i, active }: { i: number; active: boolean }) => {
+  if (i === 1) return <LogoMark size={30} />;
+  return (
+    <span
+      className={`grid h-[30px] w-[30px] place-items-center rounded-lg border font-mono text-[11px] transition-colors duration-500 ${
+        active ? "border-ac-1/70 bg-ac-1/15 text-ac-1" : "border-th-line bg-th-surface/80 text-th-muted"
+      }`}
+    >
+      {i === 0 ? <Mail className="h-3.5 w-3.5" /> : "TM"}
+    </span>
+  );
+};
 
 const Pinned = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const [step, setStep] = useState(0);
+  const [nodes, setNodes] = useState<{ x: number; y: number }[]>([]);
   const rail = useTransform(scrollYProgress, [0, 1], [0.04, 1]);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     setStep(Math.min(steps.length - 1, Math.floor(v * steps.length)));
   });
 
-  // while the block is pinned, ask the stream for a packet at the panel's height
+  // the nodes follow the stream's spine; the packet is asked to sit on the active one
+  const stepRef = useRef(step);
+  stepRef.current = step;
   useEffect(() => {
-    const onScroll = () => {
+    let frame = 0;
+    const place = () => {
+      frame = 0;
       const r = ref.current?.getBoundingClientRect();
-      if (!r) return;
+      const s = stickyRef.current?.getBoundingClientRect();
+      if (!r || !s) return;
+      const w = window.innerWidth;
+      const H = Math.max(document.documentElement.scrollHeight, window.innerHeight);
+      setNodes(
+        NODE_Y.map((f) => {
+          const vy = s.top + s.height * f;
+          const p = spine(tForY(window.scrollY + vy, w, H), w, H);
+          return { x: p.x - s.left, y: s.height * f };
+        }),
+      );
       const pinned = r.top <= 0 && r.bottom >= window.innerHeight;
       streamSignal.pulseOn = pinned;
-      if (pinned) streamSignal.pulseY = window.scrollY + window.innerHeight * 0.5;
+      if (pinned) streamSignal.pulseY = window.scrollY + s.top + s.height * NODE_Y[stepRef.current];
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(place);
+    };
+    place();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
       streamSignal.pulseOn = false;
     };
   }, []);
+  useEffect(() => {
+    const s = stickyRef.current?.getBoundingClientRect();
+    if (s && streamSignal.pulseOn) streamSignal.pulseY = window.scrollY + s.top + s.height * NODE_Y[step];
+  }, [step]);
 
   return (
     <div ref={ref} className="relative hidden lg:block" style={{ height: `${100 + steps.length * 80}vh` }}>
-      <div className="sticky top-0 flex h-screen items-center">
-        <div className="grid w-full grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-16">
+      <div ref={stickyRef} className="sticky top-0 h-screen">
+        <div className="grid h-full grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-16">
           <div className="relative pl-8">
             <div className="absolute inset-y-1 left-0 w-px bg-th-line/70" />
             <motion.div
@@ -264,22 +133,35 @@ const Pinned = () => {
               ))}
             </ol>
           </div>
-          <div className="relative">
-            <Glow />
-            <AnimatePresence mode="wait" initial={false}>
-              {/* no filter here: a filter on an ancestor stops the glass's backdrop blur from seeing the canvas */}
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.45, ease: EASE }}
-              >
-                <StepPanel i={step} play />
-              </motion.div>
-            </AnimatePresence>
-          </div>
         </div>
+
+        {/* the nodes, pinned to wherever the stream runs at their height */}
+        {nodes.map((p, i) => {
+          const active = i === step;
+          return (
+            <div
+              key={steps[i].node.name}
+              className="absolute flex items-center gap-3"
+              style={{ left: p.x, top: p.y, transform: "translate(-15px, -50%)" }}
+            >
+              <span
+                className={`absolute h-2 w-2 rounded-full transition-all duration-500 ${
+                  active ? "bg-th-heading shadow-[0_0_18px_4px_rgb(var(--ac-1)/0.7)]" : "bg-ac-1/50"
+                }`}
+                style={{ left: 15, top: "50%", transform: "translate(-50%, -50%)" }}
+              />
+              <div className={`transition-opacity duration-500 ${active ? "opacity-100" : "opacity-45"}`} style={{ marginLeft: 22 }}>
+                <div className="flex items-center gap-2.5">
+                  <NodeMark i={i} active={active} />
+                  <div>
+                    <p className="font-mono text-[12px] text-th-heading">{steps[i].node.name}</p>
+                    <p className="font-mono text-[11px] text-th-muted">{steps[i].node.detail}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -289,12 +171,8 @@ const Stacked = ({ i }: { i: number }) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-25% 0px" });
   return (
-    <div ref={ref} className="space-y-6">
+    <div ref={ref}>
       <StepText i={i} active={inView} />
-      <div className="relative">
-        <Glow />
-        <StepPanel i={i} play={inView} />
-      </div>
     </div>
   );
 };
@@ -311,7 +189,7 @@ export const RelayHowItWorks = () => (
       aside="Forward the order inbox. The agent reads, drafts, and waits for your approval."
     />
     <Pinned />
-    <div className="mt-16 space-y-20 pb-20 lg:hidden">
+    <div className="mt-16 space-y-14 pb-20 lg:hidden">
       {steps.map((_, i) => (
         <Stacked key={i} i={i} />
       ))}
