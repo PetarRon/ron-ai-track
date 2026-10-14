@@ -24,7 +24,7 @@ export const RelayProcess = () => (
       {...settle()}
       className="mx-auto max-w-3xl text-balance text-center font-display text-[clamp(28px,4.4vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
     >
-      Most of an order is retyping. <Em>Let&apos;s change the routine.</Em>
+      Most of an order is retyping. <Em>Let an AI agent do it.</Em>
     </motion.h2>
 
     <motion.div
