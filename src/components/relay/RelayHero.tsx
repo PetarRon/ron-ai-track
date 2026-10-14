@@ -27,13 +27,7 @@ export const RelayNav = () => (
         </Link>
       ))}
     </nav>
-    <div className="flex items-center gap-3">
-      <span className="hidden items-center gap-2 rounded-full border border-th-line bg-th-surface/60 px-4 py-2 font-mono text-[12px] text-th-heading sm:flex">
-        <span className="h-1.5 w-1.5 rounded-full bg-ac-1 shadow-[0_0_8px_rgb(var(--ac-1))]" />
-        all systems normal
-      </span>
-      <CalButton className="!px-5 !py-2.5">Book a Demo</CalButton>
-    </div>
+    <CalButton className="!px-5 !py-2.5">Book a Demo</CalButton>
   </header>
 );
 

@@ -86,9 +86,6 @@ export const RelayFooter = () => {
       </div>
 
       <div className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-2 font-mono text-[11px] text-th-muted">
-        <span className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-ac-1" /> all systems normal
-        </span>
         <span>EU-hosted</span>
         <span>GDPR compliant</span>
       </div>
