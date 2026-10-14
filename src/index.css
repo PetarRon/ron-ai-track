@@ -532,7 +532,7 @@ div[data-cal-namespace] > div,
 }
 .rt-rail { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 14px 6px 11px; border-bottom: 1px solid var(--rt-line); }
 .rt-rail .track { position: absolute; left: 12.5%; right: 12.5%; top: 19px; height: 1px; background: var(--rt-line-2); }
-.rt-rail .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--rt-lime); box-shadow: 0 0 8px var(--rt-lime); transition: width 1s ease; }
+.rt-rail .fill { position: absolute; inset: 0; background: var(--rt-lime); box-shadow: 0 0 8px var(--rt-lime); transform-origin: left center; transition: transform 1s ease; }
 .rt-stop { position: relative; display: grid; justify-items: center; gap: 7px; color: var(--rt-faint); font: 500 11.5px var(--rt-mono); }
 .rt-stop .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rt-lime); transform: scale(0); transition: transform 0.35s ease, background 0.35s, box-shadow 0.35s; }
 .rt-stop.is-reached { color: var(--rt-body); }
@@ -655,8 +655,8 @@ div[data-cal-namespace] > div,
 .rt-pop dt { color: var(--rt-muted); }
 .rt-pop dd { margin: 0; text-align: right; font: 12px var(--rt-mono); }
 .rt-pop .cd { height: 2px; border-radius: 2px; background: var(--rt-line); overflow: hidden; }
-.rt-pop .cd i { display: block; height: 100%; width: 100%; background: var(--rt-lime); transition: width 5s linear; }
-.rt-pop .cd.is-run i { width: 0; }
+.rt-pop .cd i { display: block; height: 100%; background: var(--rt-lime); transform-origin: left center; transition: transform 5s linear; }
+.rt-pop .cd.is-run i { transform: scaleX(0); }
 
 @media (max-width: 780px) {
   .rt-ol-body { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); }

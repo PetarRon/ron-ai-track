@@ -367,7 +367,7 @@ export const RelayTryIt = () => {
       <div ref={cardRef} className="rt-card">
         <div className="rt-rail" aria-hidden>
           <div className="track">
-            <div className="fill" style={{ width: `${((stage - 1) / 3) * 100}%` }} />
+            <div className="fill" style={{ transform: `scaleX(${(stage - 1) / 3})` }} />
           </div>
           {STOPS.map((label, i) => (
             <span key={label} className={`rt-stop${i + 1 <= stage ? " is-reached" : ""}${i + 1 === stage ? " is-current" : ""}`}>
