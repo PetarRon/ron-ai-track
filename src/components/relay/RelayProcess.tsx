@@ -20,17 +20,12 @@ const cell = "flex items-start gap-3 px-5 py-4 md:px-7";
 
 export const RelayProcess = () => (
   <section id="process" className={`relative scroll-mt-20 py-20 ${RELAY_SHELL}`}>
-    <div className="mx-auto grid max-w-3xl justify-items-center gap-4 text-center">
-      <motion.h2
-        {...settle()}
-        className="text-balance font-display text-[clamp(28px,4.4vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
-      >
-        Most of an order is retyping. <Em>Let&apos;s change the routine.</Em>
-      </motion.h2>
-      <motion.p {...settle(0.1)} className="font-body text-[14px] text-th-body">
-        The manual way versus Petaron.
-      </motion.p>
-    </div>
+    <motion.h2
+      {...settle()}
+      className="mx-auto max-w-3xl text-balance text-center font-display text-[clamp(28px,4.4vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
+    >
+      Most of an order is retyping. <Em>Let&apos;s change the routine.</Em>
+    </motion.h2>
 
     <motion.div
       {...settle(0.15)}
