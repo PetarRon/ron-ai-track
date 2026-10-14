@@ -48,7 +48,8 @@ const Pinned = () => {
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const fracs = useRef<number[]>(steps.map((_, i) => i / (steps.length - 1)));
   const [rail, setRail] = useState({ top: 0, height: 0 });
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(0); // where scroll says the packet should go
+  const [lit, setLit] = useState(0); // the last dot the packet has actually reached
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   // scroll picks the step; the tip then travels to that step's dot and stops exactly on it
@@ -63,9 +64,22 @@ const Pinned = () => {
 
   useEffect(() => {
     tip.set(fracs.current[step] ?? 0);
-    // the order landing in the TMS pushes a surge through the background stream
-    if (step === steps.length - 1) streamSignal.surge = 1;
   }, [step, tip]);
+
+  // a dot lights only once the packet's head is on it (within 6px), not when scroll picks the step
+  useMotionValueEvent(tip, "change", (t) => {
+    const h = railH.get() || 1;
+    let reached = 0;
+    fracs.current.forEach((f, i) => {
+      if (t * h >= f * h - 6) reached = i;
+    });
+    setLit(reached);
+  });
+
+  // the order landing in the TMS pushes a surge through the background stream
+  useEffect(() => {
+    if (lit === steps.length - 1) streamSignal.surge = 1;
+  }, [lit]);
 
   // the line runs from the first dot to the last
   useLayoutEffect(() => {
@@ -100,13 +114,13 @@ const Pinned = () => {
 
           <ol ref={listRef} className="relative space-y-14">
             {steps.map((s, i) => {
-              const active = i === step;
-              const passed = i < step;
+              const active = i === lit;
+              const passed = i < lit;
               return (
                 <li key={s.n} className="grid grid-cols-[40px_minmax(0,1fr)] items-start gap-x-4">
                   <span
                     ref={(el) => (dotRefs.current[i] = el)}
-                    className={`mt-[3px] block h-2.5 w-2.5 justify-self-center rounded-full border transition-all duration-500 ${
+                    className={`mt-[3px] block h-2.5 w-2.5 justify-self-center rounded-full border transition-all duration-200 ${
                       active
                         ? "border-white bg-white shadow-[0_0_16px_4px_rgb(var(--ac-1)/0.7)]"
                         : passed
