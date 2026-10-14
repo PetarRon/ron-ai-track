@@ -6,7 +6,8 @@ import { streamSignal } from "./streamSignal";
 /**
  * How it works: three steps with a vertical line on their left, the pair
  * centred on the page. Scroll picks the step; the line then fills to that
- * step's dot and a packet of light travels down it and stops exactly on the dot. Reaching the last
+ * step's dot and a packet of light travels down it and stops exactly on the dot.
+ * A step has no dot until the packet reaches it; then a lit dot appears and stays. Reaching the last
  * step sends a surge down the page's light stream. Below lg the steps stack
  * as plain text.
  */
@@ -120,12 +121,12 @@ const Pinned = () => {
                 <li key={s.n} className="grid grid-cols-[40px_minmax(0,1fr)] items-start gap-x-4">
                   <span
                     ref={(el) => (dotRefs.current[i] = el)}
-                    className={`mt-[3px] block h-2.5 w-2.5 justify-self-center rounded-full border transition-all duration-200 ${
+                    className={`mt-[3px] block h-2.5 w-2.5 justify-self-center rounded-full transition-all duration-300 ${
                       active
-                        ? "border-white bg-white shadow-[0_0_16px_4px_rgb(var(--ac-1)/0.7)]"
+                        ? "scale-100 bg-white opacity-100 shadow-[0_0_16px_4px_rgb(var(--ac-1)/0.7)]"
                         : passed
-                          ? "border-ac-1 bg-ac-1"
-                          : "border-th-line bg-th-page"
+                          ? "scale-100 bg-ac-1 opacity-100 shadow-[0_0_10px_2px_rgb(var(--ac-1)/0.5)]"
+                          : "scale-0 opacity-0"
                     }`}
                   />
                   <StepText i={i} active={active} />
