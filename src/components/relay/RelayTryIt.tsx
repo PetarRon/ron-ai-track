@@ -175,7 +175,7 @@ export const RelayTryIt = () => {
   const [leaving, setLeaving] = useState(false);
   const [stage, setStage] = useState(1);
   const [caption, setCaption] = useState("Email lands in the inbox");
-  const [mail, setMail] = useState<MailState>({ hasNew: true, open: true, toast: false });
+  const [mail, setMail] = useState<MailState>({ hasNew: false, open: false, toast: false });
   const [newRow, setNewRow] = useState<null | "processing" | "review">(null);
   const [revealed, setRevealed] = useState(0);
   const [lit, setLit] = useState<string | null>(null);
@@ -184,6 +184,7 @@ export const RelayTryIt = () => {
   const [countdown, setCountdown] = useState(false);
   const [cursor, setCursor] = useState<Cursor>(PARKED);
 
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLSpanElement>(null);
@@ -318,24 +319,28 @@ export const RelayTryIt = () => {
   const playRef = useRef(play);
   playRef.current = play;
 
-  // play once the card is on screen, hold whenever it is not, stop on unmount
+  // start as soon as the heading is seen (or the card, if the page opens below it);
+  // keep running while any part of the card is on screen; stop on unmount
   useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
+    const heading = headingRef.current;
+    const card = cardRef.current;
+    if (!heading || !card) return;
     let started = false;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        visible.current = entry.isIntersecting;
-        if (entry.isIntersecting && !started) {
-          started = true;
-          playRef.current();
-        }
-      },
-      { threshold: 0.4 },
-    );
-    io.observe(el);
+    const start = () => {
+      if (started) return;
+      started = true;
+      playRef.current();
+    };
+    const seen = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && start(), { threshold: 0.6 });
+    seen.observe(heading);
+    const onScreen = new IntersectionObserver(([entry]) => {
+      visible.current = entry.isIntersecting;
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.3) start();
+    }, { threshold: [0, 0.3] });
+    onScreen.observe(card);
     return () => {
-      io.disconnect();
+      seen.disconnect();
+      onScreen.disconnect();
       run.current++;
     };
   }, []);
@@ -350,6 +355,7 @@ export const RelayTryIt = () => {
   return (
     <section id="try" className={`relay-try relative scroll-mt-20 py-16 ${RELAY_SHELL}`}>
       <motion.h2
+        ref={headingRef}
         {...settle()}
         className="pb-6 text-center font-display text-[clamp(23px,6vw,40px)] font-semibold leading-[1.06] tracking-[-0.03em] text-th-heading"
       >
