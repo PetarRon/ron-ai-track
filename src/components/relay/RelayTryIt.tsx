@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type Ref } from "react";
 import { motion } from "framer-motion";
-import { Em, Eyebrow, LogoMark, RELAY_SHELL, settle } from "./shared";
+import { LogoMark, RELAY_SHELL, settle } from "./shared";
 
 /**
  * Try it: one order on a loop. A booking lands in a familiar mail client, the
@@ -349,20 +349,12 @@ export const RelayTryIt = () => {
 
   return (
     <section id="try" className={`relay-try relative scroll-mt-20 py-16 ${RELAY_SHELL}`}>
-      <div className="mx-auto grid max-w-2xl justify-items-center gap-3 pb-6 text-center">
-        <motion.div {...settle()}>
-          <Eyebrow>try it</Eyebrow>
-        </motion.div>
-        <motion.h2
-          {...settle(0.1)}
-          className="font-display text-[clamp(23px,6vw,40px)] font-semibold leading-[1.06] tracking-[-0.03em] text-th-heading"
-        >
-          Watch it run. <Em>Approve it yourself.</Em>
-        </motion.h2>
-        <motion.p {...settle(0.2)} className="font-serif text-[13.5px] text-th-body">
-          From inbox to TMS, on its own.
-        </motion.p>
-      </div>
+      <motion.h2
+        {...settle()}
+        className="pb-6 text-center font-display text-[clamp(23px,6vw,40px)] font-semibold leading-[1.06] tracking-[-0.03em] text-th-heading"
+      >
+        Watch it run.
+      </motion.h2>
 
       <div ref={cardRef} className="rt-card">
         <div className="rt-rail" aria-hidden>
