@@ -564,7 +564,7 @@ export const RelayTryIt = () => (
     >
       Watch it run.
     </motion.h2>
-    <div className="mt-12 divide-y divide-white/[0.06] rounded-[28px] border border-white/10 px-3 sm:px-8 lg:px-14">
+    <div className="mt-12 divide-y divide-white/[0.06] rounded-[28px] border border-white/10 relay-pane px-3 shadow-[0_40px_100px_-50px_rgb(0_0_0/0.9)] sm:px-8 lg:px-14">
       {STEPS.map(({ n, title, body, Clip }, i) => {
         const flip = i % 2 === 1;
         return (
