@@ -29,7 +29,10 @@ export const RelayPlate = () => {
           >
             <span className="font-mono text-[12px] text-th-page/60">| what we actually sell</span>
             <h2 className="mt-5 max-w-3xl font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-th-page sm:text-[48px]">
-              Your team runs the business. Let the AI agent handle the <Em dark>orders</Em>.
+              Your team runs the business.
+              <span className="block">
+                Let the AI agent handle the <Em dark>orders</Em>.
+              </span>
             </h2>
             <div className="mt-10">
               <LogoMark size={56} inverse />
