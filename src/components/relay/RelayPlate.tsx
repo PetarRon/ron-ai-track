@@ -4,7 +4,7 @@ import { Em, LogoMark } from "./shared";
 
 /**
  * The lime plate: opens out of the logo as you scroll in, then stays pinned in
- * the middle of the screen while the next section (its `children`, the
+ * the upper part of the screen while the next section (its `children`, the
  * calculator) scrolls up underneath it. As that section arrives the plate
  * folds away in place and fades out, so the calculator is uncovered where the
  * plate was instead of after a gap. The pinned layer never takes clicks, so the
@@ -40,7 +40,7 @@ export const RelayPlate = ({ children }: { children?: ReactNode }) => {
 
   return (
     <div ref={wrapRef} className="relative">
-      <div className="pointer-events-none sticky top-0 z-10 flex h-screen items-center">
+      <div className="pointer-events-none sticky top-0 z-10 flex h-screen items-start pt-[9vh]">
         <div className="mx-auto w-full max-w-[1240px] px-6 md:px-8">
           <div className="relative flex h-[64vh] min-h-[420px] items-center justify-center">
             <motion.div
