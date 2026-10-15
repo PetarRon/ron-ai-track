@@ -66,21 +66,25 @@ const RelayAbout = () => (
           </motion.p>
         </div>
         <motion.figure {...settle(0.25)}>
-          <Card className="overflow-hidden p-2">
-            <picture>
-              <source srcSet="/founders.avif" type="image/avif" />
-              <source srcSet="/founders.webp" type="image/webp" />
+          {/* the two of us cut out of the photo, standing in a glass frame; heads rise just above its edge */}
+          <div className="relative pt-6">
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 top-[22%] rounded-[28px] border border-white/10 bg-[radial-gradient(ellipse_at_50%_100%,rgb(var(--ac-1)/0.16),transparent_62%),linear-gradient(160deg,rgb(255_255_255/0.06),rgb(255_255_255/0.012)_55%)] shadow-[0_40px_90px_-50px_rgb(0_0_0/0.9)] backdrop-blur-md"
+            />
+            <picture className="relative block">
+              <source srcSet="/founders-cutout.webp" type="image/webp" />
               <img
-                src="/founders.png"
+                src="/founders-cutout.png"
                 alt="The Petaron.ai founders, Ron Lev Tabuchov and Petar Paskalev"
-                width={811}
-                height={648}
+                width={714}
+                height={618}
                 decoding="async"
                 {...{ fetchpriority: "high" }}
-                className="h-auto w-full rounded-xl object-cover"
+                className="mx-auto h-auto w-[88%]"
               />
             </picture>
-          </Card>
+          </div>
           <figcaption className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 px-1 font-mono text-[12px] text-th-muted">
             <span>The founders</span>
             {founders.map((f) => (
