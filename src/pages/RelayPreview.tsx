@@ -21,11 +21,12 @@ const RelayPreview = () => (
     <RelayHowItWorks />
     <RelayTryIt />
     <RelayProcess />
-    <RelayPlate />
+    <RelayPlate>
+      <RelayCalculator />
+    </RelayPlate>
     <RelayReliability />
     <RelayDashboard />
     <RelayNumbers />
-    <RelayCalculator />
     <RelayFAQ />
     <RelayFooter />
   </RelayShell>
