@@ -29,7 +29,7 @@ export const RelayProcess = () => (
 
     <motion.div
       {...settle(0.15)}
-      className="mx-auto mt-12 max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.045),rgb(255_255_255/0.012)_55%)] shadow-[0_40px_90px_-40px_rgb(0_0_0/0.9),0_0_90px_-30px_rgb(var(--ac-1)/0.18)] backdrop-blur-md"
+      className="relay-glass relative mx-auto mt-12 max-w-4xl overflow-hidden rounded-2xl"
     >
       {/* column heads from sm up; on phones each pair stacks and the marks carry the meaning */}
       <div className="hidden grid-cols-2 font-mono text-[11px] uppercase tracking-[0.18em] sm:grid">

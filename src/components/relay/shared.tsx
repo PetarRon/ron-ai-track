@@ -45,7 +45,7 @@ export const SectionIntro = ({ eyebrow, title, aside }: { eyebrow: string; title
 );
 
 export const Card = ({ className = "", children }: { className?: string; children: ReactNode }) => (
-  <div className={`relative rounded-2xl border border-th-line/80 bg-th-surface/85 ${className}`}>{children}</div>
+  <div className={`relay-glass relative rounded-2xl ${className}`}>{children}</div>
 );
 
 const CAL_ATTRS = {

@@ -475,26 +475,23 @@ div[data-cal-namespace] > div,
 .relay .dash.is-glass .dash-btn.is-primary { color: rgb(var(--th-page)); }
 .relay-actions .dash-btn { height: 22px; padding: 0 7px; font-size: var(--dash-fs-sm); }
 
-/* How it works (src/components/relay/RelayHowItWorks.tsx): a pane of glass over
-   the backdrop, with the product's sans for values inside it, and a neon
-   flicker for the active step number. */
+/* Glass, Apple style: a light translucent fill, heavy frost, a hairline rim
+   that catches the light at the top left and bottom right, and no glow. Every
+   glass panel on the Relay pages uses it; the element brings its own radius
+   and `relative` (or `absolute`), and no border, since the rim is the border. */
 .relay-glass {
-  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02) 60%);
-  border: 1px solid rgb(255 255 255 / 0.1);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.1),
-    0 40px 80px -30px rgb(0 0 0 / 0.8),
-    0 0 90px -20px rgb(199 242 60 / 0.3);
-  -webkit-backdrop-filter: blur(22px) saturate(1.2);
-  backdrop-filter: blur(22px) saturate(1.2);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.065), rgb(255 255 255 / 0.025));
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  backdrop-filter: blur(28px) saturate(170%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 24px 48px -28px rgb(0 0 0 / 0.7);
 }
-.relay-glass-inset { border: 1px solid rgb(255 255 255 / 0.07); background: rgb(7 8 6 / 0.45); }
-@keyframes relay-flicker {
-  0%, 18%, 22%, 27%, 52%, 56% { opacity: 0.15; }
-  20%, 25%, 54%, 100% { opacity: 1; }
+.relay-glass::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(140deg, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.08) 30%, rgb(255 255 255 / 0.04) 62%, rgb(255 255 255 / 0.16));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
-.relay-flicker { animation: relay-flicker 0.8s steps(1, end) 1; }
 
 /* ============================================================
    Try it (src/components/relay/RelayTryIt.tsx): one order on a
@@ -530,17 +527,17 @@ div[data-cal-namespace] > div,
 .rt-card {
   max-width: 760px; margin: 0 auto; overflow: hidden; border: 1px solid var(--rt-line-2); border-radius: 16px;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012) 55%), var(--rt-win);
-  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9), 0 0 90px -30px rgb(var(--ac-1) / 0.22);
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9);
 }
 .rt-rail { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 14px 6px 11px; border-bottom: 1px solid var(--rt-line); }
 .rt-rail .track { position: absolute; left: 12.5%; right: 12.5%; top: 19px; height: 1px; background: var(--rt-line-2); }
-.rt-rail .fill { position: absolute; inset: 0; background: var(--rt-lime); box-shadow: 0 0 8px var(--rt-lime); transform-origin: left center; transition: transform 1s ease; }
+.rt-rail .fill { position: absolute; inset: 0; background: var(--rt-lime); transform-origin: left center; transition: transform 1s ease; }
 .rt-stop { position: relative; display: grid; justify-items: center; gap: 7px; color: var(--rt-faint); font: 500 11.5px var(--rt-mono); }
 .rt-stop .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rt-lime); transform: scale(0); transition: transform 0.35s ease, background 0.35s, box-shadow 0.35s; }
 .rt-stop.is-reached { color: var(--rt-body); }
 .rt-stop.is-reached .dot { transform: scale(1); }
 .rt-stop.is-current { color: var(--rt-fg); }
-.rt-stop.is-current .dot { background: var(--rt-fg); box-shadow: 0 0 14px 3px rgb(var(--ac-1) / 0.6); }
+.rt-stop.is-current .dot { background: var(--rt-fg); box-shadow: 0 0 0 3px rgb(var(--ac-1) / 0.25); }
 .rt-screen { position: relative; height: 390px; overflow: hidden; background: var(--rt-win); container-type: inline-size; }
 .rt-app { position: absolute; inset: 0; display: flex; flex-direction: column; animation: rt-appin 0.5s ease both; }
 .rt-app.is-out { animation: rt-appout 0.45s ease both; }
@@ -654,10 +651,10 @@ div[data-cal-namespace] > div,
 .rt-pr-act { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding-top: 2px; }
 .rt-pr-act .rt-hint { margin-right: auto; }
 .rt-pr-act .rt-btn.primary:not(:disabled):not(.is-still) { animation: rt-callout 1.6s ease-in-out infinite; }
-@keyframes rt-callout { 50% { box-shadow: 0 0 0 6px rgb(var(--ac-1) / 0.2); } }
+@keyframes rt-callout { 50% { box-shadow: 0 0 0 4px rgb(var(--ac-1) / 0.14); } }
 .rt-pop { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: 16px; background: rgba(7, 8, 6, 0.72); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
 .rt-pop.is-on { opacity: 1; pointer-events: auto; }
-.rt-pop .box { width: min(330px, 100%); display: grid; gap: 12px; border: 1px solid var(--rt-line-2); border-radius: 14px; background: var(--rt-surface); padding: 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 60px -20px rgb(var(--ac-1) / 0.35); transform: scale(0.96); transition: transform 0.4s; }
+.rt-pop .box { width: min(330px, 100%); display: grid; gap: 12px; border: 1px solid var(--rt-line-2); border-radius: 14px; background: var(--rt-surface); padding: 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6); transform: scale(0.96); transition: transform 0.4s; }
 .rt-pop.is-on .box { transform: none; }
 .rt-pop .ok { width: 34px; height: 34px; border-radius: 50%; background: var(--rt-lime); color: var(--rt-lime-ink); display: grid; place-items: center; font-size: 17px; font-weight: 700; }
 .rt-pop h4 { margin: 0; font: 600 20px/1.2 var(--rt-display); letter-spacing: -0.02em; color: var(--rt-fg); }
@@ -707,7 +704,6 @@ div[data-cal-namespace] > div,
 .relay-wire-pulse {
   position: absolute; left: 0; top: 0; width: 1px; height: 14px;
   background: linear-gradient(to bottom, rgb(var(--ac-1) / 0), rgb(var(--ac-1)));
-  filter: drop-shadow(0 0 2px rgb(var(--ac-1) / 0.8));
   animation: relay-wire-y 1.6s ease-in-out infinite;
 }
 @keyframes relay-wire-x { 0% { left: 0; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { left: calc(100% - 14px); opacity: 0; } }
@@ -729,12 +725,7 @@ div[data-cal-namespace] > div,
    Features (src/components/relay/RelayFeatures.tsx): six feature
    cards, each with one quiet looping visual.
    ============================================================ */
-.rf-card {
-  position: relative; border: 1px solid rgb(255 255 255 / 0.1); border-radius: 22px;
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.012) 55%);
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-  box-shadow: 0 30px 80px -50px rgb(0 0 0 / 0.9);
-}
+.rf-card { position: relative; border-radius: 22px; } /* the glass itself is .relay-glass */
 
 /* shared frame for the small visuals */
 .rf-viz { position: relative; height: 104px; border-radius: 14px; border: 1px solid rgb(255 255 255 / 0.07); background: rgb(var(--th-page) / 0.55); overflow: hidden; }
@@ -743,7 +734,7 @@ div[data-cal-namespace] > div,
 .rf-ocr { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 12px; padding: 12px; }
 .rf-ocr .page { position: relative; height: 78px; padding: 8px; border-radius: 6px; background: #d8dbd0; overflow: hidden; transform: rotate(-3deg); }
 .rf-ocr .page i { display: block; height: 4px; margin-bottom: 6px; border-radius: 2px; background: #8d9184; filter: blur(0.6px); }
-.rf-ocr .scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgb(var(--ac-1)); box-shadow: 0 0 10px 2px rgb(var(--ac-1) / 0.7); animation: rf-scan 2.6s ease-in-out infinite; }
+.rf-ocr .scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgb(var(--ac-1)); animation: rf-scan 2.6s ease-in-out infinite; }
 @keyframes rf-scan { 0%, 100% { top: 4%; } 50% { top: 92%; } }
 .rf-ocr .out { font: 12.5px/1.4 var(--font-mono, monospace); color: rgb(var(--th-heading)); }
 .rf-ocr .out b { display: block; font-weight: 400; font-size: 11px; color: rgb(var(--th-muted)); }
@@ -755,7 +746,7 @@ div[data-cal-namespace] > div,
   padding: 6px 10px; border-radius: 8px; border: 1px solid rgb(255 255 255 / 0.12); font: 600 12px var(--font-mono, monospace); color: rgb(var(--th-body));
   animation: rf-chip 4.8s ease infinite; animation-delay: calc(var(--i) * 0.8s);
 }
-@keyframes rf-chip { 0%, 100% { border-color: rgb(255 255 255 / 0.12); color: rgb(var(--th-body)); } 8%, 22% { border-color: rgb(var(--ac-1) / 0.7); color: rgb(var(--ac-1)); box-shadow: 0 0 14px rgb(var(--ac-1) / 0.25); } }
+@keyframes rf-chip { 0%, 100% { border-color: rgb(255 255 255 / 0.12); color: rgb(var(--th-body)); } 8%, 22% { border-color: rgb(var(--ac-1) / 0.7); color: rgb(var(--ac-1)); } }
 
 /* every source: three inputs meet in one queue */
 .rf-sources { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px; padding: 10px 12px; }
@@ -764,7 +755,7 @@ div[data-cal-namespace] > div,
 .rf-sources svg { width: 100%; height: 84px; }
 .rf-sources .wire { fill: none; stroke: rgb(var(--ac-1) / 0.55); stroke-width: 1.2; stroke-dasharray: 6 8; animation: rf-flow 1.5s linear infinite; vector-effect: non-scaling-stroke; }
 @keyframes rf-flow { to { stroke-dashoffset: -28; } }
-.rf-sources .hub { padding: 6px 10px; border-radius: 999px; background: rgb(var(--ac-1)); color: rgb(var(--th-page)); font: 600 11.5px var(--font-mono, monospace); white-space: nowrap; box-shadow: 0 0 18px rgb(var(--ac-1) / 0.35); }
+.rf-sources .hub { padding: 6px 10px; border-radius: 999px; background: rgb(var(--ac-1)); color: rgb(var(--th-page)); font: 600 11.5px var(--font-mono, monospace); white-space: nowrap; }
 
 /* a source for every field: a field linked to its quote */
 .rf-trace { display: grid; grid-template-columns: 1fr 34px 1fr; align-items: center; padding: 12px; }

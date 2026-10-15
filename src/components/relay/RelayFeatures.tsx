@@ -114,7 +114,7 @@ export const RelayFeatures = () => (
 
     <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {FEATURES.map((f, i) => (
-        <motion.div key={f.title} {...settle(0.05 * i)} className="rf-card flex flex-col gap-5 p-6 text-center">
+        <motion.div key={f.title} {...settle(0.05 * i)} className="rf-card relay-glass flex flex-col gap-5 p-6 text-center">
           <div>
             <h3 className="font-display text-[19px] font-semibold tracking-[-0.02em] text-th-heading">{f.title}</h3>
             <p className="mx-auto mt-2 max-w-[34ch] text-balance font-body text-[13.5px] leading-relaxed text-th-body">{f.body}</p>
