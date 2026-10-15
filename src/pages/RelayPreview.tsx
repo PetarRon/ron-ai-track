@@ -12,8 +12,8 @@ import { RelayFAQ } from "@/components/relay/RelayFAQ";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 
 /**
- * Design prototype: the Relay-direction redesign (black + lime over a low
- * horizon glow). Not linked from navigation; reached at /preview/relay.
+ * Design prototype: the Relay-direction redesign (black + lime over a field
+ * of stars and one far galaxy). Not linked from navigation; reached at /preview/relay.
  */
 const RelayPreview = () => (
   <RelayShell title="Relay direction preview">

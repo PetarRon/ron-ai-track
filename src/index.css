@@ -701,16 +701,6 @@ div[data-cal-namespace] > div,
   .relay-try *, .relay-try *::before { animation: none !important; transition: none !important; }
 }
 
-/* Horizon (src/components/relay/Horizon.tsx): the backdrop breathes slowly;
-   a fine grain over it keeps the glow from banding. */
-.relay-horizon { animation: relay-horizon-breath 9s ease-in-out infinite alternate; }
-@keyframes relay-horizon-breath { from { opacity: 0.86; } to { opacity: 1; } }
-.relay-grain {
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-@media (prefers-reduced-motion: reduce) { .relay-horizon { animation: none; } }
-
 /* Connect (src/components/relay/RelayConnect.tsx): a streak of light as thick as
    the wire runs along it, left to right on wide screens and top to bottom when
    the strip stacks */
