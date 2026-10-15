@@ -486,8 +486,6 @@ div[data-cal-namespace] > div,
     inset 0 1px 0 rgb(255 255 255 / 0.1),
     0 40px 80px -30px rgb(0 0 0 / 0.8),
     0 0 90px -20px rgb(199 242 60 / 0.3);
-  -webkit-backdrop-filter: blur(22px) saturate(1.2);
-  backdrop-filter: blur(22px) saturate(1.2);
 }
 .relay-glass-inset { border: 1px solid rgb(255 255 255 / 0.07); background: rgb(7 8 6 / 0.45); }
 @keyframes relay-flicker {
@@ -701,6 +699,13 @@ div[data-cal-namespace] > div,
   .relay-try *, .relay-try *::before { animation: none !important; transition: none !important; }
 }
 
+/* Glass panels (try-it frame, comparison table, results, Connect strip): no
+   backdrop-filter. In Chrome with GPU compositing a backdrop blur that runs past
+   the top of the screen pulls in a light band, and over this dark page it blurs
+   nothing worth seeing. A faint white sheen over a mostly opaque dark base reads
+   as the same glass and keeps the stars from showing through. */
+.relay-pane { background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.012) 55%), rgb(10 11 9 / 0.72); }
+
 /* Connect (src/components/relay/RelayConnect.tsx): a streak of light as thick as
    the wire runs along it, left to right on wide screens and top to bottom when
    the strip stacks */
@@ -731,8 +736,7 @@ div[data-cal-namespace] > div,
    ============================================================ */
 .rf-card {
   position: relative; border: 1px solid rgb(255 255 255 / 0.1); border-radius: 22px;
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.012) 55%);
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.012) 55%), rgb(10 11 9 / 0.72);
   box-shadow: 0 30px 80px -50px rgb(0 0 0 / 0.9);
 }
 

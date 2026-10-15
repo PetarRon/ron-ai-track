@@ -82,7 +82,7 @@ export const RelayNumbers = () => {
       <motion.div
         ref={ref}
         {...settle(0.15)}
-        className="mt-12 rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.05),rgb(255_255_255/0.012)_55%)] backdrop-blur-md"
+        className="mt-12 rounded-[28px] border border-white/10 relay-pane"
       >
         <div className="p-6 md:p-10">
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">

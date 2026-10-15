@@ -67,7 +67,7 @@ export const RelayConnect = () => {
 
       <motion.div
         {...settle(0.15)}
-        className="mx-auto mt-12 flex max-w-5xl flex-col items-center gap-0 rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.05),rgb(255_255_255/0.012)_55%)] px-5 py-8 backdrop-blur-md sm:flex-row sm:gap-0 sm:px-10 sm:py-10"
+        className="mx-auto mt-12 flex max-w-5xl flex-col items-center gap-0 rounded-[28px] border border-white/10 relay-pane px-5 py-8 sm:flex-row sm:gap-0 sm:px-10 sm:py-10"
       >
         <SystemCard kicker="from" name={pair.from} />
         <Wire delay={0} />

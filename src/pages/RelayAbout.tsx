@@ -70,7 +70,7 @@ const RelayAbout = () => (
           <div className="relative pt-6">
             <div
               aria-hidden
-              className="absolute inset-x-0 bottom-0 top-[22%] rounded-[28px] border border-white/10 bg-[radial-gradient(ellipse_at_50%_100%,rgb(var(--ac-1)/0.16),transparent_62%),linear-gradient(160deg,rgb(255_255_255/0.06),rgb(255_255_255/0.012)_55%)] shadow-[0_40px_90px_-50px_rgb(0_0_0/0.9)] backdrop-blur-md"
+              className="absolute inset-x-0 bottom-0 top-[22%] rounded-[28px] border border-white/10 bg-[radial-gradient(ellipse_at_50%_100%,rgb(var(--ac-1)/0.16),transparent_62%),linear-gradient(160deg,rgb(255_255_255/0.06),rgb(255_255_255/0.012)_55%),linear-gradient(rgb(10_11_9/0.72),rgb(10_11_9/0.72))] shadow-[0_40px_90px_-50px_rgb(0_0_0/0.9)]"
             />
             <picture className="relative block">
               <source srcSet="/founders-cutout.webp" type="image/webp" />
