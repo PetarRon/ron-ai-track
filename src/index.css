@@ -701,37 +701,15 @@ div[data-cal-namespace] > div,
   .relay-try *, .relay-try *::before { animation: none !important; transition: none !important; }
 }
 
-/* Ambience (src/components/relay/Ambience.tsx): the backdrop. Three soft glows
-   drift on long loops (transform) and slide with scroll progress (translate,
-   from --amb-p), over a fine grain that keeps the gradients from banding. */
-.relay-amb { --amb-p: 0; }
-.relay-amb-glow { position: absolute; border-radius: 50%; will-change: transform; }
-.relay-amb-glow.is-a {
-  width: 72vmax; height: 72vmax; left: 48%; top: -30vmax;
-  background: radial-gradient(closest-side, rgb(199 242 60 / 0.13), rgb(199 242 60 / 0.04) 55%, transparent);
-  translate: calc(var(--amb-p) * -38vw) calc(var(--amb-p) * 40vh);
-  animation: relay-amb-a 64s ease-in-out infinite alternate;
-}
-.relay-amb-glow.is-b {
-  width: 84vmax; height: 84vmax; left: -34vmax; top: 30vh;
-  background: radial-gradient(closest-side, rgb(110 150 40 / 0.11), rgb(110 150 40 / 0.03) 60%, transparent);
-  translate: calc(var(--amb-p) * 30vw) calc(var(--amb-p) * -30vh);
-  animation: relay-amb-b 82s ease-in-out infinite alternate;
-}
-.relay-amb-glow.is-c {
-  width: 46vmax; height: 46vmax; left: 62%; top: 58vh;
-  background: radial-gradient(closest-side, rgb(110 200 210 / 0.06), transparent);
-  translate: calc(var(--amb-p) * -20vw) calc(var(--amb-p) * -24vh);
-  animation: relay-amb-c 73s ease-in-out infinite alternate;
-}
-@keyframes relay-amb-a { from { transform: translate(0, 0) scale(1); } to { transform: translate(-7vw, 6vh) scale(1.12); } }
-@keyframes relay-amb-b { from { transform: translate(0, 0) scale(1.08); } to { transform: translate(8vw, -5vh) scale(0.96); } }
-@keyframes relay-amb-c { from { transform: translate(0, 0) scale(0.94); } to { transform: translate(-6vw, -7vh) scale(1.1); } }
-.relay-amb-grain {
-  position: absolute; inset: 0; opacity: 0.05;
+/* Horizon (src/components/relay/Horizon.tsx): the backdrop breathes slowly;
+   a fine grain over it keeps the glow from banding. */
+.relay-horizon { animation: relay-horizon-breath 9s ease-in-out infinite alternate; }
+@keyframes relay-horizon-breath { from { opacity: 0.86; } to { opacity: 1; } }
+.relay-grain {
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-@media (prefers-reduced-motion: reduce) { .relay-amb-glow { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .relay-horizon { animation: none; } }
 
 /* Connect (src/components/relay/RelayConnect.tsx): a streak of light as thick as
    the wire runs along it, left to right on wide screens and top to bottom when
