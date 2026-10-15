@@ -633,17 +633,22 @@ div[data-cal-namespace] > div,
 .rt-q-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rt-pr-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .rt-pr-top .t { flex: 1; min-width: 150px; font-weight: 500; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rt-pr-split { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 10px; }
+/* overflow clipped: fields can never spill into the buttons below; the top padding keeps the
+   first row's floating labels inside the clip */
+.rt-pt-main.is-review { gap: 6px; }
+.rt-pr-split { flex: 1; min-height: 0; overflow: hidden; padding-top: 8px; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 10px; }
 .rt-pr-mail { border: 1px solid var(--rt-line); border-radius: 10px; background: var(--rt-surface); padding: 10px 12px; font: 12px/1.7 var(--rt-mono); color: var(--rt-body); overflow: hidden; }
 .rt-pr-mail .from { font: 12px var(--rt-sans); color: var(--rt-muted); margin-bottom: 6px; }
 .rt-kw { color: var(--rt-fg); font-weight: 700; border-radius: 3px; padding: 0 2px; margin: 0 -2px; transition: background 0.35s, color 0.35s; }
 .rt-kw.is-lit { background: rgb(var(--ac-1) / 0.28); color: #ffffff; }
-.rt-pf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px 8px; align-content: start; }
+.rt-pf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px 8px; align-content: start; grid-auto-flow: row dense; }
 .rt-pf-f { position: relative; border: 1px solid var(--rt-line); border-radius: 8px; padding: 11px 9px 5px; min-width: 0; opacity: 0; transform: translateY(4px); transition: opacity 0.35s, transform 0.35s; }
 .rt-pf-f.is-on { opacity: 1; transform: none; }
 .rt-pf-f label { position: absolute; top: -8px; left: 7px; padding: 0 4px; background: var(--rt-win); font: 500 10.5px/16px var(--rt-sans); color: var(--rt-muted); }
 .rt-pf-f .v { font-size: 12.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rt-pf-f .how { margin: 1px 0 0; display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--rt-muted); }
+/* one line each, so every field keeps the same height */
+.rt-pf-f .how { margin: 1px 0 0; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10.5px; color: var(--rt-muted); }
+.rt-pf-f .how .rt-dot { margin-right: 6px; vertical-align: 1px; }
 .rt-pr-act { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding-top: 2px; }
 .rt-pr-act .rt-hint { margin-right: auto; }
 .rt-pr-act .rt-btn.primary:not(:disabled):not(.is-still) { animation: rt-callout 1.6s ease-in-out infinite; }
@@ -678,6 +683,10 @@ div[data-cal-namespace] > div,
   .rt-pf-f label .hist { display: inline; }
   .rt-pf-f.is-wide-sm { grid-column: span 2; }
   .rt-pr-act .rt-btn:not(.primary) { display: none; }
+}
+/* phones: a little more room for the review form */
+@media (max-width: 640px) {
+  .relay-try .rt-screen { height: 452px; }
 }
 /* the windows beside the step text: drawn at 640px and zoomed down to about 500px on desktop,
    so everything inside shrinks evenly and keeps its layout */

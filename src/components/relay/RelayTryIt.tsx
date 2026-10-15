@@ -47,13 +47,13 @@ const QUEUE_ROWS: QueueRowData[] = [
 type FieldData = { label: string; value: string; how: string; src?: string; wide?: boolean; history?: boolean };
 const FIELDS: FieldData[] = [
   { label: "Consignor", value: "ROTDIS01", how: "Matched to your TMS codes", src: "consignor" },
-  { label: "Vehicle", value: "Curtainsider 13.6 m", how: "Found in order history", history: true },
-  { label: "Load Site", value: "Antwerp, Quay 730", how: "Read from the email", src: "lsite" },
+  { label: "Vehicle", value: "Curtainsider 13.6 m", how: "Found in order history", history: true, wide: true },
+  { label: "Load Site", value: "Antwerp, Quay 730", how: "Read from the email", src: "lsite", wide: true },
   { label: "Pickup", value: "14/07 · 08:00", how: "Read from the email", src: "pickup" },
   { label: "Unload Site", value: "Hamburg Freight, Dock 4", how: "Read from the email", src: "usite", wide: true },
   { label: "Delivery", value: "15/07 · 16:00", how: "Read from the email", src: "delivery" },
   { label: "Unload Site Code", value: "HAMFRE04", how: "Matched to your TMS codes", src: "usite" },
-  { label: "Goods", value: "24 pallets · 3,240 kg", how: "Read from the email and the PDF", src: "goods", wide: true },
+  { label: "Goods", value: "24 pallets · 3,240 kg", how: "From the email and PDF", src: "goods", wide: true },
 ];
 
 /* ---------- the loop runner ---------- */
@@ -241,7 +241,7 @@ type ReviewProps = {
 const ReviewApp = ({ revealed, lit, approved = false, popup = false, countdown = false, hint, titleRef, approveRef, onApprove }: ReviewProps) => (
   <>
     <PetaronBar crumb="Orders › PO 48291" />
-    <div className="rt-pt-main">
+    <div className="rt-pt-main is-review">
       <div className="rt-pr-top">
         <span className="t" ref={titleRef}>
           PO 48291 · {NEW_MAIL.subject}
@@ -566,7 +566,7 @@ export const RelayTryIt = () => (
     >
       Watch it run.
     </motion.h2>
-    <div className="mt-12 divide-y divide-white/[0.06] rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.05),rgb(255_255_255/0.012)_55%)] px-5 shadow-[0_40px_100px_-50px_rgb(0_0_0/0.9),0_0_100px_-40px_rgb(var(--ac-1)/0.2)] backdrop-blur-md sm:px-8 lg:px-14">
+    <div className="mt-12 divide-y divide-white/[0.06] rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.05),rgb(255_255_255/0.012)_55%)] px-3 shadow-[0_40px_100px_-50px_rgb(0_0_0/0.9),0_0_100px_-40px_rgb(var(--ac-1)/0.2)] backdrop-blur-md sm:px-8 lg:px-14">
       {STEPS.map(({ n, title, body, Clip }, i) => {
         const flip = i % 2 === 1;
         return (
