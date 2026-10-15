@@ -24,18 +24,18 @@ export const RelayPlate = ({ children }: { children?: ReactNode }) => {
   const out = useSpring(outRaw, SPRING);
 
   const scaleIn = useTransform(pin, [0, 0.75], [0.1, 1]);
-  const scaleOut = useTransform(out, [0.2, 0.8], [1, 0.1]);
+  const scaleOut = useTransform(out, [0.05, 0.4], [1, 0.1]);
   const scale = useTransform([scaleIn, scaleOut], ([a, b]: number[]) => Math.min(a, b));
   const radiusIn = useTransform(pin, [0, 0.75], [96, 40]);
-  const radiusOut = useTransform(out, [0.2, 0.8], [40, 96]);
+  const radiusOut = useTransform(out, [0.05, 0.4], [40, 96]);
   const radius = useTransform([radiusIn, radiusOut], ([a, b]: number[]) => Math.max(a, b));
-  const fade = useTransform(out, [0.6, 0.9], [1, 0]);
+  const fade = useTransform(out, [0.2, 0.42], [1, 0]);
 
   const textIn = useTransform(pin, [0.55, 0.85], [0, 1]);
-  const textOut = useTransform(out, [0.1, 0.3], [1, 0]);
+  const textOut = useTransform(out, [0.02, 0.14], [1, 0]);
   const text = useTransform([textIn, textOut], ([a, b]: number[]) => Math.min(a, b));
   const textYIn = useTransform(pin, [0.55, 0.85], [16, 0]);
-  const textYOut = useTransform(out, [0.1, 0.3], [0, -16]);
+  const textYOut = useTransform(out, [0.02, 0.14], [0, -16]);
   const textY = useTransform([textYIn, textYOut], ([a, b]: number[]) => a + b);
 
   return (
