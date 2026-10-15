@@ -706,3 +706,112 @@ div[data-cal-namespace] > div,
 .relay-wire-pulse { animation: relay-wire-y 1.6s ease-in-out infinite; }
 @media (min-width: 640px) { .relay-wire-pulse { animation-name: relay-wire-x; } }
 @media (prefers-reduced-motion: reduce) { .relay-wire-pulse { animation: none; opacity: 0.8; } }
+
+/* ============================================================
+   Features (src/components/relay/RelayFeatures.tsx): the pipeline
+   card and six feature cards, each with one quiet looping visual.
+   ============================================================ */
+.rf-card {
+  position: relative; border: 1px solid rgb(255 255 255 / 0.1); border-radius: 22px;
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.012) 55%);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 30px 80px -50px rgb(0 0 0 / 0.9);
+}
+
+/* the pipeline: six stops on one line, a pulse lighting each in turn (7s loop) */
+.rf-pipe { position: relative; margin-top: 28px; }
+.rf-pipe-line { position: absolute; left: calc(100% / 12); right: calc(100% / 12); top: 7px; height: 1px; background: rgb(255 255 255 / 0.12); }
+.rf-pipe-pulse {
+  position: absolute; top: -4px; left: 0; width: 9px; height: 9px; margin-left: -4px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 14px 4px rgb(var(--ac-1) / 0.7);
+  animation: rf-run 7s linear infinite;
+}
+@keyframes rf-run { 0% { left: 0; opacity: 0; } 4% { opacity: 1; } 86% { left: 100%; opacity: 1; } 92%, 100% { left: 100%; opacity: 0; } }
+.rf-pipe-stops { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.rf-pipe-stops li { display: grid; justify-items: center; align-content: start; gap: 8px; text-align: center; }
+.rf-pipe-dot {
+  width: 15px; height: 15px; border-radius: 50%; border: 1px solid rgb(var(--ac-1) / 0.5); background: rgb(var(--th-page));
+  animation: rf-l0 7s linear infinite;
+}
+@keyframes rf-l0 { 0% { background: rgb(var(--th-page)); box-shadow: none; } 1.5%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
+.rf-pipe-stops li:nth-child(1) .rf-pipe-dot { animation-name: rf-l0; }
+@keyframes rf-l1 { 0%, 17.1% { background: rgb(var(--th-page)); box-shadow: none; } 18.7%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
+.rf-pipe-stops li:nth-child(2) .rf-pipe-dot { animation-name: rf-l1; }
+@keyframes rf-l2 { 0%, 34.3% { background: rgb(var(--th-page)); box-shadow: none; } 35.9%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
+.rf-pipe-stops li:nth-child(3) .rf-pipe-dot { animation-name: rf-l2; }
+@keyframes rf-l3 { 0%, 51.5% { background: rgb(var(--th-page)); box-shadow: none; } 53.1%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
+.rf-pipe-stops li:nth-child(4) .rf-pipe-dot { animation-name: rf-l3; }
+@keyframes rf-l4 { 0%, 68.7% { background: rgb(var(--th-page)); box-shadow: none; } 70.3%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
+.rf-pipe-stops li:nth-child(5) .rf-pipe-dot { animation-name: rf-l4; }
+@keyframes rf-l5 { 0%, 85.9% { background: rgb(var(--th-page)); box-shadow: none; } 87.5%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
+.rf-pipe-stops li:nth-child(6) .rf-pipe-dot { animation-name: rf-l5; }
+.rf-pipe-n { font: 12px var(--font-mono, monospace); color: rgb(var(--ac-1)); }
+.rf-pipe-label { font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1.25; letter-spacing: -0.01em; color: rgb(var(--th-heading)); max-width: 15ch; }
+@media (max-width: 900px) {
+  .rf-pipe-line { display: none; }
+  .rf-pipe-stops { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
+}
+@media (max-width: 520px) { .rf-pipe-stops { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* shared frame for the small visuals */
+.rf-viz { position: relative; height: 104px; border-radius: 14px; border: 1px solid rgb(255 255 255 / 0.07); background: rgb(var(--th-page) / 0.55); overflow: hidden; }
+
+/* intelligent OCR: a scan line passes over a page, the value comes out clean */
+.rf-ocr { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 12px; padding: 12px; }
+.rf-ocr .page { position: relative; height: 78px; padding: 8px; border-radius: 6px; background: #d8dbd0; overflow: hidden; transform: rotate(-3deg); }
+.rf-ocr .page i { display: block; height: 4px; margin-bottom: 6px; border-radius: 2px; background: #8d9184; filter: blur(0.6px); }
+.rf-ocr .scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgb(var(--ac-1)); box-shadow: 0 0 10px 2px rgb(var(--ac-1) / 0.7); animation: rf-scan 2.6s ease-in-out infinite; }
+@keyframes rf-scan { 0%, 100% { top: 4%; } 50% { top: 92%; } }
+.rf-ocr .out { font: 12.5px/1.4 var(--font-mono, monospace); color: rgb(var(--th-heading)); }
+.rf-ocr .out b { display: block; font-weight: 400; font-size: 11px; color: rgb(var(--th-muted)); }
+
+/* any file type: chips lighting up in turn */
+.rf-files { display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 8px; padding: 12px; }
+.rf-files span {
+  padding: 6px 10px; border-radius: 8px; border: 1px solid rgb(255 255 255 / 0.12); font: 600 12px var(--font-mono, monospace); color: rgb(var(--th-body));
+  animation: rf-chip 4.8s ease infinite; animation-delay: calc(var(--i) * 0.8s);
+}
+@keyframes rf-chip { 0%, 100% { border-color: rgb(255 255 255 / 0.12); color: rgb(var(--th-body)); } 8%, 22% { border-color: rgb(var(--ac-1) / 0.7); color: rgb(var(--ac-1)); box-shadow: 0 0 14px rgb(var(--ac-1) / 0.25); } }
+
+/* every source: three inputs meet in one queue */
+.rf-sources { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px; padding: 10px 12px; }
+.rf-sources .ins { display: grid; gap: 6px; }
+.rf-sources .ins span { padding: 4px 8px; border-radius: 6px; border: 1px solid rgb(255 255 255 / 0.12); font: 11px var(--font-mono, monospace); color: rgb(var(--th-body)); white-space: nowrap; }
+.rf-sources svg { width: 100%; height: 84px; }
+.rf-sources .wire { fill: none; stroke: rgb(var(--ac-1) / 0.55); stroke-width: 1.2; stroke-dasharray: 6 8; animation: rf-flow 1.5s linear infinite; vector-effect: non-scaling-stroke; }
+@keyframes rf-flow { to { stroke-dashoffset: -28; } }
+.rf-sources .hub { padding: 6px 10px; border-radius: 999px; background: rgb(var(--ac-1)); color: rgb(var(--th-page)); font: 600 11.5px var(--font-mono, monospace); white-space: nowrap; box-shadow: 0 0 18px rgb(var(--ac-1) / 0.35); }
+
+/* a source for every field: a field linked to its quote */
+.rf-trace { display: grid; grid-template-columns: 1fr 34px 1fr; align-items: center; padding: 12px; }
+.rf-trace .quote { font: 11.5px/1.5 var(--font-mono, monospace); color: rgb(var(--th-body)); }
+.rf-trace .quote b { font-weight: 600; color: rgb(var(--th-page)); background: rgb(var(--ac-1)); border-radius: 3px; padding: 0 2px; animation: rf-mark 3s ease infinite; }
+@keyframes rf-mark { 0%, 100% { background: rgb(var(--ac-1) / 0.35); color: rgb(var(--th-heading)); } 30%, 70% { background: rgb(var(--ac-1)); color: rgb(var(--th-page)); } }
+.rf-trace svg { width: 34px; height: 60px; }
+.rf-trace .link { fill: none; stroke: rgb(var(--ac-1)); stroke-width: 1.4; stroke-dasharray: 60; animation: rf-draw 3s ease infinite; vector-effect: non-scaling-stroke; }
+@keyframes rf-draw { 0% { stroke-dashoffset: 60; } 35%, 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -60; } }
+.rf-trace .field { position: relative; padding: 12px 10px 7px; border-radius: 8px; border: 1px solid rgb(var(--ac-1) / 0.45); font: 600 12.5px var(--font-heading, sans-serif); color: rgb(var(--th-heading)); }
+.rf-trace .field em { position: absolute; top: -8px; left: 8px; padding: 0 4px; background: rgb(var(--th-page)); font: 10.5px var(--font-mono, monospace); font-style: normal; color: rgb(var(--th-muted)); }
+.rf-trace .field small { display: block; margin-top: 2px; font: 10px var(--font-mono, monospace); color: rgb(var(--th-muted)); }
+
+/* reasoning you can read: the why, typed out */
+.rf-reason { display: grid; align-content: center; gap: 6px; padding: 12px 14px; }
+.rf-reason .q { font: 600 12px var(--font-mono, monospace); color: rgb(var(--ac-1)); }
+.rf-reason .a { margin: 0; font: 12.5px/1.5 var(--font-heading, sans-serif); color: rgb(var(--th-heading)); }
+.rf-reason .typed { display: inline-block; max-width: 100%; overflow: hidden; white-space: nowrap; vertical-align: bottom; border-right: 2px solid rgb(var(--ac-1)); animation: rf-type 5s steps(40, end) infinite, rf-caret 0.8s step-end infinite; }
+@keyframes rf-type { 0% { max-width: 0; } 55%, 90% { max-width: 100%; } 100% { max-width: 0; } }
+@keyframes rf-caret { 50% { border-color: transparent; } }
+/* on narrow cards let the reason wrap instead of typing on one line */
+@media (max-width: 1180px) { .rf-reason .typed { white-space: normal; border-right: 0; animation: none; } }
+
+/* your data, in the EU: a short audit trail */
+.rf-trust { display: grid; align-content: center; gap: 6px; padding: 10px 14px; }
+.rf-trust div { display: flex; gap: 10px; align-items: baseline; font: 12px var(--font-mono, monospace); color: rgb(var(--th-body)); opacity: 0.35; animation: rf-log 4.5s ease infinite; animation-delay: calc(var(--i) * 0.7s); }
+.rf-trust .t { color: rgb(var(--ac-1)); }
+@keyframes rf-log { 0%, 100% { opacity: 0.35; } 12%, 70% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .rf-pipe-pulse, .rf-pipe-dot, .rf-ocr .scan, .rf-files span, .rf-sources .wire, .rf-trace .quote b, .rf-trace .link, .rf-reason .typed, .rf-trust div { animation: none !important; }
+  .rf-trust div { opacity: 1; }
+  .rf-pipe-dot { background: rgb(var(--ac-1)); }
+}
