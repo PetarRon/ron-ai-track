@@ -699,13 +699,29 @@ div[data-cal-namespace] > div,
   .relay-try *, .relay-try *::before { animation: none !important; transition: none !important; }
 }
 
-/* Connect (src/components/relay/RelayConnect.tsx): a pulse running along each wire,
-   left to right on wide screens and top to bottom when the strip stacks */
-@keyframes relay-wire-x { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
-@keyframes relay-wire-y { 0% { top: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-.relay-wire-pulse { animation: relay-wire-y 1.6s ease-in-out infinite; }
-@media (min-width: 640px) { .relay-wire-pulse { animation-name: relay-wire-x; } }
+/* Connect (src/components/relay/RelayConnect.tsx): a streak of light as thick as
+   the wire runs along it, left to right on wide screens and top to bottom when
+   the strip stacks */
+.relay-wire-pulse {
+  position: absolute; left: 0; top: 0; width: 1px; height: 14px;
+  background: linear-gradient(to bottom, rgb(var(--ac-1) / 0), rgb(var(--ac-1)));
+  filter: drop-shadow(0 0 2px rgb(var(--ac-1) / 0.8));
+  animation: relay-wire-y 1.6s ease-in-out infinite;
+}
+@keyframes relay-wire-x { 0% { left: 0; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { left: calc(100% - 14px); opacity: 0; } }
+@keyframes relay-wire-y { 0% { top: 0; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { top: calc(100% - 14px); opacity: 0; } }
+@media (min-width: 640px) {
+  .relay-wire-pulse { width: 14px; height: 1px; background: linear-gradient(to right, rgb(var(--ac-1) / 0), rgb(var(--ac-1))); animation-name: relay-wire-x; }
+}
 @media (prefers-reduced-motion: reduce) { .relay-wire-pulse { animation: none; opacity: 0.8; } }
+
+/* Numbers (src/components/relay/RelayNumbers.tsx): one square per field, lit in a wave */
+.rn-cell.is-ok { fill: rgb(var(--ac-1)); }
+.rn-cell.is-check { fill: rgb(245 183 42 / 0.8); }
+.rn-wall .rn-cell { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.4); }
+.rn-wall.is-on .rn-cell { animation: rn-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@keyframes rn-pop { 60% { opacity: 1; transform: scale(1.06); } 100% { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .rn-wall .rn-cell { opacity: 1; transform: none; animation: none !important; } }
 
 /* ============================================================
    Features (src/components/relay/RelayFeatures.tsx): six feature

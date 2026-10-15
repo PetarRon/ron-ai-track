@@ -4,11 +4,10 @@ import { RelayTryIt } from "@/components/relay/RelayTryIt";
 import { RelayProcess } from "@/components/relay/RelayProcess";
 import { RelayFeatures } from "@/components/relay/RelayFeatures";
 import { RelayPlate } from "@/components/relay/RelayPlate";
-import { RelayReliability } from "@/components/relay/RelayReliability";
-import { RelayDashboard } from "@/components/relay/RelayDashboard";
 import { RelayNumbers } from "@/components/relay/RelayNumbers";
 import { RelayCalculator } from "@/components/relay/RelayCalculator";
 import { RelayConnect } from "@/components/relay/RelayConnect";
+import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFAQ } from "@/components/relay/RelayFAQ";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 
@@ -25,10 +24,9 @@ const RelayPreview = () => (
     <RelayPlate>
       <RelayCalculator />
     </RelayPlate>
-    <RelayReliability />
-    <RelayDashboard />
     <RelayNumbers />
     <RelayConnect />
+    <RelayCTA />
     <RelayFAQ />
     <RelayFooter />
   </RelayShell>

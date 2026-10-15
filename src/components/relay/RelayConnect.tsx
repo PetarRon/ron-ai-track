@@ -35,13 +35,10 @@ const SystemCard = ({ kicker, name }: { kicker: string; name: string }) => (
   </div>
 );
 
-/** the fibre between two cards: a hairline with a lime pulse running along it */
+/** the fibre between two cards: a hairline with a streak of light, as thin as the line, running along it */
 const Wire = ({ delay }: { delay: number }) => (
   <div className="relative h-10 w-px shrink-0 bg-white/10 sm:h-px sm:w-auto sm:flex-1" aria-hidden>
-    <span
-      className="relay-wire-pulse absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ac-1 shadow-[0_0_12px_3px_rgb(var(--ac-1)/0.7)] sm:left-0 sm:top-1/2"
-      style={{ animationDelay: `${delay}s` }}
-    />
+    <span className="relay-wire-pulse" style={{ animationDelay: `${delay}s` }} />
   </div>
 );
 
@@ -60,7 +57,8 @@ export const RelayConnect = () => {
           {...settle()}
           className="text-balance font-display text-[clamp(28px,4.4vw,44px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
         >
-          Any two systems. <Em>One AI agent between them.</Em>
+          Any two systems. <br className="hidden sm:block" />
+          <Em>One AI agent between them.</Em>
         </motion.h2>
         <motion.p {...settle(0.1)} className="max-w-xl font-body text-[15px] leading-relaxed text-th-body">
           Orders into a TMS is where we start. The same agent reads what one system sends, fills the fields the other one needs and checks every value on the way, for any market and any volume.
@@ -69,7 +67,7 @@ export const RelayConnect = () => {
 
       <motion.div
         {...settle(0.15)}
-        className="mx-auto mt-12 flex max-w-4xl flex-col items-center gap-0 rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.05),rgb(255_255_255/0.012)_55%)] px-5 py-8 backdrop-blur-md sm:flex-row sm:gap-0 sm:px-10 sm:py-10"
+        className="mx-auto mt-12 flex max-w-5xl flex-col items-center gap-0 rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.05),rgb(255_255_255/0.012)_55%)] px-5 py-8 backdrop-blur-md sm:flex-row sm:gap-0 sm:px-10 sm:py-10"
       >
         <SystemCard kicker="from" name={pair.from} />
         <Wire delay={0} />

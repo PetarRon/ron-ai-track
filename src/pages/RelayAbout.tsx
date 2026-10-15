@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { RelayShell } from "@/components/relay/RelayShell";
 import { RelayNav } from "@/components/relay/RelayHero";
+import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 import { Card, Em, Eyebrow, RELAY_SHELL, settle } from "@/components/relay/shared";
 
@@ -122,6 +123,7 @@ const RelayAbout = () => (
         </div>
       </motion.div>
     </article>
+    <RelayCTA />
     <RelayFooter />
   </RelayShell>
 );

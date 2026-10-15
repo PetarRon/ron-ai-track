@@ -169,6 +169,10 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
     let flow = 0; // extra time added by scrolling
     let pulse = 0; // eased 0..1 presence of the section-requested packet
     let pulseY = 0; // eased page-space position, so the packet slides along the spine between targets
+    // page-space band where the stream ends: it fades out inside the element marked
+    // `data-stream-end` (the CTA panel), so whatever comes after sits on plain black
+    let endFrom = Infinity;
+    let endTo = Infinity;
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, quality);
@@ -178,6 +182,15 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const end = document.querySelector<HTMLElement>("[data-stream-end]");
+      if (end) {
+        const r = end.getBoundingClientRect();
+        // finished well inside the panel, so its 24px entrance offset cannot leave a stub below it
+        endFrom = r.top + window.scrollY + r.height * 0.2;
+        endTo = r.top + window.scrollY + r.height * 0.7;
+      } else {
+        endFrom = endTo = Infinity;
+      }
     };
 
     const draw = (now: number) => {
@@ -332,6 +345,16 @@ export const LightStream = ({ className = "" }: { className?: string }) => {
           ctx.lineWidth = lw;
           ctx.stroke();
         }
+      }
+
+      // clear everything past the end band, fading in across it
+      if (endFrom < bottom) {
+        ctx.globalCompositeOperation = "destination-out";
+        const g = ctx.createLinearGradient(0, endFrom, 0, endTo);
+        g.addColorStop(0, "rgba(0, 0, 0, 0)");
+        g.addColorStop(1, "rgba(0, 0, 0, 1)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, Math.max(endFrom, top), w, bottom - Math.max(endFrom, top));
       }
 
       ctx.restore();

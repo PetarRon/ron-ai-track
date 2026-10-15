@@ -2,22 +2,24 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { faqItems } from "@/components/petaron/data";
-import { Em, RELAY_SHELL, SectionIntro, settle } from "./shared";
+import { Em, RELAY_SHELL, settle } from "./shared";
 
 export const RelayFAQ = () => {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faq" className={`relative scroll-mt-20 pb-28 pt-20 ${RELAY_SHELL}`}>
-      <SectionIntro
-        eyebrow="questions"
-        title={
-          <>
-            Asked <Em>before</Em> anyone signs anything.
-          </>
-        }
-        aside="Straight answers to what operations teams ask in the first call."
-      />
-      <motion.ul {...settle(0.1)} className="mt-12 divide-y divide-th-line/60 border-y border-th-line/60">
+      <div className="mx-auto grid max-w-3xl justify-items-center gap-4 text-center">
+        <motion.h2
+          {...settle()}
+          className="text-balance font-display text-[clamp(28px,4.4vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
+        >
+          Asked <Em>before</Em> anyone signs anything.
+        </motion.h2>
+        <motion.p {...settle(0.1)} className="max-w-xl font-body text-[15px] leading-relaxed text-th-body">
+          Straight answers to what operations teams ask in the first call.
+        </motion.p>
+      </div>
+      <motion.ul {...settle(0.1)} className="mx-auto mt-12 max-w-4xl divide-y divide-th-line/60 border-y border-th-line/60">
         {faqItems.map((item, i) => {
           const isOpen = open === i;
           return (
