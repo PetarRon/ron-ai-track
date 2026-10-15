@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { animate, motion } from "framer-motion";
 import { TokenSlider, computeResults } from "@/components/petaron/calculator/controls";
-import { CalButton, Card, Em, RELAY_SHELL, SectionIntro, settle } from "./shared";
+import { CalButton, Card, Em, RELAY_SHELL, settle } from "./shared";
 
 const CountUp = ({ value, format }: { value: number; format: (v: number) => string }) => {
   const [display, setDisplay] = useState(0);
@@ -64,15 +64,18 @@ export const RelayCalculator = () => {
 
   return (
     <section id="calculator" className={`relative scroll-mt-20 py-20 ${RELAY_SHELL}`}>
-      <SectionIntro
-        eyebrow="your numbers"
-        title={
-          <>
-            What manual entry <Em>costs</Em> you today.
-          </>
-        }
-        aside="Set your own numbers and see what the difference is worth to your team. Your estimate, not ours."
-      />
+      {/* stacked and centred so the headline gets the full width and sits on one line from lg up */}
+      <div className="mx-auto grid justify-items-center gap-5 text-center">
+        <motion.h2
+          {...settle()}
+          className="font-display text-[34px] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading sm:text-[44px] lg:whitespace-nowrap"
+        >
+          What manual entry <Em>costs</Em> you today.
+        </motion.h2>
+        <motion.p {...settle(0.1)} className="max-w-md font-body text-[15px] leading-relaxed text-th-body">
+          Set your own numbers and see what the difference is worth to your team. Your estimate, not ours.
+        </motion.p>
+      </div>
       <motion.div {...settle(0.15)} className="mt-14">
         <Card className="grid gap-10 p-7 md:p-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           <div>
@@ -94,8 +97,8 @@ export const RelayCalculator = () => {
               <Row label="Hourly staff cost" value={hourlyCost} onChange={setHourlyCost} min={15} max={80} step={5} format={(v) => `€${v}`} />
             </div>
           </div>
-          <div className="flex flex-col justify-between rounded-xl border border-th-line/60 bg-th-page/50 p-6 md:p-7">
-            <div>
+          <div className="flex flex-col justify-between rounded-xl border border-th-line/60 bg-th-page/50 p-6 text-center md:p-7">
+            <div className="flex flex-1 flex-col justify-center">
               <span className="font-mono text-[12px] text-th-muted">manual entry costs you</span>
               <p className="mt-3 font-body text-[44px] font-semibold leading-none tracking-[-0.03em] text-th-heading sm:text-[52px]">
                 <CountUp value={annualCost} format={euro} />
