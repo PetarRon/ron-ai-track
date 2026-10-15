@@ -4,13 +4,12 @@ import { Helmet } from "react-helmet-async";
 import { getCalApi } from "@calcom/embed-react";
 import ContactForm from "@/components/petaron/FinalCTA";
 import { ContactContext } from "@/components/petaron/contact-context";
-import { Starfield } from "./Starfield";
 
 const RELAY_PAGE = "#070806"; // --th-page inside .relay
 
 /**
- * Page chrome for the Relay direction: dark token scope, the fixed night-sky
- * backdrop behind everything, Cal.com init, contact modal, hash scrolling.
+ * Page chrome for the Relay direction: dark token scope on a plain black
+ * page, Cal.com init, contact modal, hash scrolling.
  */
 export const RelayShell = ({ title, children }: { title: string; children: ReactNode }) => {
   const location = useLocation();
@@ -73,7 +72,6 @@ export const RelayShell = ({ title, children }: { title: string; children: React
           <title>{title}</title>
           <meta name="robots" content="noindex" />
         </Helmet>
-        <Starfield />
         <div className="relative z-10">{children}</div>
         <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
       </div>

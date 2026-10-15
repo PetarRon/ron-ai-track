@@ -525,7 +525,7 @@ div[data-cal-namespace] > div,
   --ol-sub: #616161;
 }
 .rt-card {
-  max-width: 760px; margin: 0 auto; overflow: hidden; border: 1px solid var(--rt-line-2); border-radius: 16px;
+  max-width: 760px; margin: 0 auto; overflow: hidden; border: 1px solid rgb(255 255 255 / 0.1); border-radius: 16px;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012) 55%), var(--rt-win);
   box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9);
 }
@@ -702,7 +702,7 @@ div[data-cal-namespace] > div,
    backdrop-filter. In Chrome with GPU compositing a backdrop blur that runs past
    the top of the screen pulls in a light band, and over this dark page it blurs
    nothing worth seeing. A faint white sheen over a mostly opaque dark base reads
-   as the same glass and keeps the stars from showing through. */
+   as the same glass. */
 .relay-pane { background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.012) 55%), rgb(10 11 9 / 0.72); }
 
 /* Connect (src/components/relay/RelayConnect.tsx): a streak of light as thick as
