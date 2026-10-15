@@ -23,7 +23,7 @@ export const RelayCTA = () => {
           <button
             type="button"
             onClick={openContact}
-            className={`${buttonVariants.ghost} border-th-page/20 bg-transparent text-th-page hover:bg-th-page/10`}
+            className={buttonVariants.onLime}
           >
             Get in Touch
           </button>

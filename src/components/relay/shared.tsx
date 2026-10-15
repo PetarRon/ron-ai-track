@@ -61,6 +61,8 @@ export const buttonVariants = {
   lime: `${BUTTON_BASE} bg-ac-1 text-th-page hover:brightness-110`,
   dark: `${BUTTON_BASE} bg-th-page text-th-heading hover:bg-th-surface`,
   ghost: `${BUTTON_BASE} border border-th-line bg-th-surface/50 text-th-heading hover:bg-th-surface`,
+  /** outlined, for use on a lime panel: hover deepens the lime, never turns dark */
+  onLime: `${BUTTON_BASE} border border-th-page/25 bg-transparent text-th-page hover:border-th-page/50 hover:bg-th-page/[0.06]`,
 };
 
 /** Opens the Cal.com booking popup (initialised in RelayPreview). */
