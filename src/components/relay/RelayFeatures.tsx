@@ -46,7 +46,7 @@ const Sources = () => (
         <path key={y} d={`M0 ${y} C 60 ${y}, 60 45, 120 45`} className="wire" style={{ animationDelay: `${i * 0.5}s` }} />
       ))}
     </svg>
-    <span className="hub">one dashboard</span>
+    <span className="hub">One dashboard</span>
   </div>
 );
 
@@ -60,7 +60,7 @@ const Trace = () => (
     </svg>
     <div className="field">
       <em>Gross weight</em>3,240 kg
-      <small>read from the email</small>
+      <small>Read from the email</small>
     </div>
   </div>
 );
@@ -117,7 +117,7 @@ export const RelayFeatures = () => (
         <motion.div key={f.title} {...settle(0.05 * i)} className="rf-card flex flex-col gap-5 p-6 text-center">
           <div>
             <h3 className="font-display text-[19px] font-semibold tracking-[-0.02em] text-th-heading">{f.title}</h3>
-            <p className="mx-auto mt-2 max-w-[34ch] font-body text-[13.5px] leading-relaxed text-th-body">{f.body}</p>
+            <p className="mx-auto mt-2 max-w-[34ch] text-balance font-body text-[13.5px] leading-relaxed text-th-body">{f.body}</p>
           </div>
           <div className="mt-auto text-left">{f.viz}</div>
         </motion.div>

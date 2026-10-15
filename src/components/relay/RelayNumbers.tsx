@@ -125,7 +125,7 @@ export const RelayNumbers = () => {
       </motion.div>
 
       <p className="mt-5 font-mono text-[11px] text-th-faint">
-        latest internal evaluation, september 2026, on a belgian intermodal operator&apos;s live orders.
+        Latest internal evaluation, September 2026, on a Belgian intermodal operator&apos;s live orders.
       </p>
     </section>
   );

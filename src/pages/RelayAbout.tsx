@@ -18,22 +18,22 @@ const founders = [
 
 const sections = [
   {
-    meta: "origin",
+    meta: "Origin",
     title: "Where we come from",
     body: "Based in the Netherlands, Petaron is built by a small team whose backgrounds span freight forwarding, enterprise software and machine learning. We have sat in the dispatcher's chair, and we have built the systems that make that chair harder than it should be.",
   },
   {
-    meta: "why",
+    meta: "Why",
     title: "What drives us",
     body: "Technology should remove friction, not add complexity. The logistics industry moves the world, yet too many teams still spend hours retyping orders. Our agents read, understand and prepare each order so your operators approve in seconds instead of typing for minutes.",
   },
   {
-    meta: "team",
+    meta: "Team",
     title: "The team",
     body: "A small, fast-moving team based in the Netherlands with roots across Europe and beyond. We speak several languages, know several markets, and share one job: making logistics operations smarter and faster.",
   },
   {
-    meta: "name",
+    meta: "Name",
     title: "Where the name comes from",
     body: "Petaron is the two of us in one word: Petar and Ron. And by happy coincidence, petaron (פתרון) is the Hebrew word for solution. A name that says exactly what we set out to build.",
   },
@@ -52,7 +52,7 @@ const RelayAbout = () => (
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
         <div>
           <motion.div {...settle()}>
-            <Eyebrow>about us</Eyebrow>
+            <Eyebrow>About us</Eyebrow>
           </motion.div>
           <motion.h1
             {...settle(0.1)}
@@ -82,7 +82,7 @@ const RelayAbout = () => (
             </picture>
           </Card>
           <figcaption className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 px-1 font-mono text-[12px] text-th-muted">
-            <span>the founders</span>
+            <span>The founders</span>
             {founders.map((f) => (
               <a
                 key={f.name}
@@ -112,7 +112,7 @@ const RelayAbout = () => (
       </div>
 
       <motion.div {...settle(0.1)} className="mt-5 rounded-2xl bg-ac-1 p-7 md:p-9">
-        <span className="font-mono text-[12px] text-th-page/60">our values</span>
+        <span className="font-mono text-[12px] text-th-page/60">Our values</span>
         <div className="mt-5 grid gap-6 md:grid-cols-3">
           {values.map((v) => (
             <div key={v.title}>

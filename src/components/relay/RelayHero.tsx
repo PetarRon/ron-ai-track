@@ -88,10 +88,10 @@ export const RelayHero = () => {
       <div className="relative z-10">
         <motion.span
           {...rise(0.1)}
-          className="inline-flex items-center gap-2 rounded-md border border-th-line bg-th-surface/50 px-3 py-1.5 font-mono text-[12px] text-th-heading"
+          className="inline-flex items-center gap-2 rounded-full border border-th-line bg-th-surface/50 px-3.5 py-1.5 font-body text-[13px] text-th-heading"
         >
-          <span className="h-1.5 w-1.5 rounded-sm bg-ac-1" />
-          free one-month pilot / from email to TMS
+          <span className="h-1.5 w-1.5 rounded-full bg-ac-1" />
+          Free one-month pilot · From email to TMS
         </motion.span>
         <h1 className="mt-7 font-display text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-th-heading sm:text-[56px] lg:text-[60px]">
           <motion.span {...rise(0.2)} className="block">
@@ -113,12 +113,11 @@ export const RelayHero = () => {
             <Play className="h-3 w-3 fill-current" /> Get in Touch
           </button>
         </motion.div>
-        <motion.p {...rise(0.8)} className="mt-6 font-mono text-[12px] text-th-muted">
-          runs on your own orders / no card / your TMS stays as it is
+        <motion.p {...rise(0.8)} className="mt-6 font-body text-[13px] text-th-muted">
+          Runs on your own orders · No card needed · Your TMS stays as it is
         </motion.p>
       </div>
       <div className="relative hidden lg:block">
-        <div className="pointer-events-none absolute -inset-20 rounded-full bg-ac-1/10 blur-[120px]" aria-hidden />
         <TiltWindow />
       </div>
     </div>

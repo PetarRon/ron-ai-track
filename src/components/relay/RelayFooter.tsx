@@ -3,16 +3,16 @@ import { useContact } from "@/components/petaron/contact-context";
 import { LogoMark, RELAY_SHELL } from "./shared";
 
 const columns = {
-  product: [
+  Product: [
     { label: "How it works", href: "/preview/relay#process" },
     { label: "Cost calculator", href: "/preview/relay#calculator" },
     { label: "FAQ", href: "/preview/relay#faq" },
   ],
-  company: [
+  Company: [
     { label: "About", href: "/preview/relay/about" },
     { label: "Careers", href: "/careers" },
   ],
-  legal: [
+  Legal: [
     { label: "Privacy", href: "/privacy" },
     { label: "Terms", href: "/terms" },
   ],

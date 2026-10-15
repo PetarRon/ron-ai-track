@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode, type Ref, type RefObject } from "react";
 import { motion } from "framer-motion";
 import { LogoMark, RELAY_SHELL, settle } from "./shared";
-import { streamSignal } from "./streamSignal";
 
 /**
  * How it works, shown running: four steps, each a short text beside a small
@@ -496,7 +495,6 @@ const ApproveClip = () => {
     setCursor((c) => ({ ...c, on: false }));
     setApproved(true);
     setPopup(true);
-    streamSignal.surge = 1;
     await wait(60);
     setCountdown(true);
     await wait(5000);

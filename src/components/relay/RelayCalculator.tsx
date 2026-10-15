@@ -79,7 +79,7 @@ export const RelayCalculator = () => {
       <motion.div {...settle(0.15)} className="mt-14">
         <Card className="grid gap-10 p-7 md:p-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           <div>
-            <span className="font-mono text-[12px] text-th-muted">estimate</span>
+            <span className="font-mono text-[12px] text-th-muted">Estimate</span>
             <h3 className="mt-2 font-display text-[20px] font-medium tracking-[-0.02em] text-th-heading">
               How many orders does your team type in a day?
             </h3>
@@ -99,13 +99,13 @@ export const RelayCalculator = () => {
           </div>
           <div className="flex flex-col justify-between rounded-xl border border-th-line/60 bg-th-page/50 p-6 text-center md:p-7">
             <div className="flex flex-1 flex-col justify-center">
-              <span className="font-mono text-[12px] text-th-muted">manual entry costs you</span>
+              <span className="font-mono text-[12px] text-th-muted">Manual entry costs you</span>
               <p className="mt-3 font-body text-[44px] font-semibold leading-none tracking-[-0.03em] text-th-heading sm:text-[52px]">
                 <CountUp value={annualCost} format={euro} />
                 <span className="ml-2 font-mono text-[13px] font-normal tracking-normal text-th-muted">a year</span>
               </p>
               <div className="my-6 h-px bg-th-line/60" />
-              <span className="font-mono text-[12px] text-th-muted">hours back on your desk</span>
+              <span className="font-mono text-[12px] text-th-muted">Hours back on your desk</span>
               <p className="mt-2 font-body text-[28px] font-semibold tracking-[-0.02em] text-ac-1">
                 <CountUp value={hoursPerMonth} format={num} />
                 <span className="ml-2 font-mono text-[13px] font-normal tracking-normal text-th-muted">every month</span>
@@ -113,7 +113,7 @@ export const RelayCalculator = () => {
             </div>
             <div className="mt-8">
               <CalButton className="w-full">Book a Demo for Free</CalButton>
-              <p className="mt-3 text-center font-mono text-[11px] text-th-faint">free one-month pilot on your own orders</p>
+              <p className="mt-3 text-center font-mono text-[11px] text-th-faint">Free one-month pilot on your own orders</p>
             </div>
           </div>
         </Card>

@@ -100,7 +100,7 @@ export const RelayConnect = () => {
               </motion.div>
             </AnimatePresence>
           </div>
-          <span className="font-mono text-[11px] text-th-muted">reads · matches · fills · checks</span>
+          <span className="font-mono text-[11px] text-th-muted">Reads, matches, fills and checks</span>
         </div>
         <Wire delay={0.6} />
         <SystemCard kicker="to" name={pair.to} />

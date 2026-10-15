@@ -4,11 +4,11 @@ import { Helmet } from "react-helmet-async";
 import { getCalApi } from "@calcom/embed-react";
 import ContactForm from "@/components/petaron/FinalCTA";
 import { ContactContext } from "@/components/petaron/contact-context";
-import { LightStream } from "./LightStream";
+import { Ambience } from "./Ambience";
 
 /**
- * Page chrome for the Relay direction: dark token scope, the fixed stream of
- * light behind everything, Cal.com init, contact modal, hash scrolling.
+ * Page chrome for the Relay direction: dark token scope, the fixed ambient
+ * backdrop behind everything, Cal.com init, contact modal, hash scrolling.
  */
 export const RelayShell = ({ title, children }: { title: string; children: ReactNode }) => {
   const location = useLocation();
@@ -50,7 +50,7 @@ export const RelayShell = ({ title, children }: { title: string; children: React
           <title>{title}</title>
           <meta name="robots" content="noindex" />
         </Helmet>
-        <LightStream className="z-0" />
+        <Ambience />
         <div className="relative z-10">{children}</div>
         <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
       </div>
