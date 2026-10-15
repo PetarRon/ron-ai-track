@@ -731,7 +731,8 @@ div[data-cal-namespace] > div,
 .rf-ocr .out b { display: block; font-weight: 400; font-size: 11px; color: rgb(var(--th-muted)); }
 
 /* any file type: chips lighting up in turn */
-.rf-files { display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 8px; padding: 12px; }
+.rf-files { display: grid; grid-template-columns: repeat(3, 64px); align-content: center; justify-content: center; gap: 8px; padding: 12px; }
+.rf-files span { text-align: center; }
 .rf-files span {
   padding: 6px 10px; border-radius: 8px; border: 1px solid rgb(255 255 255 / 0.12); font: 600 12px var(--font-mono, monospace); color: rgb(var(--th-body));
   animation: rf-chip 4.8s ease infinite; animation-delay: calc(var(--i) * 0.8s);
