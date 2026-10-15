@@ -13,10 +13,10 @@ export const RelayFAQ = () => {
           {...settle()}
           className="text-balance font-display text-[clamp(28px,4.4vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
         >
-          Asked <Em>before</Em> anyone signs anything.
+          Common questions, <Em>straight answers.</Em>
         </motion.h2>
         <motion.p {...settle(0.1)} className="max-w-xl font-body text-[15px] leading-relaxed text-th-body">
-          Straight answers to what operations teams ask in the first call.
+          What operations teams ask us in the first call.
         </motion.p>
       </div>
       <motion.ul {...settle(0.1)} className="mx-auto mt-12 max-w-4xl divide-y divide-th-line/60 border-y border-th-line/60">
