@@ -30,7 +30,7 @@ export const RelayFAQ = () => {
                 aria-expanded={isOpen}
                 className="grid w-full grid-cols-[1fr_auto] items-center gap-6 py-5 text-left md:grid-cols-[120px_1fr_auto]"
               >
-                <span className="hidden font-mono text-[12px] text-th-muted md:block">{item.meta.toLowerCase()}</span>
+                <span className="hidden font-mono text-[12px] text-ac-1 md:block">{item.meta.toLowerCase()}</span>
                 <span className="font-body text-[17px] text-th-heading">{item.question}</span>
                 <Plus
                   className={`h-4 w-4 text-th-muted transition-transform duration-500 ${isOpen ? "rotate-45 text-ac-1" : ""}`}
