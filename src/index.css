@@ -708,8 +708,8 @@ div[data-cal-namespace] > div,
 @media (prefers-reduced-motion: reduce) { .relay-wire-pulse { animation: none; opacity: 0.8; } }
 
 /* ============================================================
-   Features (src/components/relay/RelayFeatures.tsx): the pipeline
-   card and six feature cards, each with one quiet looping visual.
+   Features (src/components/relay/RelayFeatures.tsx): six feature
+   cards, each with one quiet looping visual.
    ============================================================ */
 .rf-card {
   position: relative; border: 1px solid rgb(255 255 255 / 0.1); border-radius: 22px;
@@ -717,41 +717,6 @@ div[data-cal-namespace] > div,
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   box-shadow: 0 30px 80px -50px rgb(0 0 0 / 0.9);
 }
-
-/* the pipeline: six stops on one line, a pulse lighting each in turn (7s loop) */
-.rf-pipe { position: relative; margin-top: 28px; }
-.rf-pipe-line { position: absolute; left: calc(100% / 12); right: calc(100% / 12); top: 7px; height: 1px; background: rgb(255 255 255 / 0.12); }
-.rf-pipe-pulse {
-  position: absolute; top: -4px; left: 0; width: 9px; height: 9px; margin-left: -4px; border-radius: 50%;
-  background: #fff; box-shadow: 0 0 14px 4px rgb(var(--ac-1) / 0.7);
-  animation: rf-run 7s linear infinite;
-}
-@keyframes rf-run { 0% { left: 0; opacity: 0; } 4% { opacity: 1; } 86% { left: 100%; opacity: 1; } 92%, 100% { left: 100%; opacity: 0; } }
-.rf-pipe-stops { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
-.rf-pipe-stops li { display: grid; justify-items: center; align-content: start; gap: 8px; text-align: center; }
-.rf-pipe-dot {
-  width: 15px; height: 15px; border-radius: 50%; border: 1px solid rgb(var(--ac-1) / 0.5); background: rgb(var(--th-page));
-  animation: rf-l0 7s linear infinite;
-}
-@keyframes rf-l0 { 0% { background: rgb(var(--th-page)); box-shadow: none; } 1.5%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
-.rf-pipe-stops li:nth-child(1) .rf-pipe-dot { animation-name: rf-l0; }
-@keyframes rf-l1 { 0%, 17.1% { background: rgb(var(--th-page)); box-shadow: none; } 18.7%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
-.rf-pipe-stops li:nth-child(2) .rf-pipe-dot { animation-name: rf-l1; }
-@keyframes rf-l2 { 0%, 34.3% { background: rgb(var(--th-page)); box-shadow: none; } 35.9%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
-.rf-pipe-stops li:nth-child(3) .rf-pipe-dot { animation-name: rf-l2; }
-@keyframes rf-l3 { 0%, 51.5% { background: rgb(var(--th-page)); box-shadow: none; } 53.1%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
-.rf-pipe-stops li:nth-child(4) .rf-pipe-dot { animation-name: rf-l3; }
-@keyframes rf-l4 { 0%, 68.7% { background: rgb(var(--th-page)); box-shadow: none; } 70.3%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
-.rf-pipe-stops li:nth-child(5) .rf-pipe-dot { animation-name: rf-l4; }
-@keyframes rf-l5 { 0%, 85.9% { background: rgb(var(--th-page)); box-shadow: none; } 87.5%, 92% { background: rgb(var(--ac-1)); box-shadow: 0 0 14px 2px rgb(var(--ac-1) / 0.55); } 97%, 100% { background: rgb(var(--th-page)); box-shadow: none; } }
-.rf-pipe-stops li:nth-child(6) .rf-pipe-dot { animation-name: rf-l5; }
-.rf-pipe-n { font: 12px var(--font-mono, monospace); color: rgb(var(--ac-1)); }
-.rf-pipe-label { font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1.25; letter-spacing: -0.01em; color: rgb(var(--th-heading)); max-width: 15ch; }
-@media (max-width: 900px) {
-  .rf-pipe-line { display: none; }
-  .rf-pipe-stops { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
-}
-@media (max-width: 520px) { .rf-pipe-stops { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* shared frame for the small visuals */
 .rf-viz { position: relative; height: 104px; border-radius: 14px; border: 1px solid rgb(255 255 255 / 0.07); background: rgb(var(--th-page) / 0.55); overflow: hidden; }
@@ -811,7 +776,6 @@ div[data-cal-namespace] > div,
 @keyframes rf-log { 0%, 100% { opacity: 0.35; } 12%, 70% { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .rf-pipe-pulse, .rf-pipe-dot, .rf-ocr .scan, .rf-files span, .rf-sources .wire, .rf-trace .quote b, .rf-trace .link, .rf-reason .typed, .rf-trust div { animation: none !important; }
+  .rf-ocr .scan, .rf-files span, .rf-sources .wire, .rf-trace .quote b, .rf-trace .link, .rf-reason .typed, .rf-trust div { animation: none !important; }
   .rf-trust div { opacity: 1; }
-  .rf-pipe-dot { background: rgb(var(--ac-1)); }
 }

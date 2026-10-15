@@ -3,30 +3,10 @@ import { motion } from "framer-motion";
 import { Em, RELAY_SHELL, settle } from "./shared";
 
 /**
- * What you get: the pipeline across the top (its six real stages, a pulse
- * lighting each in turn), then six feature cards, each with one quiet
+ * What you get: six feature cards under one headline, each with one quiet
  * looping micro-visual. Claims stay within what the product does today.
  * Styles: `rf-*` in src/index.css.
  */
-
-const STAGES = ["Read every document", "Understand the message", "Match to your TMS codes", "Fill from history", "Your review", "Export in your TMS format"];
-
-const Pipeline = () => (
-  <div className="rf-pipe">
-    <div className="rf-pipe-line" aria-hidden>
-      <span className="rf-pipe-pulse" />
-    </div>
-    <ol className="rf-pipe-stops">
-      {STAGES.map((s, i) => (
-        <li key={s} style={{ ["--i" as string]: i }}>
-          <span className="rf-pipe-dot" />
-          <span className="rf-pipe-n">{String(i + 1).padStart(2, "0")}</span>
-          <span className="rf-pipe-label">{s}</span>
-        </li>
-      ))}
-    </ol>
-  </div>
-);
 
 /* ---------- the six micro-visuals ---------- */
 
@@ -132,15 +112,7 @@ export const RelayFeatures = () => (
       </motion.p>
     </div>
 
-    <motion.div {...settle(0.15)} className="rf-card mt-12 px-5 py-8 sm:px-8 lg:px-10">
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h3 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-th-heading">The pipeline</h3>
-        <span className="font-mono text-[12px] text-th-muted">every order, the same six steps</span>
-      </div>
-      <Pipeline />
-    </motion.div>
-
-    <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {FEATURES.map((f, i) => (
         <motion.div key={f.title} {...settle(0.05 * i)} className="rf-card flex flex-col gap-4 p-6">
           {f.viz}
