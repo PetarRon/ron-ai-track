@@ -6,6 +6,8 @@ import ContactForm from "@/components/petaron/FinalCTA";
 import { ContactContext } from "@/components/petaron/contact-context";
 import { Starfield } from "./Starfield";
 
+const RELAY_PAGE = "#070806"; // --th-page inside .relay
+
 /**
  * Page chrome for the Relay direction: dark token scope, the fixed night-sky
  * backdrop behind everything, Cal.com init, contact modal, hash scrolling.
@@ -14,6 +16,27 @@ export const RelayShell = ({ title, children }: { title: string; children: React
   const location = useLocation();
   const [contactOpen, setContactOpen] = useState(false);
   const openContact = useCallback(() => setContactOpen(true), []);
+
+  // The live site's beige sits on <html>/<body> and in the browser's theme
+  // colour. Here it would show as a light band at the top when scrolling past
+  // the edge or while the page paints, and in a phone's address bar; so both go
+  // dark while a Relay page is mounted and are restored when it leaves.
+  useEffect(() => {
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    const prev = {
+      meta: meta?.content,
+      html: document.documentElement.style.backgroundColor,
+      body: document.body.style.backgroundColor,
+    };
+    meta?.setAttribute("content", RELAY_PAGE);
+    document.documentElement.style.backgroundColor = RELAY_PAGE;
+    document.body.style.backgroundColor = RELAY_PAGE;
+    return () => {
+      if (meta && prev.meta) meta.setAttribute("content", prev.meta);
+      document.documentElement.style.backgroundColor = prev.html;
+      document.body.style.backgroundColor = prev.body;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
