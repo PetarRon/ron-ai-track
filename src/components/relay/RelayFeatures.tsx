@@ -46,7 +46,7 @@ const Sources = () => (
         <path key={y} d={`M0 ${y} C 60 ${y}, 60 45, 120 45`} className="wire" style={{ animationDelay: `${i * 0.5}s` }} />
       ))}
     </svg>
-    <span className="hub">one queue</span>
+    <span className="hub">one dashboard</span>
   </div>
 );
 
@@ -92,7 +92,7 @@ const Trust = () => (
 const FEATURES: { title: string; body: string; viz: ReactNode }[] = [
   { title: "Intelligent OCR", body: "Scans, photos and poor-quality PDFs are read like typed text, tables included.", viz: <Ocr /> },
   { title: "Any file type", body: "PDF, Excel, Word, images and forwarded threads. Whatever the attachment is called.", viz: <Files /> },
-  { title: "Every source, one queue", body: "Shared inboxes, forwarded mail and SFTP drops all land in the same place.", viz: <Sources /> },
+  { title: "Every source, one dashboard", body: "Shared inboxes, forwarded mail and SFTP drops all land in one place, ready for your team.", viz: <Sources /> },
   { title: "A source for every field", body: "Each value links to the exact line it was read from. Click the field, see the quote.", viz: <Trace /> },
   { title: "Reasoning you can read", body: "When the agent picks a code or leaves a field open, it says why, in plain words.", viz: <Reason /> },
   { title: "Your data, in the EU", body: "EU-hosted and GDPR-compliant. Every draft and approval kept in an append-only history.", viz: <Trust /> },
