@@ -38,11 +38,12 @@ const QUEUE_ROWS: QueueRowData[] = [
   { tone: "green", status: "Order completed", subject: "Bulk salt, 3 trucks Monday", fields: "31/31", received: "Yesterday" },
 ];
 
-// `src` names the phrase in the email that the value was read from
-type FieldData = { label: string; value: string; how: string; src?: string; wide?: boolean };
+// `src` names the phrase in the email that the value was read from; `history` marks a value
+// the agent found in the customer's past orders rather than in this email
+type FieldData = { label: string; value: string; how: string; src?: string; wide?: boolean; history?: boolean };
 const FIELDS: FieldData[] = [
   { label: "Consignor", value: "ROTDIS01", how: "Matched to your TMS codes", src: "consignor" },
-  { label: "Load Reference", value: "PO 48291", how: "Read from the PDF" },
+  { label: "Vehicle", value: "Curtainsider 13.6 m", how: "Found in order history", history: true },
   { label: "Load Site", value: "Antwerp, Quay 730", how: "Read from the email", src: "lsite" },
   { label: "Pickup", value: "14/07 · 08:00", how: "Read from the email", src: "pickup" },
   { label: "Unload Site", value: "Hamburg Freight, Dock 4", how: "Read from the email", src: "usite", wide: true },
@@ -437,10 +438,13 @@ export const RelayTryIt = () => {
                     <div className="rt-pf">
                       {FIELDS.map((f, i) => (
                         <div key={f.label} className={`rt-pf-f${i < revealed ? " is-on" : ""}${f.wide ? " is-wide-sm" : ""}`}>
-                          <label>{f.label}</label>
+                          <label>
+                            {f.label}
+                            {f.history && <span className="hist"> · from history</span>}
+                          </label>
                           <div className="v">{f.value}</div>
                           <p className="how">
-                            <span className="rt-dot" />
+                            <span className={`rt-dot${f.history ? " is-history" : ""}`} />
                             {f.how}
                           </p>
                         </div>

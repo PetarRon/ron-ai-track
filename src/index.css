@@ -556,6 +556,9 @@ div[data-cal-namespace] > div,
 .rt-chip.quiet { color: var(--rt-muted); border: 1px solid var(--rt-line-2); padding: 1px 7px; }
 .rt-num { font-family: var(--rt-mono); font-size: 12px; color: var(--rt-body); font-variant-numeric: tabular-nums; }
 .rt-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex: none; background: var(--rt-lime); }
+/* blue marks a value found in order history, as the product draws it */
+.rt-dot.is-history { background: #74a3db; }
+.rt-pf-f label .hist { display: none; color: #74a3db; }
 .rt-hint { margin: 0; font: 12.5px/1.5 var(--rt-sans); color: var(--rt-muted); }
 .rt-btn { border: 1px solid var(--rt-line-2); background: transparent; color: var(--rt-fg); border-radius: 999px; padding: 8px 16px; font: 500 13px var(--rt-sans); white-space: nowrap; }
 .rt-btn.primary { background: var(--rt-lime); border-color: var(--rt-lime); color: var(--rt-lime-ink); cursor: pointer; }
@@ -672,6 +675,7 @@ div[data-cal-namespace] > div,
   .rt-pr-split { grid-template-columns: minmax(0, 1fr); }
   .rt-pr-mail { display: none; }
   .rt-pf-f .how { display: none; }
+  .rt-pf-f label .hist { display: inline; }
   .rt-pf-f.is-wide-sm { grid-column: span 2; }
   .rt-pr-act .rt-btn:not(.primary) { display: none; }
 }
