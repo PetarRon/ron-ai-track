@@ -1,6 +1,5 @@
 import { RelayShell } from "@/components/relay/RelayShell";
 import { RelayHero } from "@/components/relay/RelayHero";
-import { RelayHowItWorks } from "@/components/relay/RelayHowItWorks";
 import { RelayTryIt } from "@/components/relay/RelayTryIt";
 import { RelayProcess } from "@/components/relay/RelayProcess";
 import { RelayPlate } from "@/components/relay/RelayPlate";
@@ -18,7 +17,6 @@ import { RelayFooter } from "@/components/relay/RelayFooter";
 const RelayPreview = () => (
   <RelayShell title="Relay direction preview">
     <RelayHero />
-    <RelayHowItWorks />
     <RelayTryIt />
     <RelayProcess />
     <RelayPlate>

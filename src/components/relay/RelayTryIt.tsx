@@ -1,14 +1,18 @@
-import { useCallback, useEffect, useRef, useState, type Ref } from "react";
+import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode, type Ref, type RefObject } from "react";
 import { motion } from "framer-motion";
 import { LogoMark, RELAY_SHELL, settle } from "./shared";
+import { streamSignal } from "./streamSignal";
 
 /**
- * Try it: one order on a loop. A booking lands in a familiar mail client, the
- * screen switches to Petaron, the order appears in the queue, a cursor opens
- * it with every field ready, and Approve is clicked by the visitor or, after a
- * few seconds, by the cursor. An "Order completed" pop-up holds for five
- * seconds and the loop starts again. Styles: `.relay-try` / `rt-*` in
- * src/index.css. Sample data only.
+ * How it works, shown running: four steps, each a short text beside a small
+ * window that loops one part of the journey, alternating sides.
+ * 01 a booking lands in a familiar mail client; 02 the AI agent processes it
+ * and it shows up in Petaron's queue; 03 the review fields fill in, each
+ * lighting its phrase in the email; 04 Approve is clicked (by the visitor, or
+ * by the cursor after a few seconds) and the order completes. Each window loops
+ * on its own while it is on screen. Styles: `.relay-try` / `rt-*` in
+ * src/index.css; the windows lay themselves out by their own width. Sample
+ * data only.
  */
 
 /* ---------- data ---------- */
@@ -52,7 +56,67 @@ const FIELDS: FieldData[] = [
   { label: "Goods", value: "24 pallets · 3,240 kg", how: "Read from the email and the PDF", src: "goods", wide: true },
 ];
 
-const STOPS = ["Email", "Petaron", "Review", "Done"];
+/* ---------- the loop runner ---------- */
+
+type Wait = (ms: number, until?: () => boolean) => Promise<void>;
+
+/**
+ * Runs `cycle` over and over once the window is a third on screen; every wait
+ * holds while the window is off screen, and everything stops on unmount.
+ */
+const useLoop = (frameRef: RefObject<HTMLElement>, cycle: (wait: Wait) => Promise<void>) => {
+  const cycleRef = useRef(cycle);
+  cycleRef.current = cycle;
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    let run = 0;
+    let visible = false;
+    let started = false;
+    const start = async () => {
+      const id = ++run;
+      const wait: Wait = (ms, until) =>
+        new Promise<void>((resolve, reject) => {
+          let left = ms;
+          let last = Date.now();
+          const t = window.setInterval(() => {
+            if (id !== run) {
+              window.clearInterval(t);
+              reject(new Error("stopped"));
+              return;
+            }
+            const now = Date.now();
+            if (visible) left -= now - last;
+            last = now;
+            if (left <= 0 || (until && until())) {
+              window.clearInterval(t);
+              resolve();
+            }
+          }, 30);
+        });
+      try {
+        for (;;) await cycleRef.current(wait);
+      } catch {
+        /* stopped */
+      }
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (entry.intersectionRatio >= 0.33 && !started) {
+          started = true;
+          start();
+        }
+      },
+      { threshold: [0, 0.33] },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      run++;
+    };
+  }, [frameRef]);
+};
 
 /* ---------- pieces ---------- */
 
@@ -147,14 +211,12 @@ const PetaronBar = ({ crumb }: { crumb: string }) => (
   </div>
 );
 
-const QueueRow = ({ row, fresh = false, cellRef }: { row: QueueRowData; fresh?: boolean; cellRef?: Ref<HTMLSpanElement> }) => (
+const QueueRow = ({ row, fresh = false }: { row: QueueRowData; fresh?: boolean }) => (
   <div className={`rt-q-row${row.status === "No order" ? " is-dim" : ""}${fresh ? " is-new" : ""}`}>
     <span>
       <span className={`rt-chip ${row.tone}`}>{row.status}</span>
     </span>
-    <span className="rt-q-sub" ref={cellRef}>
-      {row.subject}
-    </span>
+    <span className="rt-q-sub">{row.subject}</span>
     <span className="rt-num">{row.fields}</span>
     <span className="rt-num">{row.received}</span>
   </div>
@@ -164,187 +226,281 @@ const Kw = ({ k, lit, children }: { k: string; lit: string | null; children: str
   <b className={`rt-kw${lit === k ? " is-lit" : ""}`}>{children}</b>
 );
 
-/* ---------- the loop ---------- */
+type ReviewProps = {
+  revealed: number;
+  lit: string | null;
+  approved?: boolean;
+  popup?: boolean;
+  countdown?: boolean;
+  hint: string;
+  titleRef?: Ref<HTMLSpanElement>;
+  approveRef?: Ref<HTMLButtonElement>;
+  onApprove?: () => void;
+};
 
-type Phase = "mail" | "queue" | "review";
-type Cursor = { x: string; y: string; on: boolean; clicking: boolean; instant: boolean };
-const PARKED: Cursor = { x: "60%", y: "105%", on: false, clicking: false, instant: true };
+const ReviewApp = ({ revealed, lit, approved = false, popup = false, countdown = false, hint, titleRef, approveRef, onApprove }: ReviewProps) => (
+  <>
+    <PetaronBar crumb="Orders › PO 48291" />
+    <div className="rt-pt-main">
+      <div className="rt-pr-top">
+        <span className="t" ref={titleRef}>
+          PO 48291 · {NEW_MAIL.subject}
+        </span>
+        <span className={`rt-chip ${approved ? "green" : "amber"}`}>{approved ? "Order completed" : "Needs review"}</span>
+        <span className="rt-num">31/31</span>
+      </div>
+      <div className="rt-pr-split">
+        <div className="rt-pr-mail">
+          <div className="from">
+            <Kw k="consignor" lit={lit}>
+              Rotterdam Distribution B.V.
+            </Kw>{" "}
+            · 09:41
+          </div>
+          Pickup at <Kw k="lsite" lit={lit}>Antwerp, Quay 730</Kw> on Thursday <Kw k="pickup" lit={lit}>14/07 at 08:00</Kw>. Deliver to{" "}
+          <Kw k="usite" lit={lit}>Hamburg Freight, Dock 4</Kw> by <Kw k="delivery" lit={lit}>15/07, 16:00</Kw>. <Kw k="goods" lit={lit}>24 pallets</Kw>,
+          order attached.
+        </div>
+        <div className="rt-pf">
+          {FIELDS.map((f, i) => (
+            <div key={f.label} className={`rt-pf-f${i < revealed ? " is-on" : ""}${f.wide ? " is-wide-sm" : ""}`}>
+              <label>
+                {f.label}
+                {f.history && <span className="hist"> · from history</span>}
+              </label>
+              <div className="v">{f.value}</div>
+              <p className="how">
+                <span className={`rt-dot${f.history ? " is-history" : ""}`} />
+                {f.how}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="rt-pr-act">
+        <span className="rt-hint">{hint}</span>
+        <span className="rt-btn">Save draft</span>
+        {onApprove ? (
+          <button ref={approveRef} type="button" className="rt-btn primary" onClick={onApprove} disabled={approved}>
+            {approved ? "Approved" : "Approve"}
+          </button>
+        ) : (
+          <span className="rt-btn primary is-still">Approve</span>
+        )}
+      </div>
+      {onApprove && (
+        <div className={`rt-pop${popup ? " is-on" : ""}`}>
+          <div className="box">
+            <span className="ok">✓</span>
+            <h4>Order completed</h4>
+            <dl>
+              <dt>Order</dt>
+              <dd>PO 48291</dd>
+              <dt>Consignor</dt>
+              <dd>ROTDIS01</dd>
+              <dt>Unload</dt>
+              <dd>HAMFRE04 · 15/07</dd>
+            </dl>
+            <p className="rt-hint">Exported in your TMS format. Nobody retyped it.</p>
+            <div className={`cd${countdown ? " is-run" : ""}`}>
+              <i />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </>
+);
 
-export const RelayTryIt = () => {
-  const [phase, setPhase] = useState<Phase>("mail");
+type CursorState = { x: string; y: string; on: boolean; clicking: boolean; instant: boolean };
+const PARKED: CursorState = { x: "60%", y: "105%", on: false, clicking: false, instant: true };
+
+const Cursor = ({ c }: { c: CursorState }) => (
+  <div
+    className={`rt-cursor${c.on ? " is-on" : ""}${c.clicking ? " is-click" : ""}`}
+    style={{ left: c.x, top: c.y, transition: c.instant ? "none" : undefined }}
+    aria-hidden
+  >
+    <svg viewBox="0 0 24 24">
+      <path d="M5 3l14 8-6 1.5L16 20l-2 1-3-7.5L6 18z" />
+    </svg>
+    <span className="ripple" />
+  </div>
+);
+
+/** where an element's centre sits inside the window, for the cursor; undoes the window's zoom */
+const spot = (screen: HTMLElement | null, el: Element | null, fx = 0.5, fy = 0.55) => {
+  if (!screen || !el) return null;
+  const s = screen.getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+  const k = s.width ? screen.offsetWidth / s.width : 1;
+  return { x: `${(r.left - s.left + r.width * fx) * k}px`, y: `${(r.top - s.top + r.height * fy) * k}px` };
+};
+
+const Frame = ({ frameRef, screenRef, children }: { frameRef: Ref<HTMLDivElement>; screenRef?: Ref<HTMLDivElement>; children: ReactNode }) => (
+  <div ref={frameRef} className="rt-card is-mini">
+    <div ref={screenRef} className="rt-screen">
+      {children}
+    </div>
+  </div>
+);
+
+/* ---------- 01 · the email lands ---------- */
+
+const MailClip = () => {
+  const frameRef = useRef<HTMLDivElement>(null);
   const [appKey, setAppKey] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  const [stage, setStage] = useState(1);
-  const [caption, setCaption] = useState("Email lands in the inbox");
   const [mail, setMail] = useState<MailState>({ hasNew: false, open: false, toast: false });
+
+  useLoop(frameRef, async (wait) => {
+    setAppKey((k) => k + 1);
+    setMail({ hasNew: false, open: false, toast: false });
+    await wait(1400);
+    setMail({ hasNew: true, open: false, toast: true });
+    await wait(2400);
+    setMail({ hasNew: true, open: true, toast: false });
+    await wait(4200);
+  });
+
+  return (
+    <Frame frameRef={frameRef}>
+      <div key={appKey} className="rt-app rt-ol">
+        <MailApp mail={mail} />
+      </div>
+    </Frame>
+  );
+};
+
+/* ---------- 02 · the AI agent processes it, and it shows up in the queue ---------- */
+
+const QueueClip = () => {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [appKey, setAppKey] = useState(0);
   const [newRow, setNewRow] = useState<null | "processing" | "review">(null);
+
+  useLoop(frameRef, async (wait) => {
+    setAppKey((k) => k + 1);
+    setNewRow(null);
+    await wait(1200);
+    setNewRow("processing");
+    await wait(2800);
+    setNewRow("review");
+    await wait(3600);
+  });
+
+  return (
+    <Frame frameRef={frameRef}>
+      <div key={appKey} className="rt-app rt-pt">
+        <PetaronBar crumb="Orders" />
+        <div className="rt-pt-main">
+          <div className="rt-q">
+            <div className="rt-q-row is-head">
+              <span>Status</span>
+              <span>Subject</span>
+              <span className="rt-num">Fields</span>
+              <span className="rt-num">Received</span>
+            </div>
+            {newRow && (
+              <QueueRow
+                fresh
+                row={{
+                  tone: newRow === "review" ? "amber" : "grey",
+                  status: newRow === "review" ? "Needs review" : "Processing",
+                  subject: NEW_MAIL.subject,
+                  fields: newRow === "review" ? "31/31" : "…",
+                  received: "09:41",
+                }}
+              />
+            )}
+            {QUEUE_ROWS.map((r, i) => (
+              <QueueRow key={i} row={r} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </Frame>
+  );
+};
+
+/* ---------- 03 · the fields fill in, each lighting its source ---------- */
+
+const ReviewClip = () => {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [appKey, setAppKey] = useState(0);
   const [revealed, setRevealed] = useState(0);
   const [lit, setLit] = useState<string | null>(null);
+
+  useLoop(frameRef, async (wait) => {
+    setAppKey((k) => k + 1);
+    setRevealed(0);
+    setLit(null);
+    await wait(800);
+    for (let i = 0; i < FIELDS.length; i++) {
+      setRevealed(i + 1);
+      setLit(FIELDS[i].src ?? null);
+      await wait(450);
+    }
+    setLit(null);
+    await wait(3800);
+  });
+
+  return (
+    <Frame frameRef={frameRef}>
+      <div key={appKey} className="rt-app rt-pt">
+        <ReviewApp revealed={revealed} lit={lit} hint="Every value traced to its source." />
+      </div>
+    </Frame>
+  );
+};
+
+/* ---------- 04 · approve, and it is done ---------- */
+
+const ApproveClip = () => {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const approveRef = useRef<HTMLButtonElement>(null);
+  const waiting = useRef(false);
+  const approvedRef = useRef(false);
+  const [appKey, setAppKey] = useState(0);
   const [approved, setApproved] = useState(false);
   const [popup, setPopup] = useState(false);
   const [countdown, setCountdown] = useState(false);
-  const [cursor, setCursor] = useState<Cursor>(PARKED);
+  const [cursor, setCursor] = useState<CursorState>(PARKED);
 
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const screenRef = useRef<HTMLDivElement>(null);
-  const rowRef = useRef<HTMLSpanElement>(null);
-  const titleRef = useRef<HTMLSpanElement>(null);
-  const approveRef = useRef<HTMLButtonElement>(null);
-
-  const run = useRef(0);
-  const visible = useRef(false);
-  const waiting = useRef(false);
-  const approvedRef = useRef(false);
-
-  // a cancellable wait that holds while the card is off screen, and can end early
-  const wait = useCallback(
-    (ms: number, id: number, until?: () => boolean) =>
-      new Promise<void>((resolve, reject) => {
-        let left = ms;
-        let last = Date.now();
-        const t = window.setInterval(() => {
-          if (id !== run.current) {
-            window.clearInterval(t);
-            reject(new Error("cancelled"));
-            return;
-          }
-          const now = Date.now();
-          if (visible.current) left -= now - last;
-          last = now;
-          if (left <= 0 || (until && until())) {
-            window.clearInterval(t);
-            resolve();
-          }
-        }, 30);
-      }),
-    [],
-  );
-
-  const pointAt = useCallback((el: Element | null, fx = 0.5, fy = 0.55) => {
-    const screen = screenRef.current;
-    if (!el || !screen) return;
-    const s = screen.getBoundingClientRect();
-    const r = el.getBoundingClientRect();
-    setCursor((c) => ({ ...c, on: true, instant: false, x: `${r.left - s.left + r.width * fx}px`, y: `${r.top - s.top + r.height * fy}px` }));
+  const moveTo = useCallback((el: Element | null, fx?: number, fy?: number) => {
+    const p = spot(screenRef.current, el, fx, fy);
+    if (p) setCursor((c) => ({ ...c, ...p, on: true, instant: false }));
   }, []);
 
-  const click = useCallback(
-    async (id: number) => {
-      setCursor((c) => ({ ...c, clicking: true }));
-      await wait(380, id);
-      setCursor((c) => ({ ...c, clicking: false }));
-    },
-    [wait],
-  );
-
-  const play = useCallback(async () => {
-    const id = ++run.current;
-    waiting.current = false;
+  useLoop(frameRef, async (wait) => {
+    setAppKey((k) => k + 1);
+    setApproved(false);
+    setPopup(false);
+    setCountdown(false);
+    setCursor(PARKED);
     approvedRef.current = false;
-    try {
-      // 1 · the email lands
-      setCursor(PARKED);
-      setPhase("mail");
-      setAppKey((k) => k + 1);
-      setLeaving(false);
-      setStage(1);
-      setMail({ hasNew: false, open: false, toast: false });
-      setNewRow(null);
-      setRevealed(0);
-      setLit(null);
-      setApproved(false);
-      setPopup(false);
-      setCountdown(false);
-      setCaption("Email lands in the inbox");
-      await wait(1800, id);
-      setMail({ hasNew: true, open: false, toast: true });
-      await wait(2400, id);
-      setMail({ hasNew: true, open: true, toast: false });
-      await wait(3600, id);
-
-      // 2 · Petaron picks it up
-      setLeaving(true);
-      await wait(450, id);
-      setLeaving(false);
-      setPhase("queue");
-      setAppKey((k) => k + 1);
-      setStage(2);
-      setCaption("Petaron is processing the order");
-      await wait(1000, id);
-      setNewRow("processing");
-      await wait(2800, id);
-      setNewRow("review");
-      await wait(1600, id);
-      pointAt(rowRef.current, 0.3);
-      await wait(1250, id);
-      await click(id);
-
-      // 3 · ready for review; the visitor may approve
-      setPhase("review");
-      setAppKey((k) => k + 1);
-      setStage(3);
-      setCaption("Order is available for review");
-      for (let i = 0; i < FIELDS.length; i++) {
-        setRevealed(i + 1);
-        setLit(FIELDS[i].src ?? null);
-        await wait(320, id);
-      }
-      window.setTimeout(() => setLit(null), 350);
-      pointAt(titleRef.current, 0.7, 1.6);
-      waiting.current = true;
-      await wait(5500, id, () => approvedRef.current);
-      if (!approvedRef.current) {
-        pointAt(approveRef.current);
-        await wait(1250, id);
-        await click(id);
-        approvedRef.current = true;
-      }
-      waiting.current = false;
-
-      // 4 · done, hold, and go again
-      setCursor((c) => ({ ...c, on: false }));
-      setApproved(true);
-      setStage(4);
-      setPopup(true);
-      setCaption("Order completed");
-      await wait(60, id);
-      setCountdown(true);
-      await wait(5000, id);
-      playRef.current();
-    } catch {
-      /* replaced by a newer run, or unmounted */
+    waiting.current = true;
+    await wait(900);
+    moveTo(titleRef.current, 0.7, 1.6);
+    await wait(4200, () => approvedRef.current);
+    if (!approvedRef.current) {
+      moveTo(approveRef.current);
+      await wait(1250);
+      setCursor((c) => ({ ...c, clicking: true }));
+      await wait(380);
+      setCursor((c) => ({ ...c, clicking: false }));
+      approvedRef.current = true;
     }
-  }, [wait, pointAt, click]);
-
-  const playRef = useRef(play);
-  playRef.current = play;
-
-  // start as soon as the heading is seen (or the card, if the page opens below it);
-  // keep running while any part of the card is on screen; stop on unmount
-  useEffect(() => {
-    const heading = headingRef.current;
-    const card = cardRef.current;
-    if (!heading || !card) return;
-    let started = false;
-    const start = () => {
-      if (started) return;
-      started = true;
-      playRef.current();
-    };
-    const seen = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && start(), { threshold: 0.6 });
-    seen.observe(heading);
-    const onScreen = new IntersectionObserver(([entry]) => {
-      visible.current = entry.isIntersecting;
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.3) start();
-    }, { threshold: [0, 0.3] });
-    onScreen.observe(card);
-    return () => {
-      seen.disconnect();
-      onScreen.disconnect();
-      run.current++;
-    };
-  }, []);
+    waiting.current = false;
+    setCursor((c) => ({ ...c, on: false }));
+    setApproved(true);
+    setPopup(true);
+    streamSignal.surge = 1;
+    await wait(60);
+    setCountdown(true);
+    await wait(5000);
+  });
 
   const onApprove = () => {
     if (waiting.current && !approvedRef.current) {
@@ -354,149 +510,81 @@ export const RelayTryIt = () => {
   };
 
   return (
-    <section id="try" className={`relay-try relative scroll-mt-20 py-16 ${RELAY_SHELL}`}>
-      <motion.h2
-        ref={headingRef}
-        {...settle()}
-        className="pb-6 text-center font-display text-[clamp(23px,6vw,40px)] font-semibold leading-[1.06] tracking-[-0.03em] text-th-heading"
-      >
-        Watch it run.
-      </motion.h2>
-
-      <div ref={cardRef} className="rt-card">
-        <div className="rt-rail" aria-hidden>
-          <div className="track">
-            <div className="fill" style={{ transform: `scaleX(${(stage - 1) / 3})` }} />
-          </div>
-          {STOPS.map((label, i) => (
-            <span key={label} className={`rt-stop${i + 1 <= stage ? " is-reached" : ""}${i + 1 === stage ? " is-current" : ""}`}>
-              <span className="dot" />
-              {label}
-            </span>
-          ))}
-        </div>
-
-        <div ref={screenRef} className="rt-screen">
-          <div key={appKey} className={`rt-app ${phase === "mail" ? "rt-ol" : "rt-pt"}${leaving ? " is-out" : ""}`}>
-            {phase === "mail" && <MailApp mail={mail} />}
-
-            {phase === "queue" && (
-              <>
-                <PetaronBar crumb="Orders" />
-                <div className="rt-pt-main">
-                  <div className="rt-q">
-                    <div className="rt-q-row is-head">
-                      <span>Status</span>
-                      <span>Subject</span>
-                      <span className="rt-num">Fields</span>
-                      <span className="rt-num">Received</span>
-                    </div>
-                    {newRow && (
-                      <QueueRow
-                        fresh
-                        cellRef={rowRef}
-                        row={{
-                          tone: newRow === "review" ? "amber" : "grey",
-                          status: newRow === "review" ? "Needs review" : "Processing",
-                          subject: NEW_MAIL.subject,
-                          fields: newRow === "review" ? "31/31" : "…",
-                          received: "09:41",
-                        }}
-                      />
-                    )}
-                    {QUEUE_ROWS.map((r, i) => (
-                      <QueueRow key={i} row={r} />
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-
-            {phase === "review" && (
-              <>
-                <PetaronBar crumb="Orders › PO 48291" />
-                <div className="rt-pt-main">
-                  <div className="rt-pr-top">
-                    <span className="t" ref={titleRef}>
-                      PO 48291 · {NEW_MAIL.subject}
-                    </span>
-                    <span className={`rt-chip ${approved ? "green" : "amber"}`}>{approved ? "Order completed" : "Needs review"}</span>
-                    <span className="rt-num">31/31</span>
-                  </div>
-                  <div className="rt-pr-split">
-                    <div className="rt-pr-mail">
-                      <div className="from">
-                        <Kw k="consignor" lit={lit}>
-                          Rotterdam Distribution B.V.
-                        </Kw>{" "}
-                        · 09:41
-                      </div>
-                      Pickup at <Kw k="lsite" lit={lit}>Antwerp, Quay 730</Kw> on Thursday <Kw k="pickup" lit={lit}>14/07 at 08:00</Kw>. Deliver to{" "}
-                      <Kw k="usite" lit={lit}>Hamburg Freight, Dock 4</Kw> by <Kw k="delivery" lit={lit}>15/07, 16:00</Kw>.{" "}
-                      <Kw k="goods" lit={lit}>24 pallets</Kw>, order attached.
-                    </div>
-                    <div className="rt-pf">
-                      {FIELDS.map((f, i) => (
-                        <div key={f.label} className={`rt-pf-f${i < revealed ? " is-on" : ""}${f.wide ? " is-wide-sm" : ""}`}>
-                          <label>
-                            {f.label}
-                            {f.history && <span className="hist"> · from history</span>}
-                          </label>
-                          <div className="v">{f.value}</div>
-                          <p className="how">
-                            <span className={`rt-dot${f.history ? " is-history" : ""}`} />
-                            {f.how}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="rt-pr-act">
-                    <span className="rt-hint">Click Approve yourself.</span>
-                    <span className="rt-btn">Save draft</span>
-                    <button ref={approveRef} type="button" className="rt-btn primary" onClick={onApprove} disabled={approved}>
-                      {approved ? "Approved" : "Approve"}
-                    </button>
-                  </div>
-                  <div className={`rt-pop${popup ? " is-on" : ""}`}>
-                    <div className="box">
-                      <span className="ok">✓</span>
-                      <h4>Order completed</h4>
-                      <dl>
-                        <dt>Order</dt>
-                        <dd>PO 48291</dd>
-                        <dt>Consignor</dt>
-                        <dd>ROTDIS01</dd>
-                        <dt>Unload</dt>
-                        <dd>HAMFRE04 · 15/07</dd>
-                      </dl>
-                      <p className="rt-hint">Exported in your TMS format. Nobody retyped it.</p>
-                      <div className={`cd${countdown ? " is-run" : ""}`}>
-                        <i />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          <div
-            className={`rt-cursor${cursor.on ? " is-on" : ""}${cursor.clicking ? " is-click" : ""}`}
-            style={{ left: cursor.x, top: cursor.y, transition: cursor.instant ? "none" : undefined }}
-            aria-hidden
-          >
-            <svg viewBox="0 0 24 24">
-              <path d="M5 3l14 8-6 1.5L16 20l-2 1-3-7.5L6 18z" />
-            </svg>
-            <span className="ripple" />
-          </div>
-        </div>
-
-        <p className="rt-cap" aria-live="polite">
-          {caption}
-        </p>
+    <Frame frameRef={frameRef} screenRef={screenRef}>
+      <div key={appKey} className="rt-app rt-pt">
+        <ReviewApp
+          revealed={FIELDS.length}
+          lit={null}
+          approved={approved}
+          popup={popup}
+          countdown={countdown}
+          hint="Click Approve yourself."
+          titleRef={titleRef}
+          approveRef={approveRef}
+          onApprove={onApprove}
+        />
       </div>
-    </section>
+      <Cursor c={cursor} />
+    </Frame>
   );
 };
+
+/* ---------- the section ---------- */
+
+const STEPS: { n: string; title: string; body: string; Clip: ComponentType }[] = [
+  {
+    n: "01",
+    title: "The email lands in your inbox",
+    body: "Customers keep sending orders the way they always have: emails, PDFs, forwarded threads. Nothing changes on their side.",
+    Clip: MailClip,
+  },
+  {
+    n: "02",
+    title: "The AI agent processes the order",
+    body: "It reads the email and every attachment, sorts orders from everything else, and drafts the order before anyone opens it.",
+    Clip: QueueClip,
+  },
+  {
+    n: "03",
+    title: "Every value traces back to its source",
+    body: "Each field shows where it was read from. Anything uncertain is flagged for a person, not guessed.",
+    Clip: ReviewClip,
+  },
+  {
+    n: "04",
+    title: "Nothing moves until your team says so",
+    body: "Review, save a draft, or approve. Only approval sends the order to your TMS.",
+    Clip: ApproveClip,
+  },
+];
+
+export const RelayTryIt = () => (
+  <section id="how" className={`relay-try relative scroll-mt-20 py-16 ${RELAY_SHELL}`}>
+    <motion.h2
+      {...settle()}
+      className="text-center font-display text-[clamp(23px,6vw,40px)] font-semibold leading-[1.06] tracking-[-0.03em] text-th-heading"
+    >
+      Watch it run.
+    </motion.h2>
+    <div className="mt-12 divide-y divide-white/[0.06] rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.05),rgb(255_255_255/0.012)_55%)] px-5 shadow-[0_40px_100px_-50px_rgb(0_0_0/0.9),0_0_100px_-40px_rgb(var(--ac-1)/0.2)] backdrop-blur-md sm:px-8 lg:px-14">
+      {STEPS.map(({ n, title, body, Clip }, i) => {
+        const flip = i % 2 === 1;
+        return (
+          <div
+            key={n}
+            className={`grid items-center gap-8 py-10 lg:gap-14 lg:py-14 ${flip ? "lg:grid-cols-[500px_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,1fr)_500px]"}`}
+          >
+            <motion.div {...settle()} className={flip ? "lg:order-2" : ""}>
+              <span className="font-mono text-[13px] text-ac-1">{n}</span>
+              <h3 className="mt-3 font-display text-[26px] font-semibold leading-tight tracking-[-0.02em] text-th-heading sm:text-[30px]">{title}</h3>
+              <p className="mt-3 max-w-md font-body text-[15px] leading-relaxed text-th-body">{body}</p>
+            </motion.div>
+            <motion.div {...settle(0.1)} className={flip ? "lg:order-1" : ""}>
+              <Clip />
+            </motion.div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+);

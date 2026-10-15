@@ -539,7 +539,7 @@ div[data-cal-namespace] > div,
 .rt-stop.is-reached .dot { transform: scale(1); }
 .rt-stop.is-current { color: var(--rt-fg); }
 .rt-stop.is-current .dot { background: var(--rt-fg); box-shadow: 0 0 14px 3px rgb(var(--ac-1) / 0.6); }
-.rt-screen { position: relative; height: 390px; overflow: hidden; background: var(--rt-win); }
+.rt-screen { position: relative; height: 390px; overflow: hidden; background: var(--rt-win); container-type: inline-size; }
 .rt-app { position: absolute; inset: 0; display: flex; flex-direction: column; animation: rt-appin 0.5s ease both; }
 .rt-app.is-out { animation: rt-appout 0.45s ease both; }
 @keyframes rt-appin { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
@@ -646,7 +646,7 @@ div[data-cal-namespace] > div,
 .rt-pf-f .how { margin: 1px 0 0; display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--rt-muted); }
 .rt-pr-act { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding-top: 2px; }
 .rt-pr-act .rt-hint { margin-right: auto; }
-.rt-pr-act .rt-btn.primary:not(:disabled) { animation: rt-callout 1.6s ease-in-out infinite; }
+.rt-pr-act .rt-btn.primary:not(:disabled):not(.is-still) { animation: rt-callout 1.6s ease-in-out infinite; }
 @keyframes rt-callout { 50% { box-shadow: 0 0 0 6px rgb(var(--ac-1) / 0.2); } }
 .rt-pop { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: 16px; background: rgba(7, 8, 6, 0.72); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
 .rt-pop.is-on { opacity: 1; pointer-events: auto; }
@@ -661,15 +661,15 @@ div[data-cal-namespace] > div,
 .rt-pop .cd i { display: block; height: 100%; background: var(--rt-lime); transform-origin: left center; transition: transform 5s linear; }
 .rt-pop .cd.is-run i { transform: scaleX(0); }
 
-@media (max-width: 780px) {
+@container (max-width: 680px) {
   .rt-ol-body { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); }
   .rt-ol-folders { display: none; }
 }
-@media (max-width: 720px) {
+@container (max-width: 500px) {
   .rt-q-row { grid-template-columns: 116px minmax(0, 1fr); }
   .rt-q-row > :nth-child(3), .rt-q-row > :nth-child(4) { display: none; }
 }
-@media (max-width: 600px) {
+@container (max-width: 500px) {
   .rt-ol-body { grid-template-columns: minmax(0, 1fr); }
   .rt-ol-read { display: none; }
   .rt-pr-split { grid-template-columns: minmax(0, 1fr); }
@@ -678,6 +678,13 @@ div[data-cal-namespace] > div,
   .rt-pf-f label .hist { display: inline; }
   .rt-pf-f.is-wide-sm { grid-column: span 2; }
   .rt-pr-act .rt-btn:not(.primary) { display: none; }
+}
+/* the windows beside the step text: drawn at 640px and zoomed down to about 500px on desktop,
+   so everything inside shrinks evenly and keeps its layout */
+@media (min-width: 1024px) {
+  @supports (zoom: 1) {
+    .rt-card.is-mini { width: 640px; max-width: none; zoom: 0.78; }
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .relay-try *, .relay-try *::before { animation: none !important; transition: none !important; }
