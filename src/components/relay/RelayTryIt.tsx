@@ -534,25 +534,25 @@ const ApproveClip = () => {
 const STEPS: { n: string; title: string; body: string; Clip: ComponentType }[] = [
   {
     n: "01",
-    title: "The email lands in your inbox",
+    title: "The email lands",
     body: "Customers keep sending orders the way they always have: emails, PDFs, forwarded threads. Nothing changes on their side.",
     Clip: MailClip,
   },
   {
     n: "02",
-    title: "The AI agent processes the order",
+    title: "The AI agent drafts it",
     body: "It reads the email and every attachment, sorts orders from everything else, and drafts the order before anyone opens it.",
     Clip: QueueClip,
   },
   {
     n: "03",
-    title: "Every value traces back to its source",
+    title: "Every value traced",
     body: "Each field shows where it was read from. Anything uncertain is flagged for a person, not guessed.",
     Clip: ReviewClip,
   },
   {
     n: "04",
-    title: "Nothing moves until your team says so",
+    title: "You approve",
     body: "Review, save a draft, or approve. Only approval sends the order to your TMS.",
     Clip: ApproveClip,
   },
