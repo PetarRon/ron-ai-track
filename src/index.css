@@ -698,3 +698,11 @@ div[data-cal-namespace] > div,
 @media (prefers-reduced-motion: reduce) {
   .relay-try *, .relay-try *::before { animation: none !important; transition: none !important; }
 }
+
+/* Connect (src/components/relay/RelayConnect.tsx): a pulse running along each wire,
+   left to right on wide screens and top to bottom when the strip stacks */
+@keyframes relay-wire-x { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+@keyframes relay-wire-y { 0% { top: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+.relay-wire-pulse { animation: relay-wire-y 1.6s ease-in-out infinite; }
+@media (min-width: 640px) { .relay-wire-pulse { animation-name: relay-wire-x; } }
+@media (prefers-reduced-motion: reduce) { .relay-wire-pulse { animation: none; opacity: 0.8; } }

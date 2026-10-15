@@ -7,6 +7,7 @@ import { RelayReliability } from "@/components/relay/RelayReliability";
 import { RelayDashboard } from "@/components/relay/RelayDashboard";
 import { RelayNumbers } from "@/components/relay/RelayNumbers";
 import { RelayCalculator } from "@/components/relay/RelayCalculator";
+import { RelayConnect } from "@/components/relay/RelayConnect";
 import { RelayFAQ } from "@/components/relay/RelayFAQ";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 
@@ -25,6 +26,7 @@ const RelayPreview = () => (
     <RelayReliability />
     <RelayDashboard />
     <RelayNumbers />
+    <RelayConnect />
     <RelayFAQ />
     <RelayFooter />
   </RelayShell>
