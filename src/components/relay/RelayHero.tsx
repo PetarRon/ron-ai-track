@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { Play } from "lucide-react";
+import { GradFlow, type GradientConfigInput } from "gradflow";
 import { useContact } from "@/components/petaron/contact-context";
 import { CalButton, LogoMark, buttonVariants } from "./shared";
 import { RelayHeroLoop } from "./RelayHeroLoop";
@@ -86,10 +87,34 @@ const rise = (delay: number) => ({
   transition: { duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
 
+/* Ron's GradFlow stripes (gradflow.meera.dev) behind the hero: white, aqua and
+   purple, slow, a little grain. They fade into the page at the bottom and hold
+   still under reduced motion. */
+const HERO_FLOW: GradientConfigInput = {
+  color1: { r: 255, g: 255, b: 255 },
+  color2: { r: 66, g: 255, b: 233 },
+  color3: { r: 129, g: 6, b: 190 },
+  speed: 0.4,
+  scale: 1,
+  type: "stripe",
+  noise: 0.08,
+};
+
+const HeroFlow = () => {
+  const reduced = useReducedMotion();
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      <GradFlow config={HERO_FLOW} paused={!!reduced} />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-th-page" />
+    </div>
+  );
+};
+
 export const RelayHero = () => {
   const { openContact } = useContact();
   return (
   <section className="relative overflow-hidden">
+    <HeroFlow />
     <RelayNav />
     <div className="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 items-center gap-12 px-6 pb-28 pt-16 md:px-8 lg:grid-cols-[minmax(0,1fr)_620px] lg:pt-14">
       <div className="relative z-10">
