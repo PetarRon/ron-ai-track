@@ -911,3 +911,28 @@ div[data-cal-namespace] > div,
 .relay-light .rf-sources .wire { stroke: rgb(77 124 15 / 0.55); }
 .relay-light .rf-trace .link { stroke: rgb(77 124 15); }
 .relay-light .rf-trace .field { border-color: rgb(77 124 15 / 0.45); }
+
+/* Feature cards (src/components/relay/RelayBorderTrace.tsx): a lime arc runs
+   along the card's 1px outline toward the pointer, 2px wide, no blur or halo.
+   Both mask syntaxes, since WebKit needs the prefixed ones with source-in. */
+.relay-trace::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: var(--trace-width) solid transparent;
+  background: var(--gradient);
+  background-attachment: fixed;
+  opacity: var(--active);
+  transition: opacity 0.3s;
+  -webkit-mask-image:
+    linear-gradient(#0000, #0000),
+    conic-gradient(from calc((var(--start) - var(--spread)) * 1deg), #0000 0deg, #fff, #0000 calc(var(--spread) * 2deg));
+  mask-image:
+    linear-gradient(#0000, #0000),
+    conic-gradient(from calc((var(--start) - var(--spread)) * 1deg), #0000 0deg, #fff, #0000 calc(var(--spread) * 2deg));
+  -webkit-mask-clip: padding-box, border-box;
+  mask-clip: padding-box, border-box;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
