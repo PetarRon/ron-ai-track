@@ -114,7 +114,7 @@ export const RelayHero = () => {
           </button>
         </motion.div>
         <motion.p {...rise(0.8)} className="mt-6 font-body text-[13px] text-th-muted">
-          Runs on your own orders · No card needed · Your TMS stays as it is
+          Runs on your own orders · Your TMS stays as it is
         </motion.p>
       </div>
       <div className="relative hidden lg:block">
