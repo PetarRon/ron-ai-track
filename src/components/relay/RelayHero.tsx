@@ -87,13 +87,13 @@ const rise = (delay: number) => ({
   transition: { duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
 
-/* Ron's GradFlow stripes (gradflow.meera.dev) behind the hero: white, aqua and
-   purple, slow, a little grain. They fade into the page at the bottom and hold
-   still under reduced motion. */
+/* Ron's GradFlow stripes (gradflow.meera.dev) behind the hero, in the brand's
+   colours: white, the lime of the buttons and a soft mint; slow, a little grain.
+   They fade into the page at the bottom and hold still under reduced motion. */
 const HERO_FLOW: GradientConfigInput = {
   color1: { r: 255, g: 255, b: 255 },
-  color2: { r: 66, g: 255, b: 233 },
-  color3: { r: 129, g: 6, b: 190 },
+  color2: { r: 199, g: 242, b: 60 },
+  color3: { r: 168, g: 232, b: 208 },
   speed: 0.4,
   scale: 1,
   type: "stripe",
