@@ -847,10 +847,13 @@ div[data-cal-namespace] > div,
 
 /* cards and panels are glass: a translucent white fill, brighter at the top,
    frosting whatever passes behind (the GradFlow ribbon on the home page), a
-   bright rim and a faint outline so the edge still reads on the pale page */
+   bright rim and a faint outline so the edge still reads on the pale page.
+   The two big lime panels (the plate and the CTA, `.relay-panel`) are glass
+   too here; the dark page keeps them lime. */
 .relay-light .relay-pane,
 .relay-light .rf-card,
-.relay-light .relay-card {
+.relay-light .relay-card,
+.relay-light .relay-panel {
   background: linear-gradient(170deg, rgb(255 255 255 / 0.72), rgb(255 255 255 / 0.42));
   -webkit-backdrop-filter: blur(20px) saturate(150%);
   backdrop-filter: blur(20px) saturate(150%);

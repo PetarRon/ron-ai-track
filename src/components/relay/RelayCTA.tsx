@@ -7,7 +7,7 @@ export const RelayCTA = () => {
   const { openContact } = useContact();
   return (
     <section id="demo" className={`relative scroll-mt-24 py-20 ${RELAY_SHELL}`}>
-      <motion.div {...settle()} className="rounded-[28px] bg-ac-1 px-6 py-16 text-center md:px-12 md:py-20">
+      <motion.div {...settle()} className="relay-panel rounded-[28px] bg-ac-1 px-6 py-16 text-center md:px-12 md:py-20">
         <h2 className="mx-auto max-w-2xl text-balance font-display text-[clamp(30px,4.4vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-page">
           Ready to automate your <Em dark>order entry</Em>?
         </h2>

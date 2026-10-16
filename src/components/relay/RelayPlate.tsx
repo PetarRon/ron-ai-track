@@ -28,7 +28,7 @@ export const RelayPlate = ({ children }: { children?: ReactNode }) => {
         <div className="sticky top-[9vh] mx-auto w-full max-w-[1240px] px-6 md:px-8">
           <div className="relative flex h-[64vh] min-h-[420px] items-center justify-center">
             <motion.div
-              className="absolute inset-0 bg-ac-1"
+              className="relay-panel absolute inset-0 bg-ac-1"
               style={{ scale, borderRadius: radius, transformOrigin: "50% 50%" }}
             />
             <motion.div className="relay-on-lime relative z-10 flex flex-col items-center px-6 text-center" style={{ opacity: text, y: textY }}>
