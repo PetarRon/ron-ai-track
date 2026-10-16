@@ -834,9 +834,11 @@ div[data-cal-namespace] > div,
 .relay-light .text-ac-1 { color: rgb(77 124 15); }
 .relay-light .hover\:text-ac-1:hover { color: rgb(77 124 15); }
 
-/* on a lime fill the ink stays dark, and a "dark" button on it stays dark */
+/* on a lime fill (or the glass panels that replaced it) the ink stays dark, and a
+   "dark" button on it stays dark, hover included: its hover colour is the surface
+   token, which on the light page would be white under light text */
 .relay-light .bg-ac-1,
-.relay-light .relay-on-lime { --th-page: 7 8 6; --th-heading: 240 241 236; }
+.relay-light .relay-on-lime { --th-page: 7 8 6; --th-heading: 240 241 236; --th-surface: 38 42 34; }
 
 /* hairlines and fills that were white on dark */
 .relay-light .border-white\/10 { border-color: rgb(17 19 15 / 0.1); }
