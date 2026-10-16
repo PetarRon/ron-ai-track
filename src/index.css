@@ -747,16 +747,6 @@ div[data-cal-namespace] > div,
   .relay-belt-set[aria-hidden] { display: none; }
 }
 
-/* Numbers (src/components/relay/RelayNumbers.tsx): one square per field, the
-   agent's in lime, your team's in a deeper green: two shares of one job */
-.rn-cell.is-agent { fill: rgb(var(--ac-1)); }
-.rn-cell.is-team { fill: rgb(122 168 30); }
-.relay-light .rn-cell.is-team { fill: rgb(77 124 15); }
-.rn-wall .rn-cell { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.4); }
-.rn-wall.is-on .rn-cell { animation: rn-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-@keyframes rn-pop { 60% { opacity: 1; transform: scale(1.06); } 100% { opacity: 1; transform: scale(1); } }
-@media (prefers-reduced-motion: reduce) { .rn-wall .rn-cell { opacity: 1; transform: none; animation: none !important; } }
-
 /* ============================================================
    Features (src/components/relay/RelayFeatures.tsx): six feature
    cards, each with one quiet looping visual.
