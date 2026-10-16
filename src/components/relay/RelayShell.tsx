@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getCalApi } from "@calcom/embed-react";
 import ContactForm from "@/components/petaron/FinalCTA";
@@ -80,10 +80,16 @@ export const RelayShell = ({
   }, [location.search, location.hash]);
 
   // Scroll to the hash target once the (lazy) page has rendered; top otherwise.
+  // Keyed on the navigation too, so a link to the hash already in the address
+  // (the nav, the CTA's "watch it run") still scrolls there; staying on the same
+  // page, the way up is smooth.
+  const lastPath = useRef<string | null>(null);
   useEffect(() => {
+    const samePage = lastPath.current === location.pathname;
+    lastPath.current = location.pathname;
     if (location.hash === "#contact") return;
     if (!location.hash) {
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({ top: 0, behavior: samePage ? "smooth" : "auto" });
       return;
     }
     const raw = location.hash.slice(1);
@@ -91,7 +97,7 @@ export const RelayShell = ({
     const go = () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     const t = setTimeout(go, 120);
     return () => clearTimeout(t);
-  }, [location.pathname, location.hash]);
+  }, [location.pathname, location.hash, location.key]);
 
   return (
     <ContactContext.Provider value={{ openContact }}>
