@@ -3,6 +3,7 @@ import { RelayShell } from "@/components/relay/RelayShell";
 import { RelayNav } from "@/components/relay/RelayHero";
 import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFooter } from "@/components/relay/RelayFooter";
+import { FlowRibbon } from "@/components/relay/RelayFlow";
 import { Card, Em, Eyebrow, RELAY_SHELL, settle } from "@/components/relay/shared";
 
 const LinkedInIcon = () => (
@@ -47,9 +48,10 @@ const values = [
 
 const RelayAbout = () => (
   <RelayShell title="About · Relay direction preview" light>
+    <FlowRibbon />
     <RelayNav />
     <article className={`relative pb-10 pt-16 md:pt-24 ${RELAY_SHELL}`}>
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
+      <div data-flow-head className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
         <div>
           <motion.div {...settle()}>
             <Eyebrow>About us</Eyebrow>

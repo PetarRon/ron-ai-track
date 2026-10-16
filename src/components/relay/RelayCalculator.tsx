@@ -97,7 +97,7 @@ export const RelayCalculator = () => {
               <Row label="Hourly staff cost" value={hourlyCost} onChange={setHourlyCost} min={15} max={80} step={5} format={(v) => `€${v}`} />
             </div>
           </div>
-          <div className="flex flex-col justify-between rounded-xl border border-th-line/60 bg-th-page/50 p-6 text-center md:p-7">
+          <div className="relay-well flex flex-col justify-between rounded-xl border border-th-line/60 bg-th-page/50 p-6 text-center md:p-7">
             <div className="flex flex-1 flex-col justify-center">
               <span className="font-mono text-[12px] text-th-muted">Manual entry costs you</span>
               <p className="mt-3 font-body text-[44px] font-semibold leading-none tracking-[-0.03em] text-th-heading sm:text-[52px]">

@@ -55,8 +55,8 @@ function curve(pts: [number, number][]) {
   return d;
 }
 
-/** the mask: the hero, then the ribbon flowing out of it */
-function ribbonMask(W: number, H: number, head: number) {
+/** the mask: the hero, then (with `snake`) the ribbon flowing out of it */
+function ribbonMask(W: number, H: number, head: number, snake: boolean) {
   const band = Math.max(170, Math.min(340, W * 0.21));
   const soft = band * 0.22;
   const rest = H - head;
@@ -68,16 +68,24 @@ function ribbonMask(W: number, H: number, head: number) {
     `<filter id="s" filterUnits="userSpaceOnUse" x="${-band}" y="${-band}" width="${W + band * 2}" height="${H + band * 2}"><feGaussianBlur stdDeviation="${soft.toFixed(1)}"/></filter>` +
     `</defs>` +
     `<rect width="${W}" height="${head}" fill="url(#h)"/>` +
-    `<path d="${curve(pts)}" fill="none" stroke="#fff" stroke-width="${band.toFixed(0)}" stroke-linecap="round" stroke-linejoin="round" filter="url(#s)"/>` +
+    (snake
+      ? `<path d="${curve(pts)}" fill="none" stroke="#fff" stroke-width="${band.toFixed(0)}" stroke-linecap="round" stroke-linejoin="round" filter="url(#s)"/>`
+      : "") +
     `</svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
-/** Mount once, first inside the page's content; the hero section carries `data-flow-head`. */
-export const FlowRibbon = () => {
+/**
+ * Mount once, first inside the page's content; the element the gradient should
+ * fill down to carries `data-flow-head` (the hero, or a subpage's header).
+ * `snake={false}` keeps only that head, for pages of long reading; it then
+ * stops animating once the head is scrolled out of view.
+ */
+export const FlowRibbon = ({ snake = true }: { snake?: boolean }) => {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const [mask, setMask] = useState("");
+  const [headInView, setHeadInView] = useState(true);
 
   useEffect(() => {
     const el = ref.current;
@@ -86,17 +94,25 @@ export const FlowRibbon = () => {
     const build = () => {
       const W = Math.round(el.clientWidth);
       const H = Math.round(el.clientHeight);
-      const head = document.querySelector<HTMLElement>("[data-flow-head]")?.offsetHeight ?? 700;
+      // where the head ends, measured from the top of this layer (a subpage's nav sits above its header)
+      const headEl = document.querySelector<HTMLElement>("[data-flow-head]");
+      const head = headEl ? Math.round(headEl.getBoundingClientRect().bottom - el.getBoundingClientRect().top) : 700;
       const key = `${W}x${H}x${head}`;
       if (!W || !H || key === size) return;
       size = key;
-      setMask(ribbonMask(W, H, head));
+      setMask(ribbonMask(W, H, head, snake));
     };
     build();
     const ro = new ResizeObserver(build);
     ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+    const headEl = document.querySelector<HTMLElement>("[data-flow-head]");
+    const io = !snake && headEl ? new IntersectionObserver(([e]) => setHeadInView(e.isIntersecting)) : null;
+    if (io && headEl) io.observe(headEl);
+    return () => {
+      ro.disconnect();
+      io?.disconnect();
+    };
+  }, [snake]);
 
   return (
     <div
@@ -110,7 +126,7 @@ export const FlowRibbon = () => {
       }
     >
       <div className="sticky top-0 h-screen w-full">
-        <GradFlow config={FLOW} paused={!!reduced} />
+        <GradFlow config={FLOW} paused={!!reduced || !headInView} />
       </div>
     </div>
   );

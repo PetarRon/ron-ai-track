@@ -16,7 +16,7 @@ const PAIRS = [
 ];
 
 const SystemCard = ({ kicker, name }: { kicker: string; name: string }) => (
-  <div className="w-full rounded-2xl border border-white/10 bg-th-page/60 px-4 py-4 text-center sm:w-56">
+  <div className="relay-well w-full rounded-2xl border border-white/10 bg-th-page/60 px-4 py-4 text-center sm:w-56">
     <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-th-muted">{kicker}</span>
     <div className="relative mt-2 h-7">
       <AnimatePresence initial={false}>

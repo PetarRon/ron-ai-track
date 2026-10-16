@@ -14,6 +14,10 @@ const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const RelayPreview = lazy(() => import("./pages/RelayPreview"));
 const RelayAbout = lazy(() => import("./pages/RelayAbout"));
+const RelayCareers = lazy(() => import("./pages/RelayCareers"));
+const RelayPrivacy = lazy(() => import("./pages/RelayPrivacy"));
+const RelayTerms = lazy(() => import("./pages/RelayTerms"));
+const RelayNotFound = lazy(() => import("./pages/RelayNotFound"));
 
 const queryClient = new QueryClient();
 
@@ -35,6 +39,10 @@ const App = () => (
               <Route path="/preview/relay/light" element={<RelayPreview />} />
               <Route path="/preview/relay/dark" element={<RelayPreview dark />} />
               <Route path="/preview/relay/about" element={<RelayAbout />} />
+              <Route path="/preview/relay/careers" element={<RelayCareers />} />
+              <Route path="/preview/relay/privacy" element={<RelayPrivacy />} />
+              <Route path="/preview/relay/terms" element={<RelayTerms />} />
+              <Route path="/preview/relay/*" element={<RelayNotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

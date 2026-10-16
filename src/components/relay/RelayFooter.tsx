@@ -10,11 +10,11 @@ const columns = {
   ],
   Company: [
     { label: "About", href: "/preview/relay/about" },
-    { label: "Careers", href: "/careers" },
+    { label: "Careers", href: "/preview/relay/careers" },
   ],
   Legal: [
-    { label: "Privacy", href: "/privacy" },
-    { label: "Terms", href: "/terms" },
+    { label: "Privacy", href: "/preview/relay/privacy" },
+    { label: "Terms", href: "/preview/relay/terms" },
   ],
 };
 
