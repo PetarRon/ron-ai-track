@@ -845,12 +845,22 @@ div[data-cal-namespace] > div,
 .relay-light .divide-white\/10 > :not([hidden]) ~ :not([hidden]) { border-color: rgb(17 19 15 / 0.1); }
 .relay-light .divide-white\/\[0\.06\] > :not([hidden]) ~ :not([hidden]) { border-color: rgb(17 19 15 / 0.08); }
 
-/* glass panels become white cards with a soft shadow */
+/* cards and panels are glass: a translucent white fill, brighter at the top,
+   frosting whatever passes behind (the GradFlow ribbon on the home page), a
+   bright rim and a faint outline so the edge still reads on the pale page */
 .relay-light .relay-pane,
-.relay-light .rf-card { background: rgb(255 255 255 / 0.92); }
-.relay-light .rf-card { border-color: rgb(17 19 15 / 0.08); }
 .relay-light .rf-card,
-.relay-light [class*="rgb(0_0_0/0.9)"],
+.relay-light .relay-card {
+  background: linear-gradient(170deg, rgb(255 255 255 / 0.72), rgb(255 255 255 / 0.42));
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  border-color: rgb(255 255 255 / 0.75);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 0 0 1px rgb(17 19 15 / 0.05),
+    0 18px 40px -24px rgb(17 19 15 / 0.18);
+}
+/* the hero's product window keeps a plain soft shadow */
 .relay-light [class*="rgba(0,0,0,0.5)"] {
   box-shadow: 0 1px 2px rgb(17 19 15 / 0.05), 0 18px 40px -24px rgb(17 19 15 / 0.22);
 }
