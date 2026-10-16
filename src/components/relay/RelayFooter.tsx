@@ -4,17 +4,17 @@ import { LogoMark, RELAY_SHELL } from "./shared";
 
 const columns = {
   Product: [
-    { label: "How it works", href: "/preview/relay#process" },
-    { label: "Cost calculator", href: "/preview/relay#calculator" },
-    { label: "FAQ", href: "/preview/relay#faq" },
+    { label: "How it works", href: "/#process" },
+    { label: "Cost calculator", href: "/#calculator" },
+    { label: "FAQ", href: "/#faq" },
   ],
   Company: [
-    { label: "About", href: "/preview/relay/about" },
-    { label: "Careers", href: "/preview/relay/careers" },
+    { label: "About", href: "/about" },
+    { label: "Careers", href: "/careers" },
   ],
   Legal: [
-    { label: "Privacy", href: "/preview/relay/privacy" },
-    { label: "Terms", href: "/preview/relay/terms" },
+    { label: "Privacy", href: "/privacy" },
+    { label: "Terms", href: "/terms" },
   ],
 };
 

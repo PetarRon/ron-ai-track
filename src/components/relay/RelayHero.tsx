@@ -7,17 +7,17 @@ import { CalButton, LogoMark, buttonVariants } from "./shared";
 import { RelayHeroLoop } from "./RelayHeroLoop";
 
 const navLinks = [
-  { label: "Home", href: "/preview/relay" },
-  { label: "Product", href: "/preview/relay#process" },
-  { label: "How it works", href: "/preview/relay#how" },
-  { label: "Calculator", href: "/preview/relay#calculator" },
-  { label: "FAQ", href: "/preview/relay#faq" },
-  { label: "About", href: "/preview/relay/about" },
+  { label: "Home", href: "/" },
+  { label: "Product", href: "/#process" },
+  { label: "How it works", href: "/#how" },
+  { label: "Calculator", href: "/#calculator" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "About", href: "/about" },
 ];
 
 export const RelayNav = () => (
   <header className="relative z-20 mx-auto flex w-full max-w-[1240px] items-center justify-between px-6 py-5 md:px-8">
-    <Link to="/preview/relay" className="flex items-center gap-2.5">
+    <Link to="/" className="flex items-center gap-2.5">
       <LogoMark size={28} />
       <span className="font-body text-[17px] font-medium tracking-tight text-th-heading">Petaron</span>
     </Link>

@@ -5,10 +5,11 @@ import { RelayNav } from "@/components/relay/RelayHero";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 import { FlowRibbon } from "@/components/relay/RelayFlow";
 import { Em, RELAY_SHELL, buttonVariants, settle } from "@/components/relay/shared";
+import { routeSeo } from "@/lib/seo";
 
-/** Any unknown address under /preview/relay, in the Relay look. */
+/** Any unknown address. */
 const RelayNotFound = () => (
-  <RelayShell title="Page not found · Relay direction preview" light>
+  <RelayShell seo={{ route: routeSeo.notFound, noindex: true }} light>
     <FlowRibbon snake={false} />
     <RelayNav />
     <section
@@ -28,10 +29,10 @@ const RelayNotFound = () => (
         The link may be out of date, or the address mistyped.
       </motion.p>
       <motion.div {...settle(0.2)} className="mt-9 flex flex-wrap justify-center gap-3">
-        <Link to="/preview/relay" className={buttonVariants.lime}>
+        <Link to="/" className={buttonVariants.lime}>
           Back to home
         </Link>
-        <Link to="/preview/relay#faq" className={buttonVariants.ghost}>
+        <Link to="/#faq" className={buttonVariants.ghost}>
           Read the FAQ
         </Link>
       </motion.div>

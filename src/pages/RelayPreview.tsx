@@ -11,15 +11,15 @@ import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFAQ } from "@/components/relay/RelayFAQ";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 import { FlowRibbon } from "@/components/relay/RelayFlow";
+import { routeSeo, softwareApplicationJsonLd } from "@/lib/seo";
 
 /**
- * Design prototype: the Relay-direction redesign, lime on a light page
- * (`relay-light` in src/index.css). Not linked from navigation; reached at
- * /preview/relay. The earlier dark version stays at /preview/relay/dark.
+ * The home page: lime on a light page (`relay-light` in src/index.css), with the
+ * GradFlow ribbon running from the hero down to the CTA.
  */
-const RelayPreview = ({ dark = false }: { dark?: boolean }) => (
-  <RelayShell title={dark ? "Relay direction preview, dark" : "Relay direction preview"} light={!dark}>
-    {!dark && <FlowRibbon />}
+const RelayPreview = () => (
+  <RelayShell seo={{ route: routeSeo.home, jsonLd: softwareApplicationJsonLd() }} light>
+    <FlowRibbon />
     <RelayHero />
     <RelayTryIt />
     <RelayProcess />

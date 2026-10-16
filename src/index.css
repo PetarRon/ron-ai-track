@@ -805,8 +805,8 @@ div[data-cal-namespace] > div,
 }
 
 /* ============================================================
-   RELAY, LIGHT (the default on /preview/relay and its About page;
-   /preview/relay/dark keeps the dark one): the page on an
+   RELAY, LIGHT (every page of the site; the dark tokens above are
+   the older variant, no longer routed): the page on an
    off-white ground. The tokens flip; lime stays the fill colour,
    but text that was lime turns deep green, anything sitting on lime
    keeps dark ink, and the few colours written for the dark page get

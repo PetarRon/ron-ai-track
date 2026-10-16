@@ -6,10 +6,11 @@ import { RelayNav } from "@/components/relay/RelayHero";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 import { FlowRibbon } from "@/components/relay/RelayFlow";
 import { Card, Em, RELAY_SHELL, buttonVariants, settle } from "@/components/relay/shared";
+import { routeSeo } from "@/lib/seo";
 
 /**
- * Careers in the Relay look, at /preview/relay/careers: the live page's words
- * and its open application, sent to the same Formspree form.
+ * Careers, at /careers: the team, who we look for, and the open application,
+ * sent to Formspree.
  */
 
 const FIELD =
@@ -26,7 +27,7 @@ const RelayCareers = () => {
   const [state, handleSubmit] = useForm("mreyazvz");
 
   return (
-    <RelayShell title="Careers · Relay direction preview" light>
+    <RelayShell seo={{ route: routeSeo.careers }} light>
       <FlowRibbon />
       <RelayNav />
       <article className={`relative pb-24 ${RELAY_SHELL}`}>

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import type { LegalLinks, LegalSection } from "./shared";
 
-/** The terms of service, shared by /terms and /preview/relay/terms. */
+/** The terms of service's sections; /terms draws them with its own Section and links. */
 export const TermsBody = ({ Section, links }: { Section: LegalSection; links: LegalLinks }) => (
   <>
     <Section title="1. Introduction" i={1}>

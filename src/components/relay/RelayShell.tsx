@@ -1,26 +1,44 @@
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { getCalApi } from "@calcom/embed-react";
 import ContactForm from "@/components/petaron/FinalCTA";
 import { ContactContext } from "@/components/petaron/contact-context";
+import { SEO } from "@/components/petaron/SEO";
+import type { RouteSeo } from "@/lib/seo";
 
 const RELAY_PAGE = "#070806"; // --th-page inside .relay
 const RELAY_PAGE_LIGHT = "#f7f7f4"; // --th-page inside .relay.relay-light
 
+// anchors of the previous site, still in emails and posts, and where they live now
+const HASH_ALIASES: Record<string, string> = {
+  "process-flow": "how",
+  "chaos-to-order": "process",
+  "cost-calculator": "calculator",
+  booking: "demo",
+};
+
 /**
- * Page chrome for the Relay direction: dark token scope on a plain black
- * page, Cal.com init, contact modal, hash scrolling.
+ * Page chrome for every page of the site: the token scope (light, or the older
+ * dark variant), title and search tags, Cal.com init, the contact modal (also
+ * opened by `?contact=1` or `#contact`), and hash scrolling, with the previous
+ * site's anchors mapped onto the new sections.
  */
-export const RelayShell = ({ title, light = false, children }: { title: string; light?: boolean; children: ReactNode }) => {
+export const RelayShell = ({
+  seo,
+  light = false,
+  children,
+}: {
+  seo: { route: RouteSeo; jsonLd?: object | object[]; noindex?: boolean };
+  light?: boolean;
+  children: ReactNode;
+}) => {
   const location = useLocation();
   const [contactOpen, setContactOpen] = useState(false);
   const openContact = useCallback(() => setContactOpen(true), []);
 
-  // The live site's beige sits on <html>/<body> and in the browser's theme
-  // colour. Here it would show as a light band at the top when scrolling past
-  // the edge or while the page paints, and in a phone's address bar; so both go
-  // dark while a Relay page is mounted and are restored when it leaves.
+  // The default beige sits on <html>/<body> and in the browser's theme colour;
+  // it would show as a band at the top when scrolling past the edge or while the
+  // page paints, and in a phone's address bar. Matched to the page while mounted.
   useEffect(() => {
     const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     const prev = {
@@ -55,13 +73,21 @@ export const RelayShell = ({ title, light = false, children }: { title: string; 
     };
   }, []);
 
+  // ?contact=1 and #contact open the contact form, as on the previous site
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("contact") === "1" || location.hash === "#contact") setContactOpen(true);
+  }, [location.search, location.hash]);
+
   // Scroll to the hash target once the (lazy) page has rendered; top otherwise.
   useEffect(() => {
+    if (location.hash === "#contact") return;
     if (!location.hash) {
       window.scrollTo({ top: 0, behavior: "auto" });
       return;
     }
-    const id = location.hash.slice(1);
+    const raw = location.hash.slice(1);
+    const id = HASH_ALIASES[raw] ?? raw;
     const go = () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     const t = setTimeout(go, 120);
     return () => clearTimeout(t);
@@ -70,10 +96,7 @@ export const RelayShell = ({ title, light = false, children }: { title: string; 
   return (
     <ContactContext.Provider value={{ openContact }}>
       <div className={`relay min-h-screen bg-th-page text-th-heading ${light ? "relay-light" : ""}`}>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="robots" content="noindex" />
-        </Helmet>
+        <SEO route={seo.route} jsonLd={seo.jsonLd} noindex={seo.noindex} />
         <div className="relative z-10">{children}</div>
         <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
       </div>

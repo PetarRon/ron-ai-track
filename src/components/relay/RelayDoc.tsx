@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import type { LegalSection } from "@/components/legal/shared";
+import type { RouteSeo } from "@/lib/seo";
 import { RelayShell } from "./RelayShell";
 import { RelayNav } from "./RelayHero";
 import { RelayFooter } from "./RelayFooter";
@@ -24,17 +25,19 @@ export const RelayDocSection: LegalSection = ({ title, children }) => (
 );
 
 export const RelayDoc = ({
+  seo,
   title,
   accent,
   updated,
   children,
 }: {
+  seo: RouteSeo;
   title: string;
   accent: string;
   updated: string;
   children: ReactNode;
 }) => (
-  <RelayShell title={`${title} ${accent} · Relay direction preview`} light>
+  <RelayShell seo={{ route: seo }} light>
     <FlowRibbon snake={false} />
     <RelayNav />
     <header data-flow-head className={`relative pb-12 pt-14 md:pt-20 ${RELAY_SHELL}`}>

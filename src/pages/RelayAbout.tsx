@@ -4,6 +4,7 @@ import { RelayNav } from "@/components/relay/RelayHero";
 import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 import { FlowRibbon } from "@/components/relay/RelayFlow";
+import { routeSeo } from "@/lib/seo";
 import { Card, Em, Eyebrow, RELAY_SHELL, settle } from "@/components/relay/shared";
 
 const LinkedInIcon = () => (
@@ -47,7 +48,7 @@ const values = [
 ];
 
 const RelayAbout = () => (
-  <RelayShell title="About · Relay direction preview" light>
+  <RelayShell seo={{ route: routeSeo.about }} light>
     <FlowRibbon />
     <RelayNav />
     <article className={`relative pb-10 pt-16 md:pt-24 ${RELAY_SHELL}`}>

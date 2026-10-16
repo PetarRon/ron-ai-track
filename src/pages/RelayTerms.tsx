@@ -1,12 +1,13 @@
 import { RelayDoc, RelayDocSection } from "@/components/relay/RelayDoc";
 import { TermsBody } from "@/components/legal/TermsBody";
 import { TERMS_UPDATED, type LegalLinks } from "@/components/legal/shared";
+import { routeSeo } from "@/lib/seo";
 
-/** The terms of service in the Relay look, at /preview/relay/terms; the text is shared with /terms. */
-const LINKS: LegalLinks = { contact: "/preview/relay#demo", privacy: "/preview/relay/privacy" };
+/** The terms of service, at /terms; the text lives in src/components/legal. */
+const LINKS: LegalLinks = { contact: "/#demo", privacy: "/privacy" };
 
 const RelayTerms = () => (
-  <RelayDoc title="Terms of" accent="service" updated={TERMS_UPDATED}>
+  <RelayDoc seo={routeSeo.terms} title="Terms of" accent="service" updated={TERMS_UPDATED}>
     <TermsBody Section={RelayDocSection} links={LINKS} />
   </RelayDoc>
 );

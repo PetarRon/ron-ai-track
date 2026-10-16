@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import type { LegalLinks, LegalSection } from "./shared";
 
-/** The privacy policy, shared by /privacy and /preview/relay/privacy. */
+/** The privacy policy's sections; /privacy draws them with its own Section and links. */
 export const PrivacyBody = ({ Section, links }: { Section: LegalSection; links: LegalLinks }) => (
   <>
     <Section title="1. Who we are" i={1}>

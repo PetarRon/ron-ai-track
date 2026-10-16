@@ -1,9 +1,10 @@
 import type { ReactElement, ReactNode } from "react";
 
 /*
- * The legal texts are written once (PrivacyBody, TermsBody) and drawn by two
- * pages each: the live /privacy and /terms, and the Relay previews. A page
- * brings its own Section and the links that fit it.
+ * The legal texts are written once (PrivacyBody, TermsBody) and drawn by the
+ * pages at /privacy and /terms (src/pages/RelayPrivacy.tsx, RelayTerms.tsx),
+ * and by the previous site's pages while those stay in the repo. A page brings
+ * its own Section and the links that fit it.
  */
 
 /** How a page draws one numbered section */
