@@ -13,7 +13,7 @@ export const RelayCTA = () => {
         </h2>
         <p className="mx-auto mt-5 max-w-2xl font-body text-[15px] leading-relaxed text-th-page/75">
           Book a 30-minute demo and see Petaron.ai run on your own orders. <br className="hidden md:block" />A free
-          one-month pilot, no card, and your TMS stays exactly as it is.
+          one-month pilot, and your TMS stays exactly as it is.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <CalButton variant="dark">Book a Demo for Free</CalButton>
