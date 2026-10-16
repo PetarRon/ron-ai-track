@@ -5,6 +5,7 @@ import { RelayProcess } from "@/components/relay/RelayProcess";
 import { RelayFeatures } from "@/components/relay/RelayFeatures";
 import { RelayPlate } from "@/components/relay/RelayPlate";
 import { RelayCalculator } from "@/components/relay/RelayCalculator";
+import { RelayPilot } from "@/components/relay/RelayPilot";
 import { RelayConnect } from "@/components/relay/RelayConnect";
 import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFAQ } from "@/components/relay/RelayFAQ";
@@ -26,6 +27,7 @@ const RelayPreview = () => (
     <RelayPlate>
       <RelayCalculator />
     </RelayPlate>
+    <RelayPilot />
     <RelayConnect />
     <RelayCTA />
     <RelayFAQ />

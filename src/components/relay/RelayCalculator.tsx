@@ -102,13 +102,13 @@ export const RelayCalculator = () => {
               <span className="font-mono text-[12px] text-th-muted">Manual entry costs you</span>
               <p className="mt-3 font-body text-[44px] font-semibold leading-none tracking-[-0.03em] text-th-heading sm:text-[52px]">
                 <CountUp value={annualCost} format={euro} />
-                <span className="ml-2 font-mono text-[13px] font-normal tracking-normal text-th-muted">a year</span>
+                <span className="ml-2 inline-block whitespace-nowrap font-mono text-[13px] font-normal tracking-normal text-th-muted">a year</span>
               </p>
               <div className="my-6 h-px bg-th-line/60" />
               <span className="font-mono text-[12px] text-th-muted">Hours back on your desk</span>
               <p className="mt-2 font-body text-[28px] font-semibold tracking-[-0.02em] text-ac-1">
                 <CountUp value={hoursPerMonth} format={num} />
-                <span className="ml-2 font-mono text-[13px] font-normal tracking-normal text-th-muted">every month</span>
+                <span className="ml-2 inline-block whitespace-nowrap font-mono text-[13px] font-normal tracking-normal text-th-muted">every month</span>
               </p>
             </div>
             <div className="mt-8">

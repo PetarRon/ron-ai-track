@@ -747,6 +747,43 @@ div[data-cal-namespace] > div,
   .relay-belt-set[aria-hidden] { display: none; }
 }
 
+/* Pilot (src/components/relay/RelayPilot.tsx): four stops on one line. Each stop
+   (--i) lights up in turn and the segment after it fills on to the next stop;
+   the line runs down on phones and across from md up. */
+.relay-pilot { --t: 0.6s; --pilot-ink: rgb(var(--ac-1)); }
+.relay-light .relay-pilot { --pilot-ink: rgb(150 200 30); }
+.relay-pilot-dot {
+  position: absolute; left: 0; top: 2px; width: 14px; height: 14px; border-radius: 4px;
+  background: rgb(var(--ac-1)); box-shadow: 0 0 0 1px rgb(77 124 15 / 0.25);
+  opacity: 0; transform: scale(0.4);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * var(--t) + 0.15s);
+}
+.relay-pilot-text {
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * var(--t) + 0.2s);
+}
+/* the stretch to the next stop: a hairline track and a fill that grows along it */
+.relay-pilot-seg { position: absolute; left: 6px; top: 9px; width: 2px; height: calc(100% + 2rem); background: rgb(var(--th-line)); overflow: hidden; }
+.relay-pilot-seg > span {
+  position: absolute; inset: 0; background: var(--pilot-ink);
+  transform-origin: top; transform: scaleY(0);
+  transition: transform calc(var(--t) - 0.1s) ease-in-out;
+  transition-delay: calc(var(--i) * var(--t) + 0.3s);
+}
+@media (min-width: 768px) {
+  .relay-pilot-dot { top: 0; }
+  .relay-pilot-seg { left: 7px; top: 6px; width: calc(100% + 2rem); height: 2px; }
+  .relay-pilot-seg > span { transform-origin: left; transform: scaleX(0); }
+}
+.relay-pilot.is-on .relay-pilot-dot,
+.relay-pilot.is-on .relay-pilot-text { opacity: 1; transform: none; }
+.relay-pilot.is-on .relay-pilot-seg > span { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .relay-pilot-dot, .relay-pilot-text, .relay-pilot-seg > span { transition: none; opacity: 1; transform: none; }
+}
+
 /* ============================================================
    Features (src/components/relay/RelayFeatures.tsx): six feature
    cards, each with one quiet looping visual.
