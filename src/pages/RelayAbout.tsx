@@ -46,7 +46,7 @@ const values = [
 ];
 
 const RelayAbout = () => (
-  <RelayShell title="About · Relay direction preview">
+  <RelayShell title="About · Relay direction preview" light>
     <RelayNav />
     <article className={`relative pb-10 pt-16 md:pt-24 ${RELAY_SHELL}`}>
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
@@ -70,7 +70,7 @@ const RelayAbout = () => (
           <div className="relative pt-6">
             <div
               aria-hidden
-              className="absolute inset-x-0 bottom-0 top-[22%] rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,rgb(255_255_255/0.06),rgb(255_255_255/0.012)_55%),linear-gradient(rgb(10_11_9/0.72),rgb(10_11_9/0.72))] shadow-[0_40px_90px_-50px_rgb(0_0_0/0.9)]"
+              className="absolute inset-x-0 bottom-0 top-[22%] rounded-[28px] border border-white/10 relay-pane shadow-[0_40px_90px_-50px_rgb(0_0_0/0.9)]"
             />
             <picture className="relative block">
               <source srcSet="/founders-cutout.webp" type="image/webp" />

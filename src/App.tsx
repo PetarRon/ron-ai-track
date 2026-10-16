@@ -32,7 +32,8 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/preview/relay" element={<RelayPreview />} />
-              <Route path="/preview/relay/light" element={<RelayPreview light />} />
+              <Route path="/preview/relay/light" element={<RelayPreview />} />
+              <Route path="/preview/relay/dark" element={<RelayPreview dark />} />
               <Route path="/preview/relay/about" element={<RelayAbout />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

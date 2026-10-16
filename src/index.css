@@ -802,7 +802,8 @@ div[data-cal-namespace] > div,
 }
 
 /* ============================================================
-   RELAY, LIGHT (/preview/relay/light): the same page on an
+   RELAY, LIGHT (the default on /preview/relay and its About page;
+   /preview/relay/dark keeps the dark one): the page on an
    off-white ground. The tokens flip; lime stays the fill colour,
    but text that was lime turns deep green, anything sitting on lime
    keeps dark ink, and the few colours written for the dark page get
@@ -828,6 +829,7 @@ div[data-cal-namespace] > div,
 
 /* lime as text would vanish on white: a deep green instead */
 .relay-light .text-ac-1 { color: rgb(77 124 15); }
+.relay-light .hover\:text-ac-1:hover { color: rgb(77 124 15); }
 
 /* on a lime fill the ink stays dark, and a "dark" button on it stays dark */
 .relay-light .bg-ac-1,
