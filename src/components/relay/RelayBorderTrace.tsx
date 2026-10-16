@@ -47,9 +47,9 @@ const unlisten = () => {
   frame = 0;
 };
 
-// lime into deep green and back, so the arc reads on the white cards as well as on dark
+// light lime only: the brand lime, a paler tint and a slightly deeper lime, no dark green
 const GRADIENT =
-  "repeating-conic-gradient(from 236.84deg at 50% 50%, #c7f23c 0%, #a8d628 5%, #6e9e14 10%, #4d7c0f 15%, #c7f23c 20%)";
+  "repeating-conic-gradient(from 236.84deg at 50% 50%, #c7f23c 0%, #dcf884 5%, #b8e33a 10%, #d2f560 15%, #c7f23c 20%)";
 
 type Props = {
   /** half the arc's length, in degrees */
