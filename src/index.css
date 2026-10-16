@@ -698,6 +698,9 @@ div[data-cal-namespace] > div,
   .relay-try *, .relay-try *::before { animation: none !important; transition: none !important; }
 }
 
+/* The GradFlow backdrops (src/components/relay/RelayFlow.tsx) belong to the light page */
+.relay:not(.relay-light) .relay-flow { display: none; }
+
 /* Glass panels (try-it frame, comparison table, results, Connect strip): no
    backdrop-filter. In Chrome with GPU compositing a backdrop blur that runs past
    the top of the screen pulls in a light band, and over this dark page it blurs

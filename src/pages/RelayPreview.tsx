@@ -10,6 +10,7 @@ import { RelayConnect } from "@/components/relay/RelayConnect";
 import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFAQ } from "@/components/relay/RelayFAQ";
 import { RelayFooter } from "@/components/relay/RelayFooter";
+import { FlowRibbon } from "@/components/relay/RelayFlow";
 
 /**
  * Design prototype: the Relay-direction redesign, lime on a light page
@@ -18,6 +19,7 @@ import { RelayFooter } from "@/components/relay/RelayFooter";
  */
 const RelayPreview = ({ dark = false }: { dark?: boolean }) => (
   <RelayShell title={dark ? "Relay direction preview, dark" : "Relay direction preview"} light={!dark}>
+    {!dark && <FlowRibbon />}
     <RelayHero />
     <RelayTryIt />
     <RelayProcess />

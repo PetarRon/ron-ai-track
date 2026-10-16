@@ -1,8 +1,7 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Play } from "lucide-react";
-import { GradFlow, type GradientConfigInput } from "gradflow";
 import { useContact } from "@/components/petaron/contact-context";
 import { CalButton, LogoMark, buttonVariants } from "./shared";
 import { RelayHeroLoop } from "./RelayHeroLoop";
@@ -87,45 +86,14 @@ const rise = (delay: number) => ({
   transition: { duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
 
-/* Ron's GradFlow stripes (gradflow.meera.dev) behind the hero, in the brand's
-   colours: white, the lime of the buttons and a soft mint; slow, a little grain.
-   They fade into the page at the bottom and hold still under reduced motion. */
-const HERO_FLOW: GradientConfigInput = {
-  color1: { r: 255, g: 255, b: 255 },
-  color2: { r: 199, g: 242, b: 60 },
-  color3: { r: 168, g: 232, b: 208 },
-  speed: 0.4,
-  scale: 1,
-  type: "stripe",
-  noise: 0.08,
-};
-
-const HeroFlow = () => {
-  const reduced = useReducedMotion();
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0">
-      <GradFlow config={HERO_FLOW} paused={!!reduced} />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-th-page" />
-    </div>
-  );
-};
-
 export const RelayHero = () => {
   const { openContact } = useContact();
   return (
-  <section className="relative overflow-hidden">
-    <HeroFlow />
+  <section data-flow-head className="relative overflow-hidden">
     <RelayNav />
     <div className="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 items-center gap-12 px-6 pb-28 pt-16 md:px-8 lg:grid-cols-[minmax(0,1fr)_620px] lg:pt-14">
       <div className="relative z-10">
-        <motion.span
-          {...rise(0.1)}
-          className="inline-flex items-center gap-2 rounded-full border border-th-line bg-th-surface/50 px-3.5 py-1.5 font-body text-[13px] text-th-heading"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-ac-1" />
-          Free one-month pilot · From email to TMS
-        </motion.span>
-        <h1 className="mt-7 font-display text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-th-heading sm:text-[56px] lg:text-[60px]">
+        <h1 className="font-display text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-th-heading sm:text-[56px] lg:text-[60px]">
           <motion.span {...rise(0.2)} className="block">
             Automate your
           </motion.span>
