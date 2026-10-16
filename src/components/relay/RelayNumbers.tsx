@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, motion, useInView } from "framer-motion";
+import { Check } from "lucide-react";
 import { Em, RELAY_SHELL, settle } from "./shared";
 
 /*
- * The latest test, shown whole: a wall of 100 squares, one per field, lit in
- * a wave. Figures are the ones already quoted on this page, from the latest
- * internal evaluation (September 2026) on one customer's live orders. They
- * still need sign-off before this goes live; update them from the eval run,
- * never by hand. Styles: `rn-*` in src/index.css.
+ * The latest test, shown as a split of the work: a wall of 100 squares, one
+ * per field. The AI agent's 92 light up first in a wave, then your team's 8
+ * fill in at the end, so the wall reads as work shared, finished and
+ * approved, not as errors. Figures are from the latest internal evaluation
+ * (September 2026) on one customer's live orders; update them from the eval
+ * run, never by hand. Styles: `rn-*` in src/index.css.
  */
 
 const TOTAL = 100;
@@ -15,16 +17,14 @@ const CELL = 22;
 const GAP = 6;
 const RIGHT = 92;
 
-/**
- * where the 8 that needed a person sit: picked by hand so they spread evenly
- * both as 25 x 4 (two per row) and as 10 x 10 (one per row, eight rows)
- */
-const CHECKED = new Set([3, 16, 34, 47, 51, 63, 82, 98]);
-const CELLS: boolean[] = Array.from({ length: TOTAL }, (_, i) => !CHECKED.has(i));
+/** the agent's share first, your team's at the end, like a bar filling up */
+const CELLS: boolean[] = Array.from({ length: TOTAL }, (_, i) => i < RIGHT);
+/** when the agent's wave has passed, your team's squares follow */
+const TEAM_AT = 1.5;
 
 const STATS = [
-  { value: "2 in 3", label: "orders needed zero edits" },
-  { value: "97%", label: "of load and unload site fields correct" },
+  { value: "2 in 3", label: "orders approved without a single edit" },
+  { value: "97%", label: "of load and unload sites right the first time" },
   { value: "0", label: "wrong TMS party codes: matched or flagged, never guessed" },
 ];
 
@@ -34,19 +34,20 @@ const Wall = ({ on, cols, className = "" }: { on: boolean; cols: number; classNa
     className={`rn-wall w-full ${on ? "is-on" : ""} ${className}`}
     aria-hidden
   >
-    {CELLS.map((right, i) => {
+    {CELLS.map((agent, i) => {
       const c = i % cols;
       const r = Math.floor(i / cols);
+      const delay = agent ? c * (1.2 / cols) + r * 0.04 : TEAM_AT + (i - RIGHT) * 0.09;
       return (
         <rect
           key={i}
-          className={`rn-cell ${right ? "is-ok" : "is-check"}`}
+          className={`rn-cell ${agent ? "is-agent" : "is-team"}`}
           x={c * (CELL + GAP)}
           y={r * (CELL + GAP)}
           width={CELL}
           height={CELL}
           rx={4}
-          style={{ animationDelay: `${(c * (1.2 / cols) + r * 0.04).toFixed(3)}s` }}
+          style={{ animationDelay: `${delay.toFixed(3)}s` }}
         />
       );
     })}
@@ -90,14 +91,14 @@ export const RelayNumbers = () => {
               <p className="font-display text-[clamp(72px,9vw,112px)] font-semibold leading-[0.85] tracking-[-0.05em] text-ac-1">
                 {shown}%
               </p>
-              <p className="max-w-[17ch] font-body text-[15px] leading-relaxed text-th-heading">
-                of fields were right on the first pass.
+              <p className="max-w-[19ch] font-body text-[15px] leading-relaxed text-th-heading">
+                of fields typed in for you, right on the first pass.
               </p>
             </div>
             <ul className="flex flex-wrap gap-x-6 gap-y-2">
               {[
-                { cls: "is-ok", label: "correct as drafted" },
-                { cls: "is-check", label: "needed a look from your team" },
+                { cls: "is-agent", label: "typed in by the AI agent" },
+                { cls: "is-team", label: "finished by your team" },
               ].map((o) => (
                 <li key={o.cls} className="flex items-center gap-2.5 font-body text-[13px] text-th-body">
                   <svg viewBox="0 0 14 14" className="h-3.5 w-3.5 shrink-0" aria-hidden>
@@ -108,10 +109,18 @@ export const RelayNumbers = () => {
               ))}
             </ul>
           </div>
-          <div className="mt-8" role="img" aria-label={`${RIGHT} of every 100 fields correct on the first pass`}>
+          <div
+            className="mt-8"
+            role="img"
+            aria-label={`${RIGHT} of every 100 fields typed in correctly by the AI agent; your team finishes the other ${TOTAL - RIGHT}`}
+          >
             <Wall on={on} cols={25} className="hidden sm:block" />
             <Wall on={on} cols={10} className="sm:hidden" />
           </div>
+          <p className="mt-6 flex items-center gap-2.5 font-body text-[14px] text-th-heading">
+            <Check className="h-4 w-4 shrink-0 text-ac-1" strokeWidth={2.5} aria-hidden />
+            Nothing reaches your TMS until someone on your team approves it.
+          </p>
         </div>
 
         <div className="grid divide-y divide-white/10 border-t border-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">

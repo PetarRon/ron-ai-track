@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Em, RELAY_SHELL, settle } from "./shared";
 import { RelayBorderTrace } from "./RelayBorderTrace";
@@ -51,20 +51,57 @@ const Sources = () => (
   </div>
 );
 
-const Trace = () => (
-  <div className="rf-viz rf-trace" aria-hidden>
-    <div className="quote">
-      “Total weight: <b>3,240 kg</b>”
+/**
+ * a source for every field: the link is drawn from the highlighted value to the
+ * field's edge, both measured, so it meets them wherever the quote wraps
+ */
+const Trace = () => {
+  const box = useRef<HTMLDivElement>(null);
+  const value = useRef<HTMLElement>(null);
+  const end = useRef<HTMLSpanElement>(null);
+  const field = useRef<HTMLDivElement>(null);
+  const [d, setD] = useState("");
+
+  useLayoutEffect(() => {
+    const el = box.current;
+    if (!el || !value.current || !end.current || !field.current) return;
+    const measure = () => {
+      if (!value.current || !end.current || !field.current) return;
+      const b = el.getBoundingClientRect();
+      const v = value.current.getBoundingClientRect();
+      const e = end.current.getBoundingClientRect();
+      const f = field.current.getBoundingClientRect();
+      const x1 = e.right - b.left + 8;
+      const y1 = v.top + v.height / 2 - b.top;
+      const x2 = f.left - b.left;
+      const y2 = f.top + f.height / 2 - b.top;
+      const mx = (x1 + x2) / 2;
+      setD(`M${x1.toFixed(1)} ${y1.toFixed(1)} C ${mx.toFixed(1)} ${y1.toFixed(1)}, ${mx.toFixed(1)} ${y2.toFixed(1)}, ${x2.toFixed(1)} ${y2.toFixed(1)}`);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    [el, value.current, field.current].forEach((n) => ro.observe(n));
+    document.fonts?.ready.then(measure);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={box} className="rf-viz rf-trace" aria-hidden>
+      <div className="quote">
+        “Total weight:{" "}
+        <span ref={end} className="whitespace-nowrap">
+          <b ref={value}>3,240 kg</b>”
+        </span>
+      </div>
+      <span />
+      <div ref={field} className="field">
+        <em>Gross weight</em>3,240 kg
+        <small>Read from the email</small>
+      </div>
+      <svg>{d && <path d={d} pathLength={1} className="link" />}</svg>
     </div>
-    <svg viewBox="0 0 40 60" preserveAspectRatio="none">
-      <path d="M2 10 C 30 10, 10 50, 38 50" className="link" />
-    </svg>
-    <div className="field">
-      <em>Gross weight</em>3,240 kg
-      <small>Read from the email</small>
-    </div>
-  </div>
-);
+  );
+};
 
 const Reason = () => (
   <div className="rf-viz rf-reason" aria-hidden>

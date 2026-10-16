@@ -723,9 +723,35 @@ div[data-cal-namespace] > div,
 }
 @media (prefers-reduced-motion: reduce) { .relay-wire-pulse { animation: none; opacity: 0.8; } }
 
-/* Numbers (src/components/relay/RelayNumbers.tsx): one square per field, lit in a wave */
-.rn-cell.is-ok { fill: rgb(var(--ac-1)); }
-.rn-cell.is-check { fill: rgb(245 183 42 / 0.8); }
+/* About values (src/pages/RelayAbout.tsx): a belt rolling right to left, faded
+   at both ends. Each copy of the set carries its own trailing gap, so moving the
+   track by half its width lands exactly on the next copy. */
+.relay-belt {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+.relay-belt-track { display: flex; width: max-content; animation: relay-belt 42s linear infinite; }
+.relay-belt:hover .relay-belt-track { animation-play-state: paused; }
+.relay-belt-set { display: flex; margin: 0; padding: 0; list-style: none; }
+.relay-belt-item {
+  display: flex; align-items: flex-start; gap: 16px; width: 420px; flex: none;
+  padding: 6px 40px; border-left: 1px solid rgb(var(--th-line));
+}
+@keyframes relay-belt { to { transform: translateX(-50%); } }
+@media (max-width: 640px) { .relay-belt-item { width: 300px; padding: 4px 24px; } }
+@media (prefers-reduced-motion: reduce) {
+  .relay-belt { -webkit-mask-image: none; mask-image: none; }
+  .relay-belt-track { animation: none; width: auto; }
+  .relay-belt-set { flex-wrap: wrap; justify-content: center; row-gap: 24px; }
+  .relay-belt-set[aria-hidden] { display: none; }
+}
+
+/* Numbers (src/components/relay/RelayNumbers.tsx): one square per field, the
+   agent's in lime, your team's in a deeper green: two shares of one job */
+.rn-cell.is-agent { fill: rgb(var(--ac-1)); }
+.rn-cell.is-team { fill: rgb(122 168 30); }
+.relay-light .rn-cell.is-team { fill: rgb(77 124 15); }
 .rn-wall .rn-cell { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.4); }
 .rn-wall.is-on .rn-cell { animation: rn-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 @keyframes rn-pop { 60% { opacity: 1; transform: scale(1.06); } 100% { opacity: 1; transform: scale(1); } }
@@ -772,13 +798,14 @@ div[data-cal-namespace] > div,
 .rf-sources .hub { padding: 6px 10px; border-radius: 999px; background: rgb(var(--ac-1)); color: rgb(var(--th-page)); font: 600 11.5px var(--font-mono, monospace); white-space: nowrap; }
 
 /* a source for every field: a field linked to its quote */
-.rf-trace { display: grid; grid-template-columns: 1fr 34px 1fr; align-items: center; padding: 12px; }
+.rf-trace { display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr); align-items: center; padding: 12px 14px; }
 .rf-trace .quote { font: 11.5px/1.5 var(--font-mono, monospace); color: rgb(var(--th-body)); }
 .rf-trace .quote b { white-space: nowrap; font-weight: 600; color: rgb(var(--th-page)); background: rgb(var(--ac-1)); border-radius: 3px; padding: 0 2px; animation: rf-mark 3s ease infinite; }
 @keyframes rf-mark { 0%, 100% { background: rgb(var(--ac-1) / 0.35); color: rgb(var(--th-heading)); } 30%, 70% { background: rgb(var(--ac-1)); color: rgb(var(--th-page)); } }
-.rf-trace svg { width: 34px; height: 60px; }
-.rf-trace .link { fill: none; stroke: rgb(var(--ac-1)); stroke-width: 1.4; stroke-dasharray: 60; animation: rf-draw 3s ease infinite; vector-effect: non-scaling-stroke; }
-@keyframes rf-draw { 0% { stroke-dashoffset: 60; } 35%, 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -60; } }
+.rf-trace svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+/* the path is measured in pixels and given pathLength 1, so the draw runs the same whatever its length */
+.rf-trace .link { fill: none; stroke: rgb(var(--ac-1)); stroke-width: 1.4; stroke-linecap: round; stroke-dasharray: 1 1; animation: rf-draw 3s ease infinite; }
+@keyframes rf-draw { 0% { stroke-dashoffset: 1; } 35%, 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1; } }
 .rf-trace .field { position: relative; padding: 12px 10px 7px; border-radius: 8px; border: 1px solid rgb(var(--ac-1) / 0.45); font: 600 12.5px var(--font-heading, sans-serif); color: rgb(var(--th-heading)); }
 .rf-trace .field em { position: absolute; top: -8px; left: 8px; padding: 0 4px; background: rgb(var(--th-page)); font: 10.5px var(--font-mono, monospace); font-style: normal; color: rgb(var(--th-muted)); }
 .rf-trace .field small { display: block; margin-top: 2px; font: 10px var(--font-mono, monospace); color: rgb(var(--th-muted)); }

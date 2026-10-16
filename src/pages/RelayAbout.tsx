@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
+import { Activity, Lock, MapPin, UserCheck, Users, Zap, type LucideIcon } from "lucide-react";
 import { RelayShell } from "@/components/relay/RelayShell";
 import { RelayNav } from "@/components/relay/RelayHero";
 import { RelayCTA } from "@/components/relay/RelayCTA";
 import { RelayFooter } from "@/components/relay/RelayFooter";
 import { FlowRibbon } from "@/components/relay/RelayFlow";
 import { routeSeo } from "@/lib/seo";
-import { Card, Em, Eyebrow, RELAY_SHELL, settle } from "@/components/relay/shared";
+import { Card, Em, LogoMark, RELAY_SHELL, settle } from "@/components/relay/shared";
 
 const LinkedInIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3 w-3 fill-current">
@@ -18,34 +19,76 @@ const founders = [
   { name: "Petar Paskalev", href: "https://www.linkedin.com/in/petar-paskalev/" },
 ];
 
-const sections = [
+/** a lime square with a dark icon, the same shape as the logo mark */
+const Badge = ({ Icon }: { Icon: LucideIcon }) => (
+  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-ac-1 text-th-page">
+    <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
+  </span>
+);
+
+const sections: { mark: LucideIcon | "logo"; title: string; body: string }[] = [
   {
-    meta: "Origin",
+    mark: MapPin,
     title: "Where we come from",
     body: "Based in the Netherlands, Petaron is built by a small team whose backgrounds span freight forwarding, enterprise software and machine learning. We have sat in the dispatcher's chair, and we have built the systems that make that chair harder than it should be.",
   },
   {
-    meta: "Why",
+    mark: Zap,
     title: "What drives us",
     body: "Technology should remove friction, not add complexity. The logistics industry moves the world, yet too many teams still spend hours retyping orders. Our agents read, understand and prepare each order so your operators approve in seconds instead of typing for minutes.",
   },
   {
-    meta: "Team",
+    mark: Users,
     title: "The team",
     body: "A small, fast-moving team based in the Netherlands with roots across Europe and beyond. We speak several languages, know several markets, and share one job: making logistics operations smarter and faster.",
   },
   {
-    meta: "Name",
+    mark: "logo",
     title: "Where the name comes from",
     body: "Petaron is the two of us in one word: Petar and Ron. And by happy coincidence, petaron (פתרון) is the Hebrew word for solution. A name that says exactly what we set out to build.",
   },
 ];
 
-const values = [
-  { title: "Reliability first.", body: "Logistics runs on trust. Built for accuracy and uptime." },
-  { title: "Human in the loop.", body: "AI handles the heavy lifting; people make the final call." },
-  { title: "Privacy by design.", body: "EU-hosted, GDPR-compliant, security at the core." },
+const values: { Icon: LucideIcon; title: string; body: string }[] = [
+  { Icon: Activity, title: "Reliability first.", body: "Logistics runs on trust. Built for accuracy and uptime." },
+  { Icon: UserCheck, title: "Human in the loop.", body: "AI handles the heavy lifting; people make the final call." },
+  { Icon: Lock, title: "Privacy by design.", body: "EU-hosted, GDPR-compliant, security at the core." },
 ];
+
+/**
+ * The values on a slow belt rolling right to left, with no card behind them:
+ * two copies of the set, the track moving by exactly one copy, so the loop has
+ * no seam. Hovering holds it; with reduced motion the set lies still.
+ * Styles: `.relay-belt` in src/index.css.
+ */
+const ValuesBelt = () => (
+  <section className="mt-24" aria-labelledby="values-title">
+    <motion.h2
+      id="values-title"
+      {...settle()}
+      className="text-center font-display text-[clamp(28px,4vw,40px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
+    >
+      What we <Em>stand for.</Em>
+    </motion.h2>
+    <motion.div {...settle(0.1)} className="relay-belt mt-10">
+      <div className="relay-belt-track">
+        {[0, 1].map((copy) => (
+          <ul key={copy} className="relay-belt-set" aria-hidden={copy === 1 || undefined}>
+            {values.map(({ Icon, title, body }) => (
+              <li key={title} className="relay-belt-item">
+                <Badge Icon={Icon} />
+                <div>
+                  <h3 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-th-heading">{title}</h3>
+                  <p className="mt-1.5 font-body text-[15px] leading-relaxed text-th-body">{body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </motion.div>
+  </section>
+);
 
 const RelayAbout = () => (
   <RelayShell seo={{ route: routeSeo.about }} light>
@@ -54,12 +97,9 @@ const RelayAbout = () => (
     <article className={`relative pb-10 pt-16 md:pt-24 ${RELAY_SHELL}`}>
       <div data-flow-head className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
         <div>
-          <motion.div {...settle()}>
-            <Eyebrow>About us</Eyebrow>
-          </motion.div>
           <motion.h1
             {...settle(0.1)}
-            className="mt-6 font-display text-[40px] font-semibold leading-[1.04] tracking-[-0.03em] text-th-heading sm:text-[56px]"
+            className="font-display text-[40px] font-semibold leading-[1.04] tracking-[-0.03em] text-th-heading sm:text-[56px]"
           >
             Two people who were tired of <Em>retyping</Em> orders.
           </motion.h1>
@@ -110,25 +150,17 @@ const RelayAbout = () => (
         {sections.map((s, i) => (
           <motion.div key={s.title} {...settle(0.05 * i)}>
             <Card className="h-full p-7 md:p-8">
-              <span className="font-mono text-[12px] text-th-muted">{s.meta}</span>
-              <h2 className="mt-3 font-display text-[22px] font-medium tracking-[-0.02em] text-th-heading">{s.title}</h2>
+              <div className="flex items-center gap-3.5">
+                {s.mark === "logo" ? <LogoMark size={40} /> : <Badge Icon={s.mark} />}
+                <h2 className="font-display text-[22px] font-medium tracking-[-0.02em] text-th-heading">{s.title}</h2>
+              </div>
               <p className="mt-3 font-body text-[15px] leading-relaxed text-th-body">{s.body}</p>
             </Card>
           </motion.div>
         ))}
       </div>
 
-      <motion.div {...settle(0.1)} className="mt-5 rounded-2xl bg-ac-1 p-7 md:p-9">
-        <span className="font-mono text-[12px] text-th-page/60">Our values</span>
-        <div className="mt-5 grid gap-6 md:grid-cols-3">
-          {values.map((v) => (
-            <div key={v.title}>
-              <h3 className="font-display text-[20px] font-semibold tracking-[-0.02em] text-th-page">{v.title}</h3>
-              <p className="mt-2 font-body text-[14px] leading-relaxed text-th-page/75">{v.body}</p>
-            </div>
-          ))}
-        </div>
-      </motion.div>
+      <ValuesBelt />
     </article>
     <RelayCTA />
     <RelayFooter />

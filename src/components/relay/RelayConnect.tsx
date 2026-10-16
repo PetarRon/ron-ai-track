@@ -71,7 +71,7 @@ export const RelayConnect = () => {
       >
         <SystemCard kicker="from" name={pair.from} />
         <Wire delay={0} />
-        <div className="flex w-full flex-col items-center gap-3 rounded-2xl border border-ac-1/30 bg-ac-1/[0.06] px-4 py-4 sm:w-72">
+        <div className="relay-well flex w-full flex-col items-center gap-3 rounded-2xl border border-white/10 bg-th-page/60 px-4 py-4 sm:w-72">
           <div className="flex items-center gap-2.5">
             <LogoMark size={26} />
             <span className="font-display text-[16px] font-semibold text-th-heading">AI agent</span>
@@ -89,7 +89,7 @@ export const RelayConnect = () => {
                 {pair.fields.map((f, k) => (
                   <motion.span
                     key={f}
-                    className="rounded-md border border-ac-1/40 px-2 py-0.5 font-mono text-[11px] text-ac-1"
+                    className="rounded-md border border-th-line bg-th-surface/60 px-2 py-0.5 font-mono text-[11px] text-th-body"
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25 + k * 0.18, duration: 0.3 }}
