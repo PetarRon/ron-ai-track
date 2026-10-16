@@ -15,7 +15,6 @@ const HASH_ALIASES: Record<string, string> = {
   "chaos-to-order": "process",
   "cost-calculator": "calculator",
   booking: "demo",
-  results: "pilot",
 };
 
 /**
