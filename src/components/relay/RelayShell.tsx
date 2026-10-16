@@ -6,12 +6,13 @@ import ContactForm from "@/components/petaron/FinalCTA";
 import { ContactContext } from "@/components/petaron/contact-context";
 
 const RELAY_PAGE = "#070806"; // --th-page inside .relay
+const RELAY_PAGE_LIGHT = "#f7f7f4"; // --th-page inside .relay.relay-light
 
 /**
  * Page chrome for the Relay direction: dark token scope on a plain black
  * page, Cal.com init, contact modal, hash scrolling.
  */
-export const RelayShell = ({ title, children }: { title: string; children: ReactNode }) => {
+export const RelayShell = ({ title, light = false, children }: { title: string; light?: boolean; children: ReactNode }) => {
   const location = useLocation();
   const [contactOpen, setContactOpen] = useState(false);
   const openContact = useCallback(() => setContactOpen(true), []);
@@ -27,15 +28,16 @@ export const RelayShell = ({ title, children }: { title: string; children: React
       html: document.documentElement.style.backgroundColor,
       body: document.body.style.backgroundColor,
     };
-    meta?.setAttribute("content", RELAY_PAGE);
-    document.documentElement.style.backgroundColor = RELAY_PAGE;
-    document.body.style.backgroundColor = RELAY_PAGE;
+    const page = light ? RELAY_PAGE_LIGHT : RELAY_PAGE;
+    meta?.setAttribute("content", page);
+    document.documentElement.style.backgroundColor = page;
+    document.body.style.backgroundColor = page;
     return () => {
       if (meta && prev.meta) meta.setAttribute("content", prev.meta);
       document.documentElement.style.backgroundColor = prev.html;
       document.body.style.backgroundColor = prev.body;
     };
-  }, []);
+  }, [light]);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,7 +69,7 @@ export const RelayShell = ({ title, children }: { title: string; children: React
 
   return (
     <ContactContext.Provider value={{ openContact }}>
-      <div className="relay min-h-screen bg-th-page text-th-heading">
+      <div className={`relay min-h-screen bg-th-page text-th-heading ${light ? "relay-light" : ""}`}>
         <Helmet>
           <title>{title}</title>
           <meta name="robots" content="noindex" />

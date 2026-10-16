@@ -800,3 +800,112 @@ div[data-cal-namespace] > div,
   .rf-ocr .scan, .rf-files span, .rf-sources .wire, .rf-trace .quote b, .rf-trace .link, .rf-reason .typed, .rf-trust div { animation: none !important; }
   .rf-trust div { opacity: 1; }
 }
+
+/* ============================================================
+   RELAY, LIGHT (/preview/relay/light): the same page on an
+   off-white ground. The tokens flip; lime stays the fill colour,
+   but text that was lime turns deep green, anything sitting on lime
+   keeps dark ink, and the few colours written for the dark page get
+   light equivalents. The demo windows keep their own look.
+   ============================================================ */
+.relay.relay-light {
+  color-scheme: light;
+  --th-page:        247 247 244;
+  --th-surface:     255 255 255;
+  --th-surface-alt: 240 241 236;
+  --th-elevated:    255 255 255;
+  --th-heading:     17 19 15;
+  --th-body:        74 78 68;
+  --th-muted:       110 115 102;
+  --th-faint:       150 154 142;
+  --th-line:        222 224 216;
+  --th-line-subtle: 233 234 228;
+  --ac-hero-from:   17 19 15;
+  --ac-hero-via:    40 44 36;
+  --ac-hero-to:     77 124 15;
+}
+.relay-light ::selection { background: rgb(199 242 60 / 0.55); }
+
+/* lime as text would vanish on white: a deep green instead */
+.relay-light .text-ac-1 { color: rgb(77 124 15); }
+
+/* on a lime fill the ink stays dark, and a "dark" button on it stays dark */
+.relay-light .bg-ac-1,
+.relay-light .relay-on-lime { --th-page: 7 8 6; --th-heading: 240 241 236; }
+
+/* hairlines and fills that were white on dark */
+.relay-light .border-white\/10 { border-color: rgb(17 19 15 / 0.1); }
+.relay-light .border-white\/\[0\.06\] { border-color: rgb(17 19 15 / 0.08); }
+.relay-light .bg-white\/10 { background-color: rgb(17 19 15 / 0.14); }
+.relay-light .divide-white\/10 > :not([hidden]) ~ :not([hidden]) { border-color: rgb(17 19 15 / 0.1); }
+.relay-light .divide-white\/\[0\.06\] > :not([hidden]) ~ :not([hidden]) { border-color: rgb(17 19 15 / 0.08); }
+
+/* glass panels become white cards with a soft shadow */
+.relay-light .relay-pane,
+.relay-light .rf-card { background: rgb(255 255 255 / 0.92); }
+.relay-light .rf-card { border-color: rgb(17 19 15 / 0.08); }
+.relay-light .rf-card,
+.relay-light [class*="rgb(0_0_0/0.9)"],
+.relay-light [class*="rgba(0,0,0,0.5)"] {
+  box-shadow: 0 1px 2px rgb(17 19 15 / 0.05), 0 18px 40px -24px rgb(17 19 15 / 0.22);
+}
+
+/* feature visuals */
+.relay-light .rf-viz { background: rgb(var(--th-page)); border-color: rgb(17 19 15 / 0.07); }
+.relay-light .rf-files span { border-color: rgb(17 19 15 / 0.12); animation-name: rf-chip-light; }
+@keyframes rf-chip-light {
+  0%, 100% { border-color: rgb(17 19 15 / 0.12); color: rgb(var(--th-body)); }
+  8%, 22% { border-color: rgb(77 124 15 / 0.6); color: rgb(77 124 15); }
+}
+.relay-light .rf-sources .ins span { border-color: rgb(17 19 15 / 0.12); }
+.relay-light .rf-sources .hub { color: #0b0c0a; }
+.relay-light .rf-trace .quote b { --th-page: 7 8 6; }
+.relay-light .rf-trust .t,
+.relay-light .rf-reason .q { color: rgb(77 124 15); }
+
+/* the hero's product window in the app's own light colours */
+.relay.relay-light .dash.is-glass {
+  --dash-bg: #f8f8f6;
+  --dash-surface: #f2f2ef;
+  --dash-card: #ffffff;
+  --dash-border: #e6e6e1;
+  --dash-border-2: #d8d8d2;
+  --dash-text: #22241f;
+  --dash-text-2: #5a5d54;
+  --dash-text-3: #92958c;
+  --dash-primary: #c7f23c;
+  --dash-primary-2: #a8d628;
+  --dash-amber: #b7791f;
+  --dash-green: #4d7c0f;
+  --dash-grey: #8a8d84;
+  --dash-red: #c2410c;
+  color-scheme: light;
+  border-color: rgb(var(--th-line));
+  background: #ffffff;
+}
+.relay.relay-light .dash.is-glass .dash-side { background: #f7f7f4; }
+.relay.relay-light .dash.is-glass .dash-tr.is-head { background: #f7f7f4; }
+.relay.relay-light .dash.is-glass .dash-btn.is-primary { color: #0b0c0a; }
+
+/* the demo windows in light: white windows, warm grey lines, readable green */
+.relay-light .relay-try {
+  --rt-win: #ffffff;
+  --rt-surface: #f7f7f4;
+  --rt-line: #e7e8e2;
+  --rt-line-2: #d7d9d0;
+  --rt-muted: #6e7366;
+  --rt-faint: #9a9e92;
+  --rt-lime-soft: rgb(199 242 60 / 0.45);
+  --rt-amber: #b7791f;
+  --rt-amber-soft: rgba(245, 183, 42, 0.18);
+}
+.relay-light .rt-card { border-color: rgb(17 19 15 / 0.1); box-shadow: 0 1px 2px rgb(17 19 15 / 0.05), 0 18px 40px -24px rgb(17 19 15 / 0.22); }
+.relay-light .rt-chip.green { color: rgb(60 98 10); }
+.relay-light .rt-chip.grey { background: rgb(17 19 15 / 0.05); }
+.relay-light .rt-q-row.is-head { background: rgb(17 19 15 / 0.02); }
+.relay-light .rt-kw.is-lit { color: #0b0c0a; background: rgb(199 242 60 / 0.6); }
+.relay-light .rt-pop { background: rgba(247, 247, 244, 0.72); }
+.relay-light .rt-pop .box { box-shadow: 0 24px 60px rgb(17 19 15 / 0.18); }
+.relay-light .rf-sources .wire { stroke: rgb(77 124 15 / 0.55); }
+.relay-light .rf-trace .link { stroke: rgb(77 124 15); }
+.relay-light .rf-trace .field { border-color: rgb(77 124 15 / 0.45); }

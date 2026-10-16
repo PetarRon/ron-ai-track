@@ -31,7 +31,7 @@ export const RelayPlate = ({ children }: { children?: ReactNode }) => {
               className="absolute inset-0 bg-ac-1"
               style={{ scale, borderRadius: radius, transformOrigin: "50% 50%" }}
             />
-            <motion.div className="relative z-10 flex flex-col items-center px-6 text-center" style={{ opacity: text, y: textY }}>
+            <motion.div className="relay-on-lime relative z-10 flex flex-col items-center px-6 text-center" style={{ opacity: text, y: textY }}>
               <h2 className="max-w-3xl font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-th-page sm:text-[48px]">
                 Your team runs the business.
                 <span className="block">

@@ -13,10 +13,12 @@ import { RelayFooter } from "@/components/relay/RelayFooter";
 
 /**
  * Design prototype: the Relay-direction redesign (black + lime on a plain
- * dark page). Not linked from navigation; reached at /preview/relay.
+ * dark page). Not linked from navigation; reached at /preview/relay, and the
+ * same page on a light ground at /preview/relay/light (`relay-light` in
+ * src/index.css).
  */
-const RelayPreview = () => (
-  <RelayShell title="Relay direction preview">
+const RelayPreview = ({ light = false }: { light?: boolean }) => (
+  <RelayShell title={light ? "Relay direction preview, light" : "Relay direction preview"} light={light}>
     <RelayHero />
     <RelayTryIt />
     <RelayProcess />
