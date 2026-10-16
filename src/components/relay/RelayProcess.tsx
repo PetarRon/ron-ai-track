@@ -12,7 +12,6 @@ const rows: { without: string; with: string }[] = [
   { without: "5–15 min of copy-pasting per order", with: "A ready-to-approve draft in under a minute" },
   { without: "Typos and missed line items slip through", with: "Every field checked before it lands" },
   { without: "Skilled staff stuck on data entry", with: "Your team freed for the work that needs them" },
-  { without: "Volume spikes mean backlogs and overtime", with: "Same effort whether it's 10 orders or 1,000" },
   { without: "Orders wait in the inbox after hours", with: "Processed the moment they arrive, 24/7" },
 ];
 
@@ -33,8 +32,8 @@ export const RelayProcess = () => (
     >
       {/* column heads from sm up; on phones each pair stacks and the marks carry the meaning */}
       <div className="hidden grid-cols-2 font-mono text-[11px] uppercase tracking-[0.18em] sm:grid">
-        <span className="px-5 py-3.5 text-th-muted md:px-7">Without Petaron</span>
-        <span className="border-l border-white/[0.06] px-5 py-3.5 text-ac-1 md:px-7">With Petaron</span>
+        <span className="px-5 py-3.5 text-center text-th-muted md:px-7">Without Petaron</span>
+        <span className="border-l border-white/[0.06] px-5 py-3.5 text-center text-ac-1 md:px-7">With Petaron</span>
       </div>
 
       {rows.map((row, i) => (

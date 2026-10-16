@@ -7,6 +7,7 @@ import { CalButton, LogoMark, buttonVariants } from "./shared";
 import { RelayHeroLoop } from "./RelayHeroLoop";
 
 const navLinks = [
+  { label: "Home", href: "/preview/relay" },
   { label: "Product", href: "/preview/relay#process" },
   { label: "How it works", href: "/preview/relay#how" },
   { label: "Calculator", href: "/preview/relay#calculator" },
@@ -20,9 +21,15 @@ export const RelayNav = () => (
       <LogoMark size={28} />
       <span className="font-body text-[17px] font-medium tracking-tight text-th-heading">Petaron</span>
     </Link>
-    <nav className="hidden items-center gap-8 md:flex">
+    <nav className="hidden items-center gap-5 md:flex lg:gap-8">
       {navLinks.map((l) => (
-        <Link key={l.label} to={l.href} className="font-body text-[14px] text-th-body transition hover:text-th-heading">
+        <Link
+          key={l.label}
+          to={l.href}
+          // already on the page with no hash to change, the route would not move: scroll up by hand
+          onClick={l.label === "Home" ? () => window.scrollTo({ top: 0, behavior: "smooth" }) : undefined}
+          className="font-body text-[14px] text-th-body transition hover:text-th-heading"
+        >
           {l.label}
         </Link>
       ))}
