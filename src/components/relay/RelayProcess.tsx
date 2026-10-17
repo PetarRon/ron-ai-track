@@ -15,10 +15,10 @@ const rows: { without: string; with: string }[] = [
   { without: "Orders wait in the inbox after hours", with: "Processed the moment they arrive, 24/7" },
 ];
 
-const cell = "flex items-start gap-3 px-5 py-4 md:px-7";
+const cell = "flex items-start gap-3 px-5 py-3 md:px-7 md:py-4";
 
 export const RelayProcess = () => (
-  <section id="process" className={`relative scroll-mt-20 py-20 ${RELAY_SHELL}`}>
+  <section id="process" className={`relative scroll-mt-20 py-12 md:py-20 ${RELAY_SHELL}`}>
     <motion.h2
       {...settle()}
       className="mx-auto max-w-3xl text-balance text-center font-display text-[clamp(28px,4.4vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-heading"
@@ -28,7 +28,7 @@ export const RelayProcess = () => (
 
     <motion.div
       {...settle(0.15)}
-      className="mx-auto mt-12 max-w-4xl overflow-hidden rounded-2xl border border-white/10 relay-pane shadow-[0_40px_90px_-40px_rgb(0_0_0/0.9)]"
+      className="mx-auto mt-8 max-w-4xl md:mt-12 overflow-hidden rounded-2xl border border-white/10 relay-pane shadow-[0_40px_90px_-40px_rgb(0_0_0/0.9)]"
     >
       {/* column heads from sm up; on phones each pair stacks and the marks carry the meaning */}
       <div className="hidden grid-cols-2 font-mono text-[11px] uppercase tracking-[0.18em] sm:grid">

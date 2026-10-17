@@ -91,7 +91,7 @@ export const RelayHero = () => {
   return (
   <section data-flow-head className="relative overflow-hidden">
     <RelayNav />
-    <div className="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 items-center gap-12 px-6 pb-28 pt-16 md:px-8 lg:grid-cols-[minmax(0,1fr)_620px] lg:pt-14">
+    <div className="relative mx-auto grid w-full max-w-[1240px] grid-cols-1 items-center gap-12 px-6 pb-14 pt-8 md:px-8 md:pb-28 md:pt-16 lg:grid-cols-[minmax(0,1fr)_620px] lg:pt-14">
       <div className="relative z-10">
         <h1 className="font-display text-[44px] font-semibold leading-[1.02] tracking-[-0.03em] text-th-heading sm:text-[56px] lg:text-[60px]">
           <motion.span {...rise(0.2)} className="block">

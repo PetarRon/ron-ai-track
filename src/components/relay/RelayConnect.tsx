@@ -37,7 +37,7 @@ const SystemCard = ({ kicker, name }: { kicker: string; name: string }) => (
 
 /** the fibre between two cards: a hairline with a streak of light, as thin as the line, running along it */
 const Wire = ({ delay }: { delay: number }) => (
-  <div className="relative h-10 w-px shrink-0 bg-white/10 sm:h-px sm:w-auto sm:flex-1" aria-hidden>
+  <div className="relative h-6 w-px shrink-0 bg-white/10 sm:h-px sm:w-auto sm:flex-1" aria-hidden>
     <span className="relay-wire-pulse" style={{ animationDelay: `${delay}s` }} />
   </div>
 );
@@ -51,7 +51,7 @@ export const RelayConnect = () => {
   const pair = PAIRS[i];
 
   return (
-    <section id="connect" className={`relative scroll-mt-20 py-20 ${RELAY_SHELL}`}>
+    <section id="connect" className={`relative scroll-mt-20 py-12 md:py-20 ${RELAY_SHELL}`}>
       <div className="mx-auto grid max-w-3xl justify-items-center gap-4 text-center">
         <motion.h2
           {...settle()}
@@ -67,7 +67,7 @@ export const RelayConnect = () => {
 
       <motion.div
         {...settle(0.15)}
-        className="mx-auto mt-12 flex max-w-5xl flex-col items-center gap-0 rounded-[28px] border border-white/10 relay-pane px-5 py-8 sm:flex-row sm:gap-0 sm:px-10 sm:py-10"
+        className="mx-auto mt-8 flex max-w-5xl md:mt-12 flex-col items-center gap-0 rounded-[28px] border border-white/10 relay-pane px-5 py-6 sm:flex-row sm:gap-0 sm:px-10 sm:py-10"
       >
         <SystemCard kicker="from" name={pair.from} />
         <Wire delay={0} />

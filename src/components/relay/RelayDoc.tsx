@@ -16,7 +16,7 @@ import { Card, Em, RELAY_SHELL, settle } from "./shared";
 
 /** one numbered section of a legal text, in the Relay type */
 export const RelayDocSection: LegalSection = ({ title, children }) => (
-  <motion.section {...settle()} className="border-t border-th-line/70 py-8 first:border-t-0 first:pt-2 last:pb-2">
+  <motion.section {...settle()} className="border-t border-th-line/70 py-6 first:border-t-0 md:py-8 first:pt-2 last:pb-2">
     <h2 className="font-display text-[20px] font-semibold tracking-[-0.02em] text-th-heading">{title}</h2>
     <div className="mt-3 space-y-3 font-body text-[15px] leading-relaxed text-th-body [&_strong]:font-semibold [&_strong]:text-th-heading">
       {children}
@@ -40,7 +40,7 @@ export const RelayDoc = ({
   <RelayShell seo={{ route: seo }} light>
     <FlowRibbon snake={false} />
     <RelayNav />
-    <header data-flow-head className={`relative pb-12 pt-14 md:pt-20 ${RELAY_SHELL}`}>
+    <header data-flow-head className={`relative pb-8 pt-8 md:pb-12 md:pt-20 ${RELAY_SHELL}`}>
       <div className="mx-auto max-w-3xl">
         <motion.h1
           {...settle()}
@@ -53,7 +53,7 @@ export const RelayDoc = ({
         </motion.p>
       </div>
     </header>
-    <main className={`relative pb-24 ${RELAY_SHELL}`}>
+    <main className={`relative pb-14 md:pb-24 ${RELAY_SHELL}`}>
       <Card className="mx-auto max-w-3xl px-6 py-6 md:px-12 md:py-10">{children}</Card>
     </main>
     <RelayFooter />

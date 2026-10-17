@@ -49,7 +49,7 @@ export const RelayCTA = () => {
   const textY = useTransform(open, [0.6, 0.95], [16, 0]);
 
   return (
-    <section id="demo" className={`relative scroll-mt-24 py-20 ${RELAY_SHELL}`}>
+    <section id="demo" className={`relative scroll-mt-24 py-12 md:py-20 ${RELAY_SHELL}`}>
       <div ref={ref} className="relative">
         <motion.div
           aria-hidden
@@ -57,7 +57,7 @@ export const RelayCTA = () => {
           style={still ? { borderRadius: 28 } : { scale, borderRadius: radius, transformOrigin: "50% 50%" }}
         />
         <motion.div
-          className="relay-on-lime relative z-10 px-6 py-16 text-center md:px-12 md:py-20"
+          className="relay-on-lime relative z-10 px-6 py-12 text-center md:px-12 md:py-20"
           style={still ? undefined : { opacity: text, y: textY }}
         >
           <h2 className="mx-auto max-w-2xl text-balance font-display text-[clamp(30px,4.4vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-th-page">
@@ -67,7 +67,7 @@ export const RelayCTA = () => {
             Book a 30-minute demo and see Petaron.ai run on your own orders. <br className="hidden md:block" />A free
             one-month pilot, and your TMS stays exactly as it is.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-9">
             <CalButton variant="dark">Book a Demo for Free</CalButton>
             <button type="button" onClick={openContact} className={buttonVariants.onLime}>
               Get in Touch

@@ -9,10 +9,10 @@ import { Em, LogoMark, RELAY_SHELL, settle } from "./shared";
  */
 export const RelayPlate = ({ children }: { children?: ReactNode }) => (
   <>
-    <section className={`relative py-10 ${RELAY_SHELL}`}>
+    <section className={`relative py-6 md:py-10 ${RELAY_SHELL}`}>
       <motion.div
         {...settle()}
-        className="relay-panel bg-ac-1 flex min-h-[420px] flex-col items-center justify-center rounded-[40px] px-6 py-20 text-center md:min-h-[56vh]"
+        className="relay-panel bg-ac-1 flex min-h-[300px] flex-col items-center justify-center rounded-[40px] px-6 py-14 text-center md:min-h-[56vh] md:py-20"
       >
         <h2 className="max-w-3xl font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-th-page sm:text-[48px]">
           Your team runs the business.
@@ -20,7 +20,7 @@ export const RelayPlate = ({ children }: { children?: ReactNode }) => (
             Let the AI agent handle the <Em dark>orders</Em>.
           </span>
         </h2>
-        <div className="mt-10">
+        <div className="mt-8 md:mt-10">
           <LogoMark size={56} inverse />
         </div>
       </motion.div>

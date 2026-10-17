@@ -30,8 +30,8 @@ const RelayCareers = () => {
     <RelayShell seo={{ route: routeSeo.careers }} light>
       <FlowRibbon />
       <RelayNav />
-      <article className={`relative pb-24 ${RELAY_SHELL}`}>
-        <header data-flow-head className="mx-auto max-w-3xl pb-14 pt-14 text-center md:pt-20">
+      <article className={`relative pb-14 md:pb-24 ${RELAY_SHELL}`}>
+        <header data-flow-head className="mx-auto max-w-3xl pb-8 pt-8 text-center md:pb-14 md:pt-20">
           <motion.h1
             {...settle()}
             className="font-display text-[40px] font-semibold leading-[1.04] tracking-[-0.03em] text-th-heading sm:text-[56px]"
@@ -45,9 +45,9 @@ const RelayCareers = () => {
           </motion.p>
         </header>
 
-        <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
+        <div className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2 md:gap-5">
           <motion.div {...settle(0.05)}>
-            <Card className="h-full p-7 md:p-8">
+            <Card className="h-full p-5 md:p-8">
               <h2 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-th-heading">What we are building</h2>
               <p className="mt-3 font-body text-[15px] leading-relaxed text-th-body">
                 Petaron.ai is eliminating manual order entry for freight forwarders. Our AI agents read incoming orders
@@ -58,7 +58,7 @@ const RelayCareers = () => {
             </Card>
           </motion.div>
           <motion.div {...settle(0.15)}>
-            <Card className="h-full p-7 md:p-8">
+            <Card className="h-full p-5 md:p-8">
               <h2 className="font-display text-[22px] font-semibold tracking-[-0.02em] text-th-heading">Who we are looking for</h2>
               <p className="mt-3 font-body text-[15px] leading-relaxed text-th-body">
                 We value people who are curious, pragmatic, and care deeply about the quality of their work. If you have
@@ -77,8 +77,8 @@ const RelayCareers = () => {
           </motion.div>
         </div>
 
-        <motion.div {...settle(0.1)} id="apply" className="mx-auto mt-5 max-w-5xl scroll-mt-24">
-          <Card className="grid gap-8 p-7 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-12 md:p-10">
+        <motion.div {...settle(0.1)} id="apply" className="mx-auto mt-4 max-w-5xl scroll-mt-24 md:mt-5">
+          <Card className="grid gap-6 p-5 md:gap-8 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-12 md:p-10">
             <div>
               <h2 className="font-display text-[26px] font-semibold tracking-[-0.03em] text-th-heading">
                 Open <Em>application</Em>

@@ -63,7 +63,7 @@ export const RelayCalculator = () => {
   );
 
   return (
-    <section id="calculator" className={`relative scroll-mt-20 py-20 ${RELAY_SHELL}`}>
+    <section id="calculator" className={`relative scroll-mt-20 py-12 md:py-20 ${RELAY_SHELL}`}>
       {/* stacked and centred so the headline gets the full width and sits on one line from lg up */}
       <div className="mx-auto grid justify-items-center gap-5 text-center">
         <motion.h2
@@ -76,14 +76,14 @@ export const RelayCalculator = () => {
           Set your own numbers and see what the difference is worth to your team. Your estimate, not ours.
         </motion.p>
       </div>
-      <motion.div {...settle(0.15)} className="mt-14">
-        <Card className="grid gap-10 p-7 md:p-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+      <motion.div {...settle(0.15)} className="mt-8 md:mt-14">
+        <Card className="grid gap-8 p-5 md:gap-10 md:p-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           <div>
             <span className="font-mono text-[12px] text-th-muted">Estimate</span>
             <h3 className="mt-2 font-display text-[20px] font-medium tracking-[-0.02em] text-th-heading">
               How many orders does your team type in a day?
             </h3>
-            <div className="mt-10 space-y-9">
+            <div className="mt-7 space-y-7 md:mt-10 md:space-y-9">
               <Row label="Orders per day" value={ordersPerDay} onChange={setOrdersPerDay} min={20} max={500} step={10} format={num} />
               <Row
                 label="Minutes per order"
@@ -97,7 +97,7 @@ export const RelayCalculator = () => {
               <Row label="Hourly staff cost" value={hourlyCost} onChange={setHourlyCost} min={15} max={80} step={5} format={(v) => `€${v}`} />
             </div>
           </div>
-          <div className="relay-well flex flex-col justify-between rounded-xl border border-th-line/60 bg-th-page/50 p-6 text-center md:p-7">
+          <div className="relay-well flex flex-col justify-between rounded-xl border border-th-line/60 bg-th-page/50 p-5 text-center md:p-7">
             <div className="flex flex-1 flex-col justify-center">
               <span className="font-mono text-[12px] text-th-muted">Manual entry costs you</span>
               <p className="mt-3 font-body text-[44px] font-semibold leading-none tracking-[-0.03em] text-th-heading sm:text-[52px]">

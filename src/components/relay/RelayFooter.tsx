@@ -21,8 +21,8 @@ const columns = {
 export const RelayFooter = () => {
   const { openContact } = useContact();
   return (
-    <footer className={`relative pb-10 pt-12 ${RELAY_SHELL}`}>
-      <div className="grid grid-cols-2 gap-8 border-t border-th-line/60 pt-10 md:grid-cols-5">
+    <footer className={`relative pb-8 pt-8 md:pb-10 md:pt-12 ${RELAY_SHELL}`}>
+      <div className="grid grid-cols-2 gap-6 border-t border-th-line/60 pt-8 md:grid-cols-5 md:gap-8 md:pt-10">
         <div className="col-span-2">
           <div className="flex items-center gap-2">
             <LogoMark size={22} />

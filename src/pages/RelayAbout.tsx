@@ -62,7 +62,7 @@ const values: { Icon: LucideIcon; title: string; body: string }[] = [
  * Styles: `.relay-belt` in src/index.css.
  */
 const ValuesBelt = () => (
-  <section className="mt-24" aria-labelledby="values-title">
+  <section className="mt-14 md:mt-24" aria-labelledby="values-title">
     <motion.h2
       id="values-title"
       {...settle()}
@@ -70,7 +70,7 @@ const ValuesBelt = () => (
     >
       What we <Em>stand for.</Em>
     </motion.h2>
-    <motion.div {...settle(0.1)} className="relay-belt mt-10">
+    <motion.div {...settle(0.1)} className="relay-belt mt-7 md:mt-10">
       <div className="relay-belt-track">
         {[0, 1].map((copy) => (
           <ul key={copy} className="relay-belt-set" aria-hidden={copy === 1 || undefined}>
@@ -94,8 +94,8 @@ const RelayAbout = () => (
   <RelayShell seo={{ route: routeSeo.about }} light>
     <FlowRibbon />
     <RelayNav />
-    <article className={`relative pb-10 pt-16 md:pt-24 ${RELAY_SHELL}`}>
-      <div data-flow-head className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
+    <article className={`relative pb-10 pt-8 md:pt-24 ${RELAY_SHELL}`}>
+      <div data-flow-head className="grid gap-8 lg:gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
         <div>
           <motion.h1
             {...settle(0.1)}
@@ -146,10 +146,10 @@ const RelayAbout = () => (
         </motion.figure>
       </div>
 
-      <div className="mt-24 grid gap-5 md:grid-cols-2">
+      <div className="mt-14 grid gap-4 md:mt-24 md:grid-cols-2 md:gap-5">
         {sections.map((s, i) => (
           <motion.div key={s.title} {...settle(0.05 * i)}>
-            <Card className="h-full p-7 md:p-8">
+            <Card className="h-full p-5 md:p-8">
               <div className="flex items-center gap-3.5">
                 {s.mark === "logo" ? <LogoMark size={40} /> : <Badge Icon={s.mark} />}
                 <h2 className="font-display text-[22px] font-medium tracking-[-0.02em] text-th-heading">{s.title}</h2>

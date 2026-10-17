@@ -7,7 +7,7 @@ import { Em, RELAY_SHELL, settle } from "./shared";
 export const RelayFAQ = () => {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className={`relative scroll-mt-20 pb-28 pt-20 ${RELAY_SHELL}`}>
+    <section id="faq" className={`relative scroll-mt-20 pb-16 pt-12 md:pb-28 md:pt-20 ${RELAY_SHELL}`}>
       <div className="mx-auto grid max-w-3xl justify-items-center gap-4 text-center">
         <motion.h2
           {...settle()}
@@ -19,7 +19,7 @@ export const RelayFAQ = () => {
           What operations teams ask us in the first call.
         </motion.p>
       </div>
-      <motion.ul {...settle(0.1)} className="mx-auto mt-12 max-w-4xl divide-y divide-th-line/60 border-y border-th-line/60">
+      <motion.ul {...settle(0.1)} className="mx-auto mt-8 max-w-4xl divide-y md:mt-12 divide-th-line/60 border-y border-th-line/60">
         {faqItems.map((item, i) => {
           const isOpen = open === i;
           return (
@@ -28,7 +28,7 @@ export const RelayFAQ = () => {
                 type="button"
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
-                className="grid w-full grid-cols-[1fr_auto] items-center gap-6 py-5 text-left md:grid-cols-[120px_1fr_auto]"
+                className="grid w-full grid-cols-[1fr_auto] items-center gap-6 py-4 text-left md:py-5 md:grid-cols-[120px_1fr_auto]"
               >
                 <span className="hidden font-mono text-[12px] text-ac-1 md:block">{item.meta}</span>
                 <span className="font-body text-[17px] text-th-heading">{item.question}</span>

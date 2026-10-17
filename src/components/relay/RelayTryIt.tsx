@@ -557,20 +557,20 @@ const STEPS: { n: string; title: string; body: string; Clip: ComponentType }[] =
 ];
 
 export const RelayTryIt = () => (
-  <section id="how" className={`relay-try relative scroll-mt-20 py-16 ${RELAY_SHELL}`}>
+  <section id="how" className={`relay-try relative scroll-mt-20 py-10 md:py-16 ${RELAY_SHELL}`}>
     <motion.h2
       {...settle()}
       className="text-center font-display text-[clamp(23px,6vw,40px)] font-semibold leading-[1.06] tracking-[-0.03em] text-th-heading"
     >
       Watch it run.
     </motion.h2>
-    <div className="mt-12 divide-y divide-white/[0.06] rounded-[28px] border border-white/10 relay-pane px-3 shadow-[0_40px_100px_-50px_rgb(0_0_0/0.9)] sm:px-8 lg:px-14">
+    <div className="mt-8 divide-y divide-white/[0.06] rounded-[28px] border border-white/10 relay-pane px-3 shadow-[0_40px_100px_-50px_rgb(0_0_0/0.9)] sm:px-8 lg:px-14">
       {STEPS.map(({ n, title, body, Clip }, i) => {
         const flip = i % 2 === 1;
         return (
           <div
             key={n}
-            className={`grid items-center gap-8 py-10 lg:gap-14 lg:py-14 ${flip ? "lg:grid-cols-[500px_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,1fr)_500px]"}`}
+            className={`grid items-center gap-5 py-7 md:gap-8 md:py-10 lg:gap-14 lg:py-14 ${flip ? "lg:grid-cols-[500px_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,1fr)_500px]"}`}
           >
             <motion.div {...settle()} className={flip ? "lg:order-2" : ""}>
               <span className="font-mono text-[13px] text-ac-1">{n}</span>

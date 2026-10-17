@@ -154,7 +154,7 @@ const ContactForm = ({ open, onClose }: ContactFormProps) => {
               <button
                 type="submit"
                 disabled={state.submitting}
-                className="w-full rounded-full bg-ac-1 px-6 py-3.5 text-sm font-bold text-white transition hover:shadow-[0_0_24px_rgb(var(--ac-1)/0.4)] disabled:opacity-50"
+                className="w-full rounded-full bg-ac-1 px-6 py-3.5 text-sm font-bold text-th-page transition hover:shadow-[0_0_24px_rgb(var(--ac-1)/0.4)] disabled:opacity-50"
               >
                 {state.submitting ? "Sending..." : "Send Message"}
               </button>

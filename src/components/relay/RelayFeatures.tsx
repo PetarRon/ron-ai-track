@@ -139,7 +139,7 @@ const FEATURES: { title: string; body: string; viz: ReactNode }[] = [
 ];
 
 export const RelayFeatures = () => (
-  <section id="features" className={`relative scroll-mt-20 py-20 ${RELAY_SHELL}`}>
+  <section id="features" className={`relative scroll-mt-20 py-12 md:py-20 ${RELAY_SHELL}`}>
     <div className="mx-auto grid max-w-3xl justify-items-center gap-4 text-center">
       <motion.h2
         {...settle()}
@@ -152,9 +152,9 @@ export const RelayFeatures = () => (
       </motion.p>
     </div>
 
-    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mt-8 grid gap-4 sm:grid-cols-2 md:mt-12 md:gap-5 lg:grid-cols-3">
       {FEATURES.map((f, i) => (
-        <motion.div key={f.title} {...settle(0.05 * i)} className="rf-card flex flex-col gap-5 p-6 text-center">
+        <motion.div key={f.title} {...settle(0.05 * i)} className="rf-card flex flex-col gap-4 p-5 text-center md:gap-5 md:p-6">
           <RelayBorderTrace />
           <div>
             <h3 className="font-display text-[19px] font-semibold tracking-[-0.02em] text-th-heading">{f.title}</h3>
