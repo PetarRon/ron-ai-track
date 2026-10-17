@@ -1,339 +1,397 @@
 ---
 name: Petaron.ai
-description: Freight order intake, set like a well-kept ledger — warm paper, true ink, hairline rules, and no colour that isn't money.
+description: Freight order intake on an off-white page, frosted-glass panels over a lime-and-mint ribbon, with a lime that only ever fills.
 colors:
-  page: "#FAF8F5"
+  page: "#F7F7F4"
   surface: "#FFFFFF"
-  surface-alt: "#F4F1EC"
-  elevated: "#FFFFFF"
-  heading: "#1C1917"
-  body: "#574E46"
-  muted: "#7A7169"
-  faint: "#958F88"
-  line: "#E5E0D8"
-  line-subtle: "#F0ECE6"
-  ink-1: "#1C1917"
-  ink-2: "#44403C"
-  ink-3: "#78716C"
-  savings: "#166534"
-  cost: "#B91C1C"
-  button-ink: "#161310"
-  button-hover-fill: "#E2D8C4"
-  button-hover-text: "#2A2000"
-  hero-from: "#48403A"
-  hero-via: "#302B27"
+  surface-alt: "#F0F1EC"
+  heading: "#11130F"
+  body: "#4A4E44"
+  muted: "#6E7366"
+  faint: "#969A8E"
+  line: "#DEE0D8"
+  line-subtle: "#E9EAE4"
+  lime: "#C7F23C"
+  lime-2: "#A8D628"
+  lime-3: "#78A01E"
+  lime-text: "#4D7C0F"
+  lime-text-deep: "#3C620A"
+  ink-on-lime: "#070806"
+  ink-on-lime-soft: "#0B0C0A"
+  surface-on-lime: "#262A22"
+  ribbon-pale: "#ECF9CE"
+  ribbon-mint: "#A8E8D0"
+  trace-pale: "#DCF884"
+  trace-mid: "#D2F560"
+  trace-deep: "#B8E33A"
+  error: "#B91C1C"
+  dash-bg: "#F8F8F6"
+  dash-surface: "#F2F2EF"
+  dash-border: "#E6E6E1"
+  dash-border-2: "#D8D8D2"
+  dash-text: "#22241F"
+  dash-text-2: "#5A5D54"
+  dash-text-3: "#92958C"
+  dash-grey: "#8A8D84"
+  dash-amber: "#B7791F"
+  dash-red: "#C2410C"
+  dash-history: "#5B8EC9"
+  dash-mark: "#ABABAB"
+  dash-base-bg: "#F8F8F8"
+  dash-base-surface: "#F5F5F5"
+  dash-base-border: "#E8E8E8"
+  dash-base-border-2: "#DADADA"
+  dash-base-text: "#2A2A2A"
+  dash-base-text-3: "#979797"
+  dash-base-primary: "#6CB445"
+  dash-base-primary-2: "#559035"
+  dash-base-green: "#5C9F36"
+  dash-base-amber: "#F9AB00"
+  dash-base-grey: "#B9B9B9"
+  dash-base-red: "#D93025"
+  dash-highlight: "#FFC107"
+  dash-highlight-rule: "#BF8C00"
+  dash-tint: "#7F7F7F"
+  rt-line: "#E7E8E2"
+  rt-line-2: "#D7D9D0"
+  rt-amber: "#F5B72A"
+  rt-history: "#74A3DB"
+  rt-paper: "#D8DBD0"
+  rt-paper-ink: "#8D9184"
+  mail-blue: "#0F6CBD"
+  mail-pane: "#F5F5F5"
+  mail-selected: "#E1ECF7"
+  mail-line: "#E3E3E3"
+  mail-row-line: "#F0F0F0"
+  mail-text: "#242424"
+  mail-sub: "#616161"
+  mail-empty: "#8A8A8A"
+  mail-pdf: "#C43E1C"
+  mail-avatar-violet: "#8764B8"
+  mail-avatar-orange: "#CA5010"
+  mail-avatar-teal: "#038387"
 typography:
   display:
-    fontFamily: "Playfair Display, Georgia, serif"
-    fontSize: "26px–44px"
-    fontWeight: 400
-    lineHeight: 1.2
-    letterSpacing: "-0.025em"
-  display-italic:
-    fontFamily: "Playfair Display, Georgia, serif"
-    fontSize: "18px–34px"
-    fontWeight: 400
-    lineHeight: 1.3
-    letterSpacing: "normal"
+    fontFamily: "Space Grotesk, system-ui, sans-serif"
+    fontSize: "60px"
+    fontWeight: 600
+    lineHeight: 1.02
+    letterSpacing: "-0.03em"
+  display-accent:
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "72px"
+    fontWeight: 300
+    lineHeight: 1.02
+    letterSpacing: "-0.03em"
   headline:
-    fontFamily: "Playfair Display, Georgia, serif"
-    fontSize: "24px–30px"
-    fontWeight: 400
-    lineHeight: 1.25
-    letterSpacing: "-0.025em"
+    fontFamily: "Space Grotesk, system-ui, sans-serif"
+    fontSize: "clamp(28px, 4.4vw, 46px)"
+    fontWeight: 600
+    lineHeight: 1.08
+    letterSpacing: "-0.03em"
   title:
-    fontFamily: "Playfair Display, Georgia, serif"
-    fontSize: "20px"
-    fontWeight: 400
-    lineHeight: 1.3
-    letterSpacing: "-0.025em"
-  body:
+    fontFamily: "Space Grotesk, system-ui, sans-serif"
+    fontSize: "22px"
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: "-0.02em"
+  accent-word:
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontWeight: 300
+    letterSpacing: "-0.02em"
+  lead:
     fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "13px–16px"
+    fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.625
-    letterSpacing: "normal"
+  body:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.625
+  button:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: "14px"
+    fontWeight: 500
   label:
     fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "10px–12px"
-    fontWeight: 700
-    lineHeight: 1.4
-    letterSpacing: "0.1em"
-  meta:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "9px"
+    fontSize: "12px"
     fontWeight: 400
-    lineHeight: 1.4
-    letterSpacing: "0.3em"
-  mono:
+  replica-ui:
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.35
+  replica-mono:
     fontFamily: "JetBrains Mono, ui-monospace, monospace"
     fontSize: "12px"
     fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: "normal"
+  replica-dash:
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "10px"
+    fontWeight: 400
+    lineHeight: 1.2
+    letterSpacing: "-0.01em"
+  replica-mail:
+    fontFamily: "Segoe UI, IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.35
+  scale:
+    r-6-5: "6.5px"
+    r-8-5: "8.5px"
+    r-9: "9px"
+    s-10: "10px"
+    r-10-5: "10.5px"
+    s-11: "11px"
+    r-11-5: "11.5px"
+    s-12: "12px"
+    r-12-5: "12.5px"
+    s-13: "13px"
+    s-13-5: "13.5px"
+    s-14: "14px"
+    s-15: "15px"
+    s-16: "16px"
+    s-17: "17px"
+    s-19: "19px"
+    s-20: "20px"
+    s-22: "22px"
+    s-23: "23px"
+    s-24: "24px"
+    s-26: "26px"
+    s-28: "28px"
+    s-30: "30px"
+    s-32: "32px"
+    s-34: "34px"
+    s-40: "40px"
+    s-44: "44px"
+    s-46: "46px"
+    s-48: "48px"
+    s-52: "52px"
+    s-56: "56px"
+    s-60: "60px"
+    s-62: "62px"
+    s-72: "72px"
+    s-96: "96px"
+    s-140: "140px"
 rounded:
-  control: "12px"
+  sm: "8px"
+  md: "10px"
+  input: "12px"
+  viz: "14px"
   card: "16px"
-  frame: "20px"
-  pill: "9999px"
+  feature: "22px"
+  panel: "28px"
+  plate: "40px"
+  full: "9999px"
 spacing:
-  frame-inset: "6px"
-  control-y: "14px"
+  shell-max: "1240px"
+  shell-x: "24px"
+  shell-x-md: "32px"
+  section-y: "80px"
   card: "24px"
-  gutter: "20px"
-  gutter-wide: "32px"
-  section: "64px"
+  card-lg: "28px"
+  panel-y: "80px"
+  control-gap: "12px"
 components:
-  button-primary:
-    backgroundColor: "{colors.button-ink}"
-    textColor: "#FFFFFF"
-    typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    padding: "14px 28px"
-  button-primary-hover:
-    backgroundColor: "{colors.button-hover-fill}"
-    textColor: "{colors.button-hover-text}"
-    rounded: "{rounded.pill}"
-    padding: "14px 28px"
-  button-secondary:
-    backgroundColor: "{colors.surface-alt}"
+  button-lime:
+    backgroundColor: "{colors.lime}"
+    textColor: "{colors.ink-on-lime}"
+    typography: "{typography.button}"
+    rounded: "{rounded.full}"
+    padding: "12px 24px"
+  button-lime-hover:
+    backgroundColor: "{colors.ink-on-lime-soft}"
+    textColor: "{colors.lime}"
+    rounded: "{rounded.full}"
+    padding: "12px 24px"
+  button-ghost:
+    backgroundColor: "rgb(255 255 255 / 0.5)"
     textColor: "{colors.heading}"
-    rounded: "{rounded.pill}"
-    padding: "14px 28px"
-  button-submit:
-    backgroundColor: "{colors.ink-1}"
-    textColor: "#FFFFFF"
-    rounded: "{rounded.pill}"
-    padding: "14px 24px"
-    width: "100%"
-  input-field:
-    backgroundColor: "{colors.surface-alt}"
-    textColor: "{colors.heading}"
-    rounded: "{rounded.control}"
-    padding: "12px 16px"
-  card-frame:
-    backgroundColor: "transparent"
-    rounded: "{rounded.card}"
-    padding: "{spacing.frame-inset}"
-  card-panel:
+    typography: "{typography.button}"
+    rounded: "{rounded.full}"
+    padding: "12px 24px"
+  button-ghost-hover:
     backgroundColor: "{colors.surface}"
-    textColor: "{colors.body}"
-    rounded: "{rounded.control}"
+    textColor: "{colors.heading}"
+    rounded: "{rounded.full}"
+    padding: "12px 24px"
+  button-nav:
+    backgroundColor: "{colors.lime}"
+    textColor: "{colors.ink-on-lime}"
+    typography: "{typography.button}"
+    rounded: "{rounded.full}"
+    padding: "10px 20px"
+  panel-glass:
+    backgroundColor: "rgb(255 255 255 / 0.6)"
+    textColor: "{colors.heading}"
+    rounded: "{rounded.panel}"
+    padding: "40px"
+  feature-card:
+    backgroundColor: "rgb(255 255 255 / 0.6)"
+    textColor: "{colors.heading}"
+    rounded: "{rounded.feature}"
     padding: "{spacing.card}"
-  chip-meta:
-    backgroundColor: "transparent"
-    textColor: "{colors.muted}"
-    typography: "{typography.meta}"
-    rounded: "{rounded.pill}"
-    padding: "2px 10px"
-  nav-bar:
-    backgroundColor: "{colors.page}"
-    textColor: "{colors.body}"
-    rounded: "{rounded.pill}"
-    padding: "10px 8px 10px 12px"
+  viz-well:
+    backgroundColor: "rgb(255 255 255 / 0.45)"
+    rounded: "{rounded.viz}"
+    height: "104px"
+  plate:
+    backgroundColor: "rgb(255 255 255 / 0.6)"
+    textColor: "{colors.heading}"
+    rounded: "{rounded.plate}"
+    padding: "80px 24px"
+  input-field:
+    backgroundColor: "rgb(255 255 255 / 0.7)"
+    textColor: "{colors.heading}"
+    rounded: "{rounded.input}"
+    padding: "12px 16px"
+  logo-mark:
+    backgroundColor: "{colors.lime}"
+    rounded: "{rounded.input}"
+    size: "28px"
 ---
 
 # Design System: Petaron.ai
 
 ## Overview
 
-**Creative North Star: "The Dispatch Ledger"**
+**Creative North Star: "Relay, in daylight"**
 
-Freight paperwork made calm and exact. The waybill, the manifest, the rate sheet — the trade's own materials, rendered with care instead of chaos. The page is warm stock (#FAF8F5), the type is genuinely ink (#1C1917), the divisions are hairlines rather than boxes, and the figures are set so they can be read at a glance and trusted. Petaron sells the removal of frantic manual work; the interface has to look like the state it delivers, not the state it replaces.
+An order handed from inbox to TMS without a stop. The page is a pale off-white (#F7F7F4) with near-black ink, and a slow GradFlow ribbon in pale lime, lime and mint runs from the hero down the page behind the sections. Everything that holds content is frosted white glass over that ribbon, so the colour reads through the panels rather than sitting on them.
 
-The system is **composed and exact**. Authority comes from size, weight and air — never from colour. This is why the palette is monochrome by construction: `--ac-1`, the "primary accent", is the same value as `--th-heading`, so the brand's accent literally *is* its ink. Only two hues exist in the entire system, deep green (#166534) and deep red (#B91C1C), and they are reserved for money moving in one direction or the other. A ledger has no neon; neither does this.
+Lime is the brand, and it is a fill, never a text colour on the light page: buttons, the logo square, dots, the hover fill, the border arc on feature cards, highlighted values. Where lime would have been text, deep green takes its place. Titles are set in Space Grotesk, semibold and tight, with at most one light IBM Plex Sans word for the second voice; everything else is Inter. The product appears as faithful replicas (the hero dashboard and the Try-it mail-to-dashboard windows), which keep the product's own palette and fonts.
 
-Density is moderate and deliberately uneven: generous air around headlines and interstitial lines, then tight, information-dense clusters inside the double-framed panels where the product actually demonstrates itself. Motion is ambient and slow — a word-by-word headline reveal, a shimmer that crosses a heading every few seconds, a light that follows the cursor, a header that ducks away on scroll. Nothing bounces, nothing pops, nothing announces itself. The single piece of theatre in the whole system is the primary button, which fills with cream on hover and flips its label to dark.
+Density is calm: wide section padding, short copy, one quiet looping visual per feature card. Motion is a soft "settle" (blur and rise) on first view plus a few ambient loops; all of it stops under reduced motion.
 
 **Key Characteristics:**
-- Warm paper ground with true-ink type; zero brand hue.
-- Playfair Display set at regular weight, never bold, with tight tracking.
-- Hairline rules and nested double-frames instead of drop shadows.
-- Colour reserved exclusively for money: green saves, red costs.
-- Pills for anything interactive; 16px rounded rectangles for anything that contains.
-- Slow, ambient, non-bouncing motion.
-
-**A test to apply:** *would this element belong on a well-kept ledger page?* A glowing gradient would not. A hairline rule, a precise column of figures, a serif heading and a wide margin all would.
+- Off-white page, near-black ink, lime as fill only, deep green for lime-as-text.
+- Frosted white glass for every panel, card and well, over a pale lime / mint ribbon.
+- Space Grotesk titles with one IBM Plex Sans Light accent word; Inter for everything else.
+- Full-round buttons; containers step down 40 / 28 / 22 / 16 / 14 / 12px.
+- Product replicas keep their own sub-systems (dashboard, mail client).
 
 ## Colors
 
-A warm greyscale drawn from paper and ink, with exactly two saturated exceptions that both mean money.
+A near-neutral, very slightly green-grey palette with one saturated brand hue that fills and never writes.
 
 ### Primary
-- **Ink** (#1C1917): The single accent. Headings, primary text, links, focus rings, the solid submit button, the value dots in bulleted lists. Defined twice in `src/index.css` — as `--th-heading` and as `--ac-1` — with the same value, on purpose.
-- **Button Ink** (#161310): A half-step darker and warmer than Ink, used only as the resting fill of the primary pill button so it separates from body text on the same cream ground.
+- **Relay Lime** (lime): Primary button fill, logo square, nav CTA, status dots, highlighted values in the demo windows, text selection (at 55%). The Book a Demo hover fill swaps it with Ink on Lime.
+- **Lime Shoulder / Lime Shade** (lime-2, lime-3): The replica's primary-button gradient end and the careers input focus border.
+- **Field Green** (lime-text): Any lime that would be text on the light page: FAQ category labels, feature-visual labels, the open FAQ icon, success icons, SVG wires and trace lines. **Deep Field Green** (lime-text-deep) is the green chip text in the demo windows.
 
 ### Secondary
-- **Slate Ink** (#44403C): Second-rank emphasis. Gradient midpoints, secondary marker dots, the middle stop of the hero subtitle.
-- **Stone** (#78716C): Third-rank. Gradient tails, hover states, the lightest of the three ink accents.
-
-### Tertiary
-- **Savings Green** (#166534): Money recovered. Calculator savings figures, the EU-hosted badge, positive process states.
-- **Cost Red** (#B91C1C): Money spent or lost. Calculator cost figures, form validation errors.
+- **Ribbon Pale and Ribbon Mint** (ribbon-pale, ribbon-mint): With lime, the three GradFlow stops of the backdrop ribbon. Not used anywhere else.
+- **Arc Lime tints** (trace-pale, trace-mid, trace-deep): The conic gradient of the pointer-following arc on feature cards, lime only.
 
 ### Neutral
-- **Warm Paper** (#FAF8F5): The page ground everywhere, including inside full-width sections. Sections never alternate their fill.
-- **Card White** (#FFFFFF): Raised panels — the inner surface of a double-frame, modals, popovers.
-- **Inset Linen** (#F4F1EC): Recessed surfaces. Input fields, secondary buttons, icon wells, chips — almost always at partial opacity (`/30`, `/40`, `/50`) so the paper reads through.
-- **Body Brown** (#574E46): Running text. Warm enough to sit on cream without the blue cast a neutral grey would bring.
-- **Muted Stone** (#7A7169): Labels, captions, chip text, small informational copy (footer copyright, slider range endpoints), and the interstitial sell lines — always at full opacity; quietness comes from size and weight, not alpha. Holds 4.5:1 against both Warm Paper and Card White.
-- **Faint Stone** (#958F88): Input placeholders only, plus any genuinely large or decorative text that doesn't carry information on its own. Too light to pass body-text contrast at small sizes — never use it for informational copy that must be read; use Muted Stone instead.
-- **Rule** (#E5E0D8): Standard borders — cards, chips, header, outer frames.
-- **Whisper Rule** (#F0ECE6): Section dividers and the inner border of a double-frame. Present but barely.
+- **Daylight Page** (page): The ground of every page, also the browser theme colour.
+- **White** (surface): Glass highlights, demo window backgrounds, inputs.
+- **Pale Stone** (surface-alt): Inset fills; doubles as the light text colour inside lime contexts.
+- **Ink** (heading): Headings, primary text, hairlines at 5-14% alpha, shadow colour.
+- **Body Olive-Grey** (body): Running text. **Muted** (muted): captions, small labels, footer headings. **Faint** (faint): placeholders and the copyright line.
+- **Rule / Whisper Rule** (line, line-subtle): Borders, dividers (usually at 60-80%).
+- **Ink on Lime** (ink-on-lime, ink-on-lime-soft): Text on lime fills and the dark fill of the hover swap. **Surface on Lime** (surface-on-lime): a dark button's hover surface inside a lime context.
+- **Error** (error): Form validation messages only.
 
 ### Named Rules
+**The Lime-Fills Rule.** On the light page lime is a fill, never a text or stroke colour; text, icons and lines that mean "lime" use Field Green. Anything set on lime is Ink on Lime.
 
-**The Ink Rule.** The primary accent *is* the heading colour. There is no brand hue in this system. Anything that needs to stand out does it with size, weight, or surrounding space — never by introducing a colour.
-
-**The Money-Only Rule.** #166534 and #B91C1C are the only saturated values in the system, and they may only be applied to a figure, a state, or a badge that is genuinely about money or safety. A green or red that isn't reporting a value is a defect.
-
-**The Paper-Through Rule.** Inset surfaces are set at partial alpha (`bg-th-surface-alt/50`, `bg-th-line/50`) rather than at full opacity, so the warm ground stays visible through every recessed element. Solid fills are for raised surfaces only.
-
-**The Legible-Quiet Rule.** Alpha is for backgrounds, never for informational text. Muted Stone and Faint Stone are used at full opacity; where a text element needs to feel quieter than its neighbours, that comes from a smaller size or a lighter weight, not from an opacity modifier stacked on top of a text-color token. An opacity-dimmed text color is the fastest way to fall below AA contrast.
+**The Replica Palette Rule.** The dash-*, rt-* and mail-* colours belong to the product replicas and the mail-client mock. They never appear in site chrome, and site tokens do not enter the replicas.
 
 ## Typography
 
-**Display Font:** Playfair Display (with Georgia, serif)
-**Body Font:** Inter (with system-ui, sans-serif)
-**Label/Mono Font:** JetBrains Mono (with ui-monospace, monospace) — figures inside the product preview only
+**Display Font:** Space Grotesk (with system-ui, sans-serif)
+**Accent Font:** IBM Plex Sans Light (with system-ui, sans-serif), via the `font-serif` utility
+**Body Font:** Inter (with system-ui, sans-serif); inside `.relay` both `font-body` and `font-mono` resolve to Inter
+**Replica fonts:** IBM Plex Sans and JetBrains Mono inside `.dash` and the `rt-*` windows; Segoe UI in the mail-client mock
 
-**Character:** A high-contrast Didone serif set at regular weight against a neutral grotesque. Playfair supplies the editorial authority a ledger page has; Inter carries every piece of information without competing. The pairing works because Playfair is never asked to be loud — it is never bold, never uppercase, and always tracked tight.
+**Character:** A tight geometric grotesk for titles, softened by one light humanist word; a neutral Inter for everything a reader has to read.
 
 ### Hierarchy
-- **Display** (400, 26→44px stepped at sm/md/lg, line-height 1.2): The hero headline only. Set with `tracking-tight`, revealed word by word.
-- **Display Italic** (400 italic, 18→34px, line-height 1.3): The hero's second line, clipped to a three-stop ink gradient (#48403A → #302B27 → #1C1917) running left to right. The one place a gradient touches type.
-- **Headline** (400, 24→30px): Section titles and page titles. Serif, regular weight, tracking-tight.
-- **Title** (400, 20px): Sub-section headings inside article pages.
-- **Body** (400, 13–16px, line-height ~1.625): All running text, in Inter. The hero paragraph drops to 300 for its single appearance at large size. Articles hold to `max-w-3xl`.
-- **Label** (700, 10–12px, 0.1em, uppercase): Form field labels, chip text, and small uppercase tags. Bold, wide, small.
-- **Meta** (400, 9px, 0.3em, uppercase): Category chips on FAQ rows. The widest tracking in the system, and the smallest type.
-- **Mono** (500, 12px): Numeric values inside the dashboard preview and chart tooltips.
+- **Display** (600, 44 / 56 / 60px by breakpoint, 1.02, -0.03em): Home hero first line. Its second line is **Display Accent** (IBM Plex Sans 300, 48 / 62 / 72px) at 90% ink.
+- **Headline** (600, clamp 28-48px or stepped 32-56px, 1.04-1.08, -0.03em): Section and page titles, `text-balance`.
+- **Title** (600, 19-26px, -0.02em): Feature card, calculator and step titles; 20-22px is the common size.
+- **Lead** (400, 17px, 1.625): Hero paragraph, FAQ questions.
+- **Body** (400, 15px, 1.625): Running copy and asides; 13.5px inside feature cards and the comparison table.
+- **Button** (500, 14px): All buttons and nav links.
+- **Label** (400, 11-13px): Meta lines, footer headings, captions, sentence case, muted. 10px only in footer social glyph tiles.
+- **Specials:** 96 / 140px for the 404 numeral; 44px semibold Inter for the calculator result figure.
+- **Replica scale:** dashboard 8.5 / 9 / 10 / 11px; demo windows 10.5-15px with a 20px dialog title in Space Grotesk; mail mock 10.5-15px.
 
 ### Named Rules
+**The One Light Word Rule.** A title may carry one word or short phrase in IBM Plex Sans Light (`Em`: weight 300, upright, -0.02em, 80% ink). Never italic, never more than one per title.
 
-**The Never-Bold-Serif Rule.** Every Playfair heading in this system is weight 400 with `tracking-tight`. The display face is never bolded, never uppercased, and never letterspaced. If a heading isn't carrying enough weight, it gets more size or more space around it — not more stroke.
-
-**The Uppercase-Is-Metadata Rule.** Uppercase plus letterspacing marks something as a label or a category, never as content. Two registers exist: 12px/0.1em/700 for form labels, 9px/0.3em/400 for chips. Headlines are never uppercase.
+**The No-Code-Look Rule.** Outside the replicas nothing is set in a monospace; `font-mono` is Inter on the site.
 
 ## Layout
 
-Everything re-enters the same shell: a 1300px max-width container with 20px gutters that open to 32px from `md` up (`mx-auto w-full max-w-[1300px] px-5 md:px-8`, exported as `PETARON_SECTION_SHELL`). Full-bleed sections still place their content in that shell rather than widening it.
+One shell: `max-width 1240px`, 24px side padding, 32px from `md`. Reading widths narrow inside it (`max-w-md` for hero copy, `max-w-3xl` / `max-w-4xl` for FAQ and legal text, `max-w-5xl` for the Connect strip). Sections breathe at about 80px vertical (`py-20`), the hero at 64px top / 112px bottom. Feature cards sit in a three-column grid with 24px padding; panels use 28-40px.
 
-Reading width narrows in three fixed steps beneath the shell: `max-w-3xl` for article prose (About, Privacy, Terms), `max-w-4xl` for the FAQ list, `max-w-2xl` for centred hero and CTA copy. Body copy therefore lands near a 65–75 character measure at every level.
-
-Vertical rhythm is 64px section padding (`py-16`) on the home page's stacked sections, dropping to 40–56px on article pages. Interstitial sell lines take 28–32px. Cards use 24px internal padding, tightening to 20px on the three-across process tiles.
-
-The header is a sticky pill inset 16px from the top (`sticky top-4`), floating over content at 60% page opacity with a heavy backdrop blur. It hides on downward scroll past 80px and returns immediately on any upward scroll, via a spring rather than a duration.
-
-Responsive behaviour is breakpoint-stepped, not fluid: type sizes step at `sm`/`md`/`lg` rather than using `clamp()`; three-across card grids collapse to one column; the process flow's staggered indents (`lg:ml-12`, `lg:ml-24`) apply only from `lg` up and flatten below. Nav collapses to a 44px icon button and a rounded drawer at `md`. Every interactive target holds a 44px minimum height on mobile.
-
-### Named Rules
-
-**The One Shell Rule.** Every section — including ones with their own background or border — lays its content out inside the same 1300px/20px/32px shell. Sections never introduce a different container width.
-
-**The Hairline Seam Rule.** Adjacent full-width sections are separated by a single `border-y` hairline in Whisper Rule (#F0ECE6) over the *same* Warm Paper ground. Sections are never distinguished by alternating background fills.
+Breakpoints are Tailwind's (640 / 768 / 1024px). From 1024 to 1440px the whole `.relay` scope is zoomed to 0.9, with `--relay-zoom` correcting screen-height boxes and measured positions. Demo windows reflow with container queries at 680 and 500px and are drawn at 640px and zoomed to 0.78 beside step text on desktop.
 
 ## Elevation & Depth
 
-This system is functionally flat. Depth is carried by hairline borders, warm tonal steps between paper / linen / white, and the physical impression of nested frames — not by lifting objects off the page. What shadows exist are large-radius, low-opacity halos with little or no offset: they read as the paper glowing slightly around a panel rather than as an object casting a shadow.
-
-The signature structure is a **double frame**: an outer container with a 0.75px Rule border and 6–8px of padding, holding an inner panel with a Whisper Rule border, a white fill, and the one soft halo. It reads like a mounted card in a mat — the ledger's own convention of ruling a box around a figure.
+Depth is glass, not lift: translucent white over the moving ribbon, a 20px backdrop blur with 150% saturation, a bright inset top rim, a 1px ink outline at 4-5% and one soft, negatively spread shadow. Inner wells use a softer glass with no drop shadow. Product windows sit on a plain soft shadow.
 
 ### Shadow Vocabulary
-- **Panel halo** (`box-shadow: 0 0 27px 0 rgba(45,45,45,0.15)`): The inner panel of a double frame. Zero offset, wide blur. The system's default and most common shadow.
-- **Deep lift** (`box-shadow: 0 20px 80px -40px rgba(0,0,0,0.5)`): FAQ rows and other large stacked surfaces. Heavily negative spread, so it stays a suggestion.
-- **Pill shadow** (`box-shadow: 0 4px 18px rgba(0,0,0,0.3)`, hover `0 6px 22px rgba(120,108,86,0.3)`): The primary button only — the one element allowed a true offset, because it is the one element meant to feel pressable.
-- **Glass edge** (`box-shadow: 0 10px 30px rgba(28,25,23,0.08), inset 0 1px 0 rgba(255,255,255,0.22)`): Glass panels and logo frames, where a white inset top edge simulates a lit lip.
+- **Glass** (`inset 0 1px 0 rgb(255 255 255 / 0.9), 0 0 0 1px rgb(17 19 15 / 0.05), 0 18px 40px -24px rgb(17 19 15 / 0.18)`): Panels, feature cards, cards, plate and CTA.
+- **Well** (`inset 0 1px 0 rgb(255 255 255 / 0.8), 0 0 0 1px rgb(17 19 15 / 0.04)`): Feature visuals, calculator result, Connect boxes.
+- **Window** (`0 1px 2px rgb(17 19 15 / 0.05), 0 18px 40px -24px rgb(17 19 15 / 0.22)`): Hero dashboard and Try-it windows.
+- **Dialog** (`0 24px 60px rgb(17 19 15 / 0.18)`): The confirmation dialog inside the demo window.
 
 ### Named Rules
-
-**The Double-Frame Rule.** The canonical container is two nested borders, not one: outer 0.75px Rule frame with 6–8px padding, inner Whisper Rule panel on white carrying the halo. The shadow belongs to the inner panel. Never put a shadow on the outer frame, and never collapse the pair into a single bordered card.
-
-**The No-Drop-Shadow Rule.** Shadows have zero or minimal Y-offset and blur radii of 27px or more. Anything that reads as a conventional drop shadow — tight, offset, dark — is out of system. The one exception is the primary pill.
+**The Glass-Over-Ribbon Rule.** Containers are frosted white (linear-gradient 170deg, white 72% to 42%, rim at 75%), never opaque grey, so the ribbon reads through them.
 
 ## Shapes
 
-Two silhouettes, strictly divided by function. **Anything interactive is a pill** (9999px): buttons, the header bar, chips, badges, the mobile menu button, slider thumbs, marquee frames. **Anything that contains is a rounded rectangle**: 16px for cards, modals, FAQ rows and the mobile drawer; 12px for inputs and the inner panels of double frames; 20px for glass and logo frames. Nothing in the system has a sharp corner, and nothing sits between those two families.
+Radii step down as containers nest: 40px for the closing plate, 28px for large glass panels (Try-it, Connect, CTA), 22px for feature cards, 16px for cards, windows and the contact modal, 14px for feature visuals, 12px for inputs, wells and the logo square, 10px for small tiles. Everything clickable is full round. Borders are 1px hairlines; feature cards add a 2px lime arc that follows the pointer along the outline.
 
-Borders are the primary structural device and are always 1px, except the outer frame of a double-frame, which is 0.75px — a deliberately sub-pixel hairline that renders lighter than everything around it. The base radius token is 12px (`--radius: 0.75rem`), with Tailwind's `md`/`sm` steps derived from it at 10px and 8px.
-
-Icons are Lucide line icons at 1.5px stroke, sitting in 40px pill wells or `rounded-lg` square wells filled with Inset Linen at partial opacity.
-
-### Named Rules
-
-**The Pill-Or-Panel Rule.** If it responds to a click, it is a pill. If it holds content, it is a 12–16px rounded rectangle. There is no third shape, and no square corners.
+Replicas keep their own radii: dashboard 2 / 4 / 8 / 10px and 60px pills, demo windows 3-16px, mail mock 1-6px.
 
 ## Components
 
 ### Buttons
-- **Shape:** Full pill (9999px) at every size and variant.
-- **Primary:** Button Ink (#161310) fill, white 13px/700 label, 14px × 28px padding, hairline white/10 border, pill shadow. On hover a cream disc (#F3EEE2 → #E2D8C4) that sits at 20%/40% inset scales up to 1.8× to flood the button, a white sheen sweeps left to right over 700ms, and the label colour flips to #2A2000. The border warms to #E2D8C4/70. This inversion is the system's one moment of theatre — reserved for the demo-booking CTA.
-- **Secondary:** Inset Linen at 50% opacity, Rule border, Ink label at 13px/600, identical pill geometry. Hover raises the fill to Rule at 50%.
-- **Submit (forms):** Solid Ink fill, white 14px/700 label, full width, pill. Hover adds a soft ink glow (`0 0 24px rgb(var(--ac-1)/0.4)`); disabled drops to 50% opacity.
-- **Focus:** 2px ring in Ink at 20–40% alpha with a 2px offset against the page ground.
-
-### Chips
-- **Meta chip (FAQ):** Transparent fill, Rule border, Muted Stone text at 9px/0.3em uppercase, pill, 2px × 10px padding. Sits right-aligned on the question row from `sm` up.
-- **Process chip:** Inset Linen at 30%, Rule border, 9px/500 uppercase Muted Stone with wider tracking, pill.
-- **Trust badge (footer):** Savings Green or Ink at 50% text with a matching 20%-alpha border, 10px, pill.
+- **Shape:** Full round, 12px x 24px, Inter 14px/500; the nav CTA is 10px x 20px.
+- **Lime (primary):** Relay Lime fill, Ink on Lime label.
+- **Book a Demo hover:** An 8px dot beside the label scales (x110, 0.55s, `cubic-bezier(0.22, 1, 0.36, 1)`) to fill the button in the opposite colour; the label slides 3rem right and fades while a copy in the new ink slides in. Same on focus-visible.
+- **Ghost:** Rule border, white at 50%, Ink label; hover goes solid surface.
+- **Dark (in the plate and CTA):** Those two panels are glass on the light page but keep the lime-context tokens, so their text is Ink on Lime and the "dark" button is an Ink on Lime fill with a Pale Stone label; its hover dot fills lime. The outlined companion is a transparent pill with an ink border at 25%.
 
 ### Cards / Containers
-- **Corner Style:** 16px for standalone cards; the double-frame pairs a 16px outer with a 12px inner.
-- **Background:** Card White for the inner panel; the outer frame is transparent over Warm Paper.
-- **Shadow Strategy:** Panel halo on the inner surface only — see The Double-Frame Rule.
-- **Border:** 0.75px Rule outside, 1px Whisper Rule inside.
-- **Internal Padding:** 24px (20px on three-across tiles), with 6–8px of frame inset between the two borders.
-- **FAQ row:** 16px radius, Rule border, Inset Linen at 40% with backdrop blur, deep-lift shadow. Rises 2px on hover; the plus icon rotates 45° into a close over 500ms; the answer expands via a `grid-rows-[0fr]` → `[1fr]` transition rather than a height animation.
+- **Glass panel:** 28px radius, Glass shadow, 32-56px padding.
+- **Feature card:** 22px radius, 24px padding, centred, a 104px visual well (14px) above a 19px title and 13.5px body; pointer-following lime arc on the outline.
+- **Plate / CTA:** 40px / 28px glass panels (the CTA opens from 96px to 28px as it scales in), min height 300px (56vh from `md`), centred headline in Ink on Lime; the plate carries the inverse logo square (dark fill, lime mark).
 
 ### Inputs / Fields
-- **Style:** Inset Linen at 50%, 1px Rule border, 12px radius, 12px × 16px padding, 14px Ink text, Faint Stone placeholder.
-- **Focus:** Border shifts to Ink and a 2px Ink/20% ring appears. No glow, no scale.
-- **Error:** Message in Cost Red at 12px directly beneath the field.
-- **Label:** 12px/700 uppercase at 0.1em in Body Brown, 6px above the field.
-- **Slider:** 6px Rule track, thumb is a 20px circle in Warm Paper with a 2px Ink border, scaling 1.1× on hover. The filled range is the one place the three ink accents run as a gradient.
+- **Style:** 12px radius, Rule border, white at 70% (careers) or Pale Stone at 50% (contact modal), 12px x 16px, Inter 14-15px, Faint placeholder.
+- **Focus:** Border to lime shade with a 2px lime ring at 20-40%.
+- **Error:** Error red, 12px, under the field.
 
 ### Navigation
-- **Style:** A floating pill — Rule border, Warm Paper at 60%, heavy backdrop blur, 16px from the top, above all content.
-- **Typography:** 13px/500 Body Brown links, hovering to Ink. Wordmark at 14px/700 Ink with ". AI Solutions" trailing in 11px/400 Muted Stone, hidden below `sm`.
-- **Behaviour:** Hides on scroll down past 80px, returns on any 4px upward movement, animated with a spring (stiffness 280, damping 30) rather than a duration.
-- **Mobile:** 44px circular menu button; the drawer is a 16px-radius panel at 95% paper with blur, animating 8px down over 180ms, dismissed on Escape or outside click with focus returned to the button.
+- Transparent bar in the shell: logo square (28px lime, 12px radius) and Inter 17px/500 wordmark; links Inter 14px Body to Ink on hover, 20-32px apart; the lime Book a Demo button at right. Links hidden below `md`.
 
-### Signature: the interstitial sell line
-A single centred sentence between sections in Inter at 14–15px, full-opacity Muted Stone, on the same paper ground with no rule, no quotation marks and no attribution. It is deliberately quieter than body text — a line you read on the way past rather than one that stops you — but that quiet comes from its small size and font-normal weight, never from dropping opacity below Muted Stone's own AA-compliant value. Two are in use on the home page. They are the system's only editorial voice element and must never be enlarged, coloured, dimmed with an opacity modifier, or turned into a pull quote.
+### FAQ
+- Hairline-divided list (Rule at 60%), 17px question, 12px Field Green category at left from `md`, plus icon rotating 45deg into Field Green when open, 15px answer.
 
-### Signature: ambient light
-A 520px radial field in Ink at 14% alpha, blurred 110px, follows the cursor with a slow spring (stiffness 55, damping 22) across every page, beneath the content and above the ground. A fixed 2.5% multiply-blend noise layer sits over the whole page, and a 0.5px scroll-progress bar in the three ink accents runs along the top. Together these keep the paper feeling lit and textured rather than flat — they must stay this subtle, and none of them may be given a hue.
-
-### Motion grammar
-- **Hero reveal:** headline animates word by word, 500ms each on a 60ms stagger, easing `cubic-bezier(0.22, 1, 0.36, 1)`. Subtitle at 600ms, paragraph at 800ms, CTA at 1000ms.
-- **Article load:** blocks fade up 16px on an indexed stagger with the same easing.
-- **Ambient loops:** heading shimmer sweeps every 3.6s over 1.4s; marquees run 32–36s linear; float-gentle is a 4px, 5s ease-in-out drift; the aurora wash cycles 16s.
-- **State changes:** 300ms for colour, 500ms for transform and expansion, 700ms for the button sheen. Accordions are 200ms ease-out.
-- **Never:** bounce, overshoot on content, spin, or any transform above 1.1× on an element carrying text.
+### Product replicas (signature)
+- **Hero dashboard (`.dash.is-glass`):** the operator app in its light palette (dash-*), 10px base type, 8px controls, 60px pills, 10px frame.
+- **Try-it windows (`rt-*`):** white windows, rt lines, lime fills with Deep Field Green chip text, amber for incomplete, blue for order-history values, IBM Plex Sans with JetBrains Mono figures, 999px buttons, 16px card.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep the accent monochrome. Ink (#1C1917) is both the heading colour and the primary accent — if something needs emphasis, give it size, weight or space.
-- **Do** reserve #166534 and #B91C1C for money and safety states only, and always attached to a figure or a status.
-- **Do** build containers as double frames: 0.75px outer Rule frame, 6–8px inset, 12px inner panel on white with the 27px halo.
-- **Do** set every Playfair heading at weight 400 with `tracking-tight`.
-- **Do** route all content through the 1300px shell with `px-5 md:px-8`, then narrow to `max-w-3xl` / `max-w-4xl` / `max-w-2xl` for reading.
-- **Do** separate full-width sections with a `border-y` Whisper Rule hairline over the same paper ground.
-- **Do** let recessed surfaces sit at partial alpha so the warm ground reads through them.
-- **Do** hold a 44px minimum touch target on every mobile control.
-- **Do** keep motion slow, ambient and non-bouncing; ease with `cubic-bezier(0.22, 1, 0.36, 1)`.
-- **Do** keep Muted Stone and Faint Stone at full opacity on text; reach for size and weight when something needs to read quieter.
+- **Do** use lime as a fill and Field Green (#4D7C0F) wherever lime would be text on the light page.
+- **Do** build containers as frosted glass with the Glass shadow, stepping radii down 40 / 28 / 22 / 16 / 14 / 12px as they nest.
+- **Do** set titles in Space Grotesk 600 at -0.03em, with at most one IBM Plex Sans Light word.
+- **Do** keep body copy in Inter at 15px (17px lead) and labels at 11-13px in Muted.
+- **Do** keep every product replica on its own palette, fonts and scale.
+- **Do** keep visuals simple and precise: one quiet loop per feature card, measured alignment.
+- **Do** honour reduced motion on every loop and the ribbon.
 
 ### Don't:
-- **Don't** introduce a brand hue, a coloured gradient, or a glow with a hue. **Confirmed anti-reference: dark neon AI SaaS** — near-black grounds with cyan/fuchsia/violet glow, gradient-filled headlines, neon-bordered cards. This project ran that theme previously and left it deliberately.
-- **Don't** reach for corporate navy, steel-blue chrome gradients, uppercase corporate headlines, or square-cornered bordered boxes. **Confirmed anti-reference: enterprise logistics blue** — the house style of the incumbent TMS vendors.
-- **Don't** use gradient blobs, multi-hue purple/pink fills, emoji as section markers, 18px+ bubble radii, or exclamation-mark copy. **Confirmed anti-reference: playful startup.**
-- **Don't** open a page with metric tiles, KPI rows or charts. **Confirmed anti-reference: dashboard-as-hero** — and doubly so here, because the product has no citable metrics, so such a page could only be furnished with invented figures.
-- **Don't** invent numbers, logos, testimonials or customer names anywhere in the interface. Integration logos are integrations, never customers.
-- **Don't** bold, uppercase, or letterspace the display serif.
-- **Don't** apply a conventional drop shadow. Shadows are wide, near-offsetless halos; the primary pill is the sole exception.
-- **Don't** alternate section background fills to create rhythm — use the hairline seam.
-- **Don't** introduce a third shape family. Interactive elements are pills; containers are 12–16px rounded rectangles; nothing has square corners.
-- **Don't** enlarge, colour, or attribute the interstitial sell lines, or add more than one per section break.
-- **Don't** dim a text-color token with an opacity modifier (`text-th-muted/50`) to make it read quieter — it drops below AA contrast. Use Faint Stone only for placeholders and large/decorative text, never for small informational copy.
+- **Don't** set lime text or white text on the light page or on a lime fill; on lime the ink is #070806.
+- **Don't** use opaque grey cards or heavy dark drop shadows on the light page.
+- **Don't** set site copy in a monospace or in italics.
+- **Don't** add busy mock panels or empty decorative circles.
+- **Don't** put internal scores, vendor names, customer names or invented metrics in the replicas.
