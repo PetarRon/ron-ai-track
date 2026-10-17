@@ -83,6 +83,7 @@ function ribbonMask(W: number, H: number, head: number, snake: boolean) {
  */
 export const FlowRibbon = ({ snake = true }: { snake?: boolean }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const [mask, setMask] = useState("");
   const [headInView, setHeadInView] = useState(true);
@@ -94,9 +95,12 @@ export const FlowRibbon = ({ snake = true }: { snake?: boolean }) => {
     const build = () => {
       const W = Math.round(el.clientWidth);
       const H = Math.round(el.clientHeight);
-      // where the head ends, measured from the top of this layer (a subpage's nav sits above its header)
+      // where the head ends, measured from the top of this layer (a subpage's nav sits above its header);
+      // on-screen positions are scaled by the page zoom and the layer's own size is not, so convert
+      const rect = el.getBoundingClientRect();
+      const k = rect.height ? el.clientHeight / rect.height : 1;
       const headEl = document.querySelector<HTMLElement>("[data-flow-head]");
-      const head = headEl ? Math.round(headEl.getBoundingClientRect().bottom - el.getBoundingClientRect().top) : 700;
+      const head = headEl ? Math.round((headEl.getBoundingClientRect().bottom - rect.top) * k) : 700;
       const key = `${W}x${H}x${head}`;
       if (!W || !H || key === size) return;
       size = key;
@@ -114,6 +118,23 @@ export const FlowRibbon = ({ snake = true }: { snake?: boolean }) => {
     };
   }, [snake]);
 
+  // GradFlow sizes its canvas from its parent only on mount and on window resize; in
+  // Safari the first read can come before the screen-tall box has its height (the canvas
+  // stuck at ~150 px), so tell it to measure again whenever that box changes size
+  useEffect(() => {
+    const box = screenRef.current;
+    if (!box) return;
+    let last = "";
+    const ro = new ResizeObserver(([e]) => {
+      const key = `${Math.round(e.contentRect.width)}x${Math.round(e.contentRect.height)}`;
+      if (key === last) return;
+      last = key;
+      window.dispatchEvent(new Event("resize"));
+    });
+    ro.observe(box);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div
       ref={ref}
@@ -125,7 +146,7 @@ export const FlowRibbon = ({ snake = true }: { snake?: boolean }) => {
           : { visibility: "hidden" }
       }
     >
-      <div className="sticky top-0 h-screen w-full">
+      <div ref={screenRef} className="sticky top-0 h-[calc(100vh/var(--relay-zoom,1))] w-full">
         <GradFlow config={FLOW} paused={!!reduced || !headInView} />
       </div>
     </div>

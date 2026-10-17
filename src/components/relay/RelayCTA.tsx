@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { Play } from "lucide-react";
 import { useContact } from "@/components/petaron/contact-context";
 import { CalButton, Em, RELAY_SHELL, buttonVariants } from "./shared";
@@ -17,9 +17,32 @@ export const RelayCTA = () => {
   const ref = useRef<HTMLDivElement>(null);
   const still = useReducedMotion();
 
-  // from the panel's top entering the screen until it is a quarter of the way down
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 0.25"] });
-  const open = useSpring(scrollYProgress, SPRING);
+  // from the panel's top entering the screen until it is a quarter of the way down; read from
+  // where the panel is on screen, which holds under the laptop zoom (offsets do not)
+  const progress = useMotionValue(0);
+  useEffect(() => {
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const el = ref.current;
+      if (!el) return;
+      const vh = window.innerHeight;
+      const top = el.getBoundingClientRect().top;
+      progress.set(Math.min(1, Math.max(0, (vh - top) / (vh * 0.75))));
+    };
+    const queue = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    measure();
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", queue);
+      window.removeEventListener("resize", queue);
+    };
+  }, [progress]);
+  const open = useSpring(progress, SPRING);
   const scale = useTransform(open, [0, 0.8], [0.1, 1]);
   const radius = useTransform(open, [0, 0.8], [96, 28]);
   const text = useTransform(open, [0.6, 0.95], [0, 1]);

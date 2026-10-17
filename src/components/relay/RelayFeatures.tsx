@@ -71,10 +71,12 @@ const Trace = () => {
       const v = value.current.getBoundingClientRect();
       const e = end.current.getBoundingClientRect();
       const f = field.current.getBoundingClientRect();
-      const x1 = e.right - b.left + 8;
-      const y1 = v.top + v.height / 2 - b.top;
-      const x2 = f.left - b.left;
-      const y2 = f.top + f.height / 2 - b.top;
+      // screen positions are scaled by the page zoom; the path is drawn in the box's own units
+      const k = b.width ? el.offsetWidth / b.width : 1;
+      const x1 = (e.right - b.left) * k + 8;
+      const y1 = (v.top + v.height / 2 - b.top) * k;
+      const x2 = (f.left - b.left) * k;
+      const y2 = (f.top + f.height / 2 - b.top) * k;
       const mx = (x1 + x2) / 2;
       setD(`M${x1.toFixed(1)} ${y1.toFixed(1)} C ${mx.toFixed(1)} ${y1.toFixed(1)}, ${mx.toFixed(1)} ${y2.toFixed(1)}, ${x2.toFixed(1)} ${y2.toFixed(1)}`);
     };

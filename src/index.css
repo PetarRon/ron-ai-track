@@ -980,3 +980,39 @@ div[data-cal-namespace] > div,
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
 }
+
+/* Book a Demo buttons (CalButton in src/components/relay/shared.tsx): a dot beside
+   the label spreads to fill the button in the opposite colour; the label slides
+   out to the right as a copy in the new ink slides in from the right. The dot
+   grows by scale, so it starts wherever the label puts it. */
+.relay-hb { position: relative; overflow: hidden; isolation: isolate; }
+.relay-hb.is-lime { --hb-fill: 11 12 10; --hb-ink: 199 242 60; }
+.relay-hb.is-dark { --hb-fill: 199 242 60; --hb-ink: 11 12 10; }
+.relay-hb-dot {
+  flex: none; width: 8px; height: 8px; border-radius: 999px; background: rgb(var(--hb-fill));
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.relay-hb-label { position: relative; z-index: 1; display: inline-block; transition: transform 0.3s ease, opacity 0.3s ease; }
+.relay-hb-over {
+  position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;
+  color: rgb(var(--hb-ink)); opacity: 0; transform: translateX(3rem);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.relay-hb:hover .relay-hb-dot, .relay-hb:focus-visible .relay-hb-dot { transform: scale(110); }
+.relay-hb:hover .relay-hb-label, .relay-hb:focus-visible .relay-hb-label { transform: translateX(3rem); opacity: 0; }
+.relay-hb:hover .relay-hb-over, .relay-hb:focus-visible .relay-hb-over { transform: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .relay-hb-dot, .relay-hb-label, .relay-hb-over { transition: none; }
+}
+
+/* Laptop screens (1024 to 1440 px wide: the usual 13 to 15 inch laptop with
+   display scaling, often only ~630 px tall) get the whole page at 90%, as if
+   zoomed out one step. The layout is drawn for wider screens and ran edge to
+   edge there. Inside the zoom, positions read with getBoundingClientRect() are
+   scaled while offset and client sizes are not, so code that measures converts
+   between the two (offsetWidth / rect.width), and screen-height boxes divide
+   by --relay-zoom to still fill the screen. */
+.relay { --relay-zoom: 1; min-height: calc(100vh / var(--relay-zoom)); }
+@media (min-width: 1024px) and (max-width: 1440px) {
+  .relay { --relay-zoom: 0.9; zoom: 0.9; }
+}

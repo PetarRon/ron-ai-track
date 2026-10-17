@@ -65,18 +65,32 @@ export const buttonVariants = {
   onLime: `${BUTTON_BASE} border border-th-page/25 bg-transparent text-th-page hover:border-th-page/50 hover:bg-th-page/[0.06]`,
 };
 
-/** Opens the Cal.com booking popup (initialised in RelayPreview). */
+/** the booking buttons: no hover shade of their own, the dot does the hover (`.relay-hb` in src/index.css) */
+const CAL_VARIANTS = {
+  lime: `${BUTTON_BASE} relay-hb is-lime bg-ac-1 text-th-page`,
+  dark: `${BUTTON_BASE} relay-hb is-dark bg-th-page text-th-heading`,
+};
+
+/**
+ * Opens the Cal.com booking popup (initialised in RelayShell). On hover the dot
+ * beside the label spreads to fill the button in the opposite colour while the
+ * label slides out and a copy in that colour slides in.
+ */
 export const CalButton = ({
   children,
   variant = "lime",
   className = "",
 }: {
   children: ReactNode;
-  variant?: keyof typeof buttonVariants;
+  variant?: keyof typeof CAL_VARIANTS;
   className?: string;
 }) => (
-  <button type="button" {...CAL_ATTRS} className={`${buttonVariants[variant]} ${className}`}>
-    {children}
+  <button type="button" {...CAL_ATTRS} className={`${CAL_VARIANTS[variant]} ${className}`}>
+    <span aria-hidden className="relay-hb-dot" />
+    <span className="relay-hb-label">{children}</span>
+    <span aria-hidden className="relay-hb-over">
+      {children}
+    </span>
   </button>
 );
 

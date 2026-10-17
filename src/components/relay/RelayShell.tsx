@@ -101,7 +101,7 @@ export const RelayShell = ({
 
   return (
     <ContactContext.Provider value={{ openContact }}>
-      <div className={`relay min-h-screen bg-th-page text-th-heading ${light ? "relay-light" : ""}`}>
+      <div className={`relay bg-th-page text-th-heading ${light ? "relay-light" : ""}`}>
         <SEO route={seo.route} jsonLd={seo.jsonLd} noindex={seo.noindex} />
         <div className="relative z-10">{children}</div>
         <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
